@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Hyperform">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png?v=2">
     <style>
         :root {
             --bg-color: #0d0d0d;
@@ -1066,7 +1066,7 @@
         };
 
         window.resetearFirebaseApp = async () => {
-if (currentUser && db) {
+            if (currentUser && db) {
                 const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'progreso', 'historial_medidas');
                 window.historialMedidas = [];
                 await setDoc(docRef, { registros: [] });
