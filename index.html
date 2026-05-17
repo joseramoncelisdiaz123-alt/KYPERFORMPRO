@@ -1066,7 +1066,7 @@
         };
 
         window.resetearFirebaseApp = async () => {
-            if (currentUser && db) {
+if (currentUser && db) {
                 const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'progreso', 'historial_medidas');
                 window.historialMedidas = [];
                 await setDoc(docRef, { registros: [] });
