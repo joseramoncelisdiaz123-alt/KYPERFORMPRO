@@ -8,8 +8,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Hyperform">
-    <link rel="apple-touch-icon" href="logohp.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="logohp.png">
     <style>
         :root {
             --bg-color: #0d0d0d;
@@ -90,7 +88,7 @@
         .rpg-details p { color: var(--text-main); font-size: 14px; font-weight: bold; }
         
         /* ⌚ WEARABLE WIDGET */
-        .wearable-status { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(0, 255, 204, 0.1); border-left: 4px solid var(--primary-color); border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .wearable-status { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(0, 255, 204, 0.1); border-left: 4px solid var(--primary-color); border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); transition: opacity 0.3s ease; }
         .wearable-status.warning { background: rgba(255, 68, 68, 0.1); border-left-color: var(--danger); }
 
         .music-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
@@ -115,12 +113,15 @@
         .btn-ai { background: linear-gradient(45deg, #8a2be2, #00ffcc); color: #000; border: none; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
 
         /* --- ENTRENAMIENTO & GESTURES --- */
-        .exercise-card { background: var(--surface-color); border-radius: 20px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05); }
-        .ex-header { height: 120px; background-image: linear-gradient(to top, var(--surface-color) 0%, rgba(26,26,26,0) 100%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop'); background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; position: relative; cursor: pointer;}
+        .exercise-card { background: var(--surface-color); border-radius: 20px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
+        .ex-header { height: 120px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; position: relative; cursor: pointer;}
         .ex-header h2 { font-size: 20px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); transition: color 0.3s; }
-        .ex-header p { font-size: 12px; color: var(--text-muted); }
-        .ex-controls { position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 10; }
+        .ex-header p { font-size: 12px; color: var(--text-main); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .ex-controls { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 10; }
         
+        .icon-btn { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .icon-btn:active { transform: scale(0.9); }
+
         /* 👁️ AI VISION SCANNER */
         .vision-scanner { width: 100%; height: 250px; background: #000; border-radius: 15px; border: 2px dashed var(--ai-color); position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--ai-color); box-shadow: 0 0 15px var(--ai-color); animation: scan 2s infinite linear; }
@@ -155,10 +156,9 @@
         .modal-box { background: var(--surface-color); padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #333; position: relative; max-height: 85vh; overflow-y: auto;}
         .close-modal { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: white; font-size: 20px; cursor: pointer; }
         
-        .barbell-container { margin: 20px 0; display: flex; align-items: center; justify-content: center; height: 100px; position: relative; }
-        .barbell-bar { width: 100%; height: 12px; background: #555; position: absolute; z-index: 1; border-radius: 5px; }
-        .plates-wrapper { display: flex; justify-content: center; align-items: center; z-index: 2; gap: 2px; }
-        .plate-svg { transition: transform 0.3s; }
+        .alt-list { list-style: none; padding: 0; margin-top: 15px; }
+        .alt-list li { background: #222; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #444; font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .alt-list li:active { background: #333; transform: scale(0.98); }
 
         .history-chart { width: 100%; height: 150px; background: #111; border-radius: 10px; margin-top: 15px; position: relative; overflow: hidden; }
         .stat-highlight { font-size: 32px; font-weight: 900; color: var(--primary-color); margin-top: 10px; }
@@ -201,13 +201,14 @@
         .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 15px 10px calc(15px + var(--safe-bottom)); z-index: 8000; }
         .tab-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; transition: color 0.2s; flex: 1; }
         .tab-item.active { color: var(--primary-color); }
-        .tab-item.active-coach { color: var(--warning); } /* Color especial para el tab Coach */
+        .tab-item.active-coach { color: var(--warning); } 
         .tab-icon { font-size: 20px; }
         .tab-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* --- B2B COACH EDITION --- */
-        .client-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #222; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; }
+        .client-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #222; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; transition: opacity 0.3s; }
         .client-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary-color); color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .btn-delete { background: transparent; border: none; color: var(--danger); font-size: 18px; cursor: pointer; padding: 5px; }
 
         /* --- TOASTS & SPINNERS --- */
         .watchdog-toast { position: fixed; top: -100px; left: 20px; right: 20px; background: var(--danger); color: white; padding: 15px; border-radius: 15px; font-weight: bold; text-align: center; z-index: 12000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -273,12 +274,10 @@
             <div class="modal-box">
                 <button class="close-modal" onclick="document.getElementById('ai-modal').classList.remove('active')">×</button>
                 <h3 style="color: var(--ai-color); display: flex; align-items: center; gap: 8px;">✨ Inteligencia Artificial</h3>
-                
                 <div id="ai-loading" style="display:none; text-align: center; margin: 30px 0;">
                     <div class="spinner"></div>
                     <p style="color: var(--text-muted); font-size: 14px;">Gemini está analizando tus datos...</p>
                 </div>
-                
                 <div id="ai-content" class="ai-text-content" style="margin-top: 20px; font-size: 14px; line-height: 1.6; color: #ddd;"></div>
             </div>
         </div>
@@ -295,6 +294,18 @@
             </div>
         </div>
 
+        <!-- 🔄 MODAL ALTERNATIVAS DE EJERCICIO -->
+        <div id="alt-modal" class="overlay-modal" onclick="if(event.target===this) this.classList.remove('active')">
+            <div class="modal-box">
+                <button class="close-modal" onclick="document.getElementById('alt-modal').classList.remove('active')">×</button>
+                <h3 style="color: var(--primary-color); border-bottom: 1px solid #333; padding-bottom: 10px;">🔄 Alternativas</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Si el aparato está ocupado, elige una de estas opciones para el mismo grupo muscular:</p>
+                <ul class="alt-list" id="alt-list-render">
+                    <!-- Dinámico -->
+                </ul>
+            </div>
+        </div>
+
         <div id="history-modal" class="overlay-modal" onclick="if(event.target===this) this.classList.remove('active')">
             <div class="modal-box">
                 <button class="close-modal" onclick="document.getElementById('history-modal').classList.remove('active')">×</button>
@@ -302,26 +313,13 @@
                 <p style="color: var(--text-muted); font-size: 12px;">Estimación 1RM (Fórmula Epley)</p>
                 <div class="stat-highlight" id="hist-1rm">0 kg</div>
                 <div class="history-chart">
-                    <svg viewBox="0 0 100 40" width="100%" height="100%" preserveAspectRatio="none">
+                    <!-- Fix: Added xmlns to guarantee render -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" width="100%" height="100%" preserveAspectRatio="none">
                         <path d="M0,35 L20,30 L40,25 L60,28 L80,15 L100,5" fill="none" stroke="var(--primary-color)" stroke-width="2"/>
                         <circle cx="20" cy="30" r="1.5" fill="#fff"/><circle cx="40" cy="25" r="1.5" fill="#fff"/><circle cx="60" cy="28" r="1.5" fill="#fff"/><circle cx="80" cy="15" r="1.5" fill="#fff"/><circle cx="100" cy="5" r="1.5" fill="#fff"/>
                         <path d="M0,40 L0,35 L20,30 L40,25 L60,28 L80,15 L100,5 L100,40 Z" fill="var(--primary-color)" opacity="0.2"/>
                     </svg>
                 </div>
-            </div>
-        </div>
-
-        <div id="plate-modal" class="overlay-modal" onclick="if(event.target===this) this.classList.remove('active')">
-            <div class="modal-box">
-                <button class="close-modal" onclick="document.getElementById('plate-modal').classList.remove('active')">×</button>
-                <h3 style="text-align: center;">Calculadora de Discos</h3>
-                <p style="text-align: center; color: var(--warning);" id="plate-target">Objetivo: 100kg</p>
-                <p style="text-align: center; font-size: 10px; color: var(--text-muted);">*Barra olímpica de 20kg</p>
-                <div class="barbell-container">
-                    <div class="barbell-bar"></div>
-                    <div class="plates-wrapper" id="plates-render"></div>
-                </div>
-                <div id="plate-text-render" style="text-align: center; font-weight: bold; font-size: 14px; margin-top: 10px;"></div>
             </div>
         </div>
 
@@ -352,16 +350,12 @@
                     <h4 style="color: var(--danger); margin-bottom: 5px;">⌚ Oura Ring / Apple Watch</h4>
                     <p style="font-size: 12px; color: #ddd;">Sueño: 4h 12m | HRV: Bajo (32ms)</p>
                 </div>
-                <button onclick="syncWearable()" style="background:transparent; border:1px solid var(--danger); color:var(--danger); padding:8px 12px; border-radius:10px; cursor: pointer;">Analizar</button>
+                <button onclick="syncWearable()" style="background:transparent; border:1px solid var(--danger); color:var(--danger); padding:8px 12px; border-radius:10px; cursor: pointer; font-weight:bold;">Analizar</button>
             </div>
 
             <div class="music-grid">
-                <a href="https://open.spotify.com" target="_blank" class="music-btn btn-spotify" onclick="hapticTick()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.24 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.381 4.26-1.261 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.54-1.02.72-1.56.3z"/></svg> Spotify
-                </a>
-                <a href="https://music.youtube.com" target="_blank" class="music-btn btn-yt" onclick="hapticTick()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186a2.636 2.636 0 0 0-1.858-1.874C18.083 3.86 12 3.86 12 3.86s-6.083 0-7.724.452a2.636 2.636 0 0 0-1.858 1.874C2 7.854 2 12 2 12s0 4.146.418 5.814a2.636 2.636 0 0 0 1.858 1.874c1.641.452 7.724.452 7.724.452s6.083 0 7.724-.452a2.636 2.636 0 0 0 1.858-1.874C22 16.146 22 12 22 12s0-4.146-.418-5.814zM9.996 15.463V8.537L15.992 12l-5.996 3.463z"/></svg> YT Music
-                </a>
+                <a href="https://open.spotify.com" target="_blank" class="music-btn btn-spotify" onclick="hapticTick()">Spotify</a>
+                <a href="https://music.youtube.com" target="_blank" class="music-btn btn-yt" onclick="hapticTick()">YT Music</a>
             </div>
 
             <div class="rpg-card">
@@ -394,14 +388,24 @@
                     </button>
                 </div>
                 
-                <!-- 👁️ AI VISION BIOMECÁNICA BUTTON -->
                 <button class="focus-btn" style="background: transparent; border: 1px solid var(--ai-color); color: var(--ai-color); margin-top: 5px;" onclick="openVisionAI()">
                     👁️ AI Vision: Corrección Biomecánica
                 </button>
                 
                 <p style="font-size:12px; color:var(--text-muted);">*Desliza el renglón para completar.</p>
             </div>
+            
             <div id="training-content"></div>
+
+            <!-- CONTROLES EXTRA DE RUTINA (Add Ex & Cardio) -->
+            <div style="display:flex; gap: 10px; margin-top: 20px;">
+                <button class="focus-btn" style="background: #222; color: white; font-size: 14px; border: 1px dashed #555;" onclick="addExtraExercise()">
+                    ➕ Añadir Ejercicio Extra
+                </button>
+                <button class="focus-btn" style="background: #222; color: var(--danger); font-size: 14px; border: 1px dashed var(--danger);" onclick="addCardioBlock()">
+                    🏃‍♂️ Añadir Cardio
+                </button>
+            </div>
         </div>
 
         <!-- 3. NUTRICIÓN -->
@@ -425,11 +429,9 @@
                     ✨ Generar Receta con Ingredientes Marcados
                 </button>
 
-                <!-- 🛒 AUTO-CHECKOUT API -->
                 <button class="focus-btn" onclick="autoCheckoutAPI()" style="background: #0071ce; color: white;">
                     🛒 Comprar Todo (Walmart/Cornershop)
                 </button>
-
                 <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 5px;">Powered by Gemini</p>
             </div>
         </div>
@@ -440,7 +442,8 @@
             
             <div class="chart-container">
                 <h3 style="margin-bottom: 10px; font-size: 16px;">Radar de Rendimiento</h3>
-                <svg width="100%" height="auto" viewBox="0 0 100 100" style="max-width: 180px;">
+                <!-- Fix: Added xmlns to guarantee render -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 100 100" style="max-width: 180px;">
                     <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="none" stroke="#333" stroke-width="1"/>
                     <polygon points="50,20 77,35 77,65 50,80 23,65 23,35" fill="none" stroke="#333" stroke-width="1"/>
                     <polygon points="50,35 63,42 63,57 50,65 37,57 37,42" fill="none" stroke="#333" stroke-width="1"/>
@@ -450,7 +453,7 @@
                     <line x1="50" y1="50" x2="50" y2="95" stroke="#333" stroke-width="1"/>
                     <line x1="50" y1="50" x2="10" y2="75" stroke="#333" stroke-width="1"/>
                     <line x1="50" y1="50" x2="10" y2="25" stroke="#333" stroke-width="1"/>
-                    <polygon points="50,15 80,30 70,65 50,85 20,60 30,30" fill="var(--primary-color)" fill-opacity="0.2" stroke="var(--primary-color)" stroke-width="2"/>
+                    <polygon points="50,15 80,30 70,65 50,85 20,60 30,30" fill="var(--primary-color)" fill-opacity="0.4" stroke="var(--primary-color)" stroke-width="2"/>
                     <text x="50" y="4" font-size="5" fill="#888" text-anchor="middle">FUERZA</text>
                     <text x="92" y="25" font-size="5" fill="#888" text-anchor="start">RESIST</text>
                     <text x="92" y="76" font-size="5" fill="#888" text-anchor="start">TÉCNICA</text>
@@ -465,7 +468,8 @@
                 <p style="font-size: 32px; font-weight: 900; color: var(--primary-color);" id="tonnage-display">0 kg</p>
                 <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">*Kilos multiplicados por repeticiones.</p>
                 <h3 style="margin-bottom: 10px; font-size: 16px; border-top: 1px solid #333; padding-top: 15px; width: 100%; text-align: center;">Mapa de Calor Muscular</h3>
-                <svg width="100%" height="auto" viewBox="0 0 100 200" style="max-width: 120px;">
+                <!-- Fix: Added xmlns to guarantee render -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 100 200" style="max-width: 120px;">
                     <circle cx="50" cy="20" r="15" fill="#333"/>
                     <rect x="35" y="40" width="30" height="60" rx="10" fill="#333" id="hm-core"/>
                     <path d="M 25 45 Q 10 70 15 100" stroke="#333" stroke-width="12" fill="none" stroke-linecap="round" id="hm-arms-l"/>
@@ -478,7 +482,6 @@
 
             <div style="background: var(--surface-color); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
                 <h3 style="color: var(--warning); margin-bottom: 5px;">🏆 Sala de Trofeos</h3>
-                <p style="font-size: 12px; color: var(--text-muted);">Desbloquea medallas al superar tus límites.</p>
                 <div class="trophy-room">
                     <div class="trophy-badge" id="trophy-water">💧<span class="trophy-label">Acuamán</span></div>
                     <div class="trophy-badge" id="trophy-beast">🦍<span class="trophy-label">Bestia (100kg+)</span></div>
@@ -494,26 +497,10 @@
                     <div class="input-group"><label>Cintura</label><input type="number" id="m-cintura" placeholder="Ej. 82"></div>
                     <div class="input-group"><label>Pierna</label><input type="number" id="m-pierna" placeholder="Ej. 60"></div>
                 </div>
-                
-                <h3 style="margin-bottom: 15px; margin-top: 15px; color: var(--warning); border-top: 1px solid #333; padding-top: 15px;">Expedición Domingo</h3>
-                <div class="measurements-grid">
-                    <div class="input-group"><label>Duración (Min)</label><input type="number" id="m-duracion" placeholder="Ej. 90"></div>
-                    <div class="input-group"><label>Distancia (km)</label><input type="number" id="m-distancia" placeholder="Ej. 6.5"></div>
-                    <div class="input-group" style="grid-column: span 2;"><label>Peso Mochila (kg)</label><input type="number" id="m-mochila" placeholder="Ej. 4"></div>
-                </div>
             </div>
 
             <button class="focus-btn" onclick="window.guardarMedidasApp()" style="background: #222; color: white;">💾 Guardar Datos en la Nube</button>
-            
-            <button class="focus-btn btn-ai" onclick="analizarProgresoIA()" style="margin-top: 10px;">
-                ✨ Analizar Progreso con Coach AI
-            </button>
-
-            <button class="focus-btn btn-ai" onclick="showApiKeyModal()" style="margin-top: 10px; background: linear-gradient(45deg, #444, #666); box-shadow: none;">
-                🔑 Administrar Gemini API Key
-            </button>
-
-            <button class="focus-btn btn-reset" onclick="resetearApp()">🚨 Reiniciar App a Ceros</button>
+            <button class="focus-btn btn-ai" onclick="analizarProgresoIA()" style="margin-top: 10px;">✨ Analizar Progreso con Coach AI</button>
         </div>
 
         <!-- 5. COACH EDITION (B2B SaaS) -->
@@ -529,52 +516,14 @@
             <button class="focus-btn btn-ai" onclick="generateMassPlans()" style="box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);">
                 ✨ Gemini AI: Redactar Planes Masivos
             </button>
-            <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Redacta y ajusta las rutinas de tus 50 clientes en segundos.</p>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                <h3 style="margin: 0;">Clientes Activos</h3>
+                <button onclick="addClient()" style="background:var(--primary-color); border:none; border-radius:5px; font-weight:bold; padding:5px 10px; cursor:pointer;">+ Añadir</button>
+            </div>
 
-            <div class="client-list">
-                <h3 style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">Clientes Activos (Vista en Vivo)</h3>
-                
-                <div class="client-item">
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <div class="client-avatar">JP</div>
-                        <div>
-                            <h4>Juan Pérez</h4>
-                            <p style="font-size: 12px; color: var(--success);">Entrenando ahora (Pierna)</p>
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <p style="font-weight: bold; color: var(--primary-color);">3.2k kg</p>
-                        <p style="font-size: 10px; color: var(--text-muted);">Tonelaje de hoy</p>
-                    </div>
-                </div>
-
-                <div class="client-item">
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <div class="client-avatar" style="background: #888;">MR</div>
-                        <div>
-                            <h4>María R.</h4>
-                            <p style="font-size: 12px; color: var(--danger);">Riesgo de abandono</p>
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <p style="font-weight: bold; color: #888;">0 kg</p>
-                        <p style="font-size: 10px; color: var(--text-muted);">Inactiva hace 5 días</p>
-                    </div>
-                </div>
-
-                <div class="client-item">
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <div class="client-avatar" style="background: var(--ai-color);">DL</div>
-                        <div>
-                            <h4>Daniel López</h4>
-                            <p style="font-size: 12px; color: var(--ai-color);">Plan modificado por AI</p>
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <p style="font-weight: bold; color: var(--primary-color);">1.8k kg</p>
-                        <p style="font-size: 10px; color: var(--text-muted);">Tonelaje de hoy</p>
-                    </div>
-                </div>
+            <div class="client-list" id="client-list-render" style="margin-top: 15px;">
+                <!-- Se renderiza vía JS -->
             </div>
         </div>
 
@@ -616,7 +565,7 @@
         window.addEventListener('offline', () => window.mostrarToast("📡 Sin Señal. Modo Supervivencia Activado.", "warning"));
         window.addEventListener('online', () => window.mostrarToast("🌐 Señal recuperada.", "success"));
 
-        // --- HAPTICS & TOASTS ---
+        // --- HAPTICS & TOASTS (CORREGIDO BUG DEL TOAST ATASCADO) ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
 
@@ -636,38 +585,38 @@
             osc.stop(audioCtx.currentTime + 0.05);
         }
 
+        let globalToastTimeout; // Control del temporizador para evitar empalmes
         window.mostrarToast = function(mensaje, tipo = "danger") {
             hapticTick(true);
             const toast = document.getElementById('toast-alert');
-            toast.innerHTML = mensaje; // Changed to innerHTML to support bold tags
+            
+            clearTimeout(globalToastTimeout);
+            
+            toast.innerHTML = mensaje;
             toast.style.background = tipo === "success" ? "var(--success)" : (tipo === "warning" ? "var(--warning)" : (tipo === "ai" ? "var(--ai-color)" : "var(--danger)"));
             toast.style.color = (tipo === "danger" || tipo === "ai") ? "#fff" : "#000";
+            
+            // Forzar reflow para reiniciar la animación si ya estaba mostrándose
+            toast.classList.remove('show');
+            void toast.offsetWidth; 
+            
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 5500);
+            
+            globalToastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
         }
 
         // --- SISTEMA DE LOGROS & TONELAJE ---
         let tonelajeDiario = 0;
-        
         function checkLogros() {
-            // Logro Agua
             if(waterLevel >= 3000) {
                 let badge = document.getElementById('trophy-water');
                 if(!badge.classList.contains('unlocked')) { badge.classList.add('unlocked'); window.mostrarToast("🏆 Logro: ¡Acuamán!", "success"); }
             }
-            // Logro Titán
             if(tonelajeDiario >= 5000) {
                 let badge = document.getElementById('trophy-tonnage');
                 if(!badge.classList.contains('unlocked')) { badge.classList.add('unlocked'); window.mostrarToast("🏆 Logro: ¡Titán (5000kg)!", "success"); }
-            }
-        }
-
-        function playAudioCoach(mensaje) {
-            const toggle = document.getElementById('audio-coach-toggle');
-            if(toggle && toggle.checked && 'speechSynthesis' in window) {
-                let msg = new SpeechSynthesisUtterance(mensaje);
-                msg.lang = "es-MX";
-                window.speechSynthesis.speak(msg);
             }
         }
 
@@ -682,7 +631,6 @@
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('main-app').style.display = 'block';
                     document.getElementById('tab-dashboard').classList.add('active');
-                    checkGeminiApiKey();
                 }, 500);
             }, 800);
         }
@@ -696,68 +644,8 @@
                 t.classList.remove('active');
                 t.classList.remove('active-coach');
             });
-            
-            if (tabId === 'coach') {
-                el.classList.add('active-coach');
-            } else {
-                el.classList.add('active');
-            }
-        }
-
-        function resetearApp() {
-            hapticTick(true);
-            if(confirm("¿Seguro que quieres borrar todo tu progreso y empezar de cero?")) {
-                document.getElementById('racha-val').innerText = "0";
-                document.getElementById('ring-kcal').innerText = "0";
-                document.getElementById('ring-min').innerText = "0m";
-                document.getElementById('ring-hr').innerText = "0h";
-                waterLevel = 0;
-                tonelajeDiario = 0;
-                document.getElementById('tonnage-display').innerText = "0 kg";
-                document.querySelectorAll('.trophy-badge').forEach(b => b.classList.remove('unlocked'));
-                document.getElementById('water-wave').style.transform = `translateY(100%)`;
-                document.getElementById('water-text').innerText = `0 / 3000 ml`;
-                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-                if(window.resetearFirebaseApp) window.resetearFirebaseApp();
-                window.mostrarToast("🧹 Todo ha sido reiniciado a cero.", "success");
-            }
-        }
-
-        // --- WATER & CHEAT MEAL ---
-        let waterLevel = 0;
-        function addWater() {
-            hapticTick();
-            if(waterLevel < 3000) {
-                waterLevel += 250;
-                let pct = (waterLevel / 3000) * 100;
-                document.getElementById('water-wave').style.transform = `translateY(${100 - pct}%)`;
-                document.getElementById('water-text').innerText = `${waterLevel} / 3000 ml`;
-                checkLogros();
-            }
-        }
-        function triggerCheatMeal() { window.mostrarToast("🍔 Cheat Meal registrado. Meta de agua +1000ml.", "warning"); }
-
-        // --- DYNAMIC ISLAND TIMER ---
-        let dTimer;
-        function startDynamicIslandTimer(seconds = 60) {
-            const di = document.getElementById('dynamic-island');
-            const span = document.getElementById('di-time');
-            di.classList.add('active');
-            let timeLeft = seconds;
-            clearInterval(dTimer);
-            dTimer = setInterval(() => {
-                let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                let s = (timeLeft % 60).toString().padStart(2, '0');
-                span.innerText = `${m}:${s}`;
-                if(timeLeft <= 0) {
-                    clearInterval(dTimer);
-                    hapticTick(true);
-                    if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                    di.classList.remove('active');
-                    playAudioCoach("Descanso terminado. ¡A romperla, Chelo!");
-                }
-                timeLeft--;
-            }, 1000);
+            if (tabId === 'coach') el.classList.add('active-coach');
+            else el.classList.add('active');
         }
 
         // --- CUSTOM NUMPAD & GESTURES ---
@@ -773,8 +661,6 @@
         function closeNumpad() {
             hapticTick();
             document.getElementById('custom-numpad').classList.remove('active');
-            
-            // Logro Bestia Check
             if(activeInput && activeInput.innerText !== '-- kg') {
                 let w = parseFloat(activeInput.innerText);
                 if(w >= 100) {
@@ -782,7 +668,6 @@
                     if(!badge.classList.contains('unlocked')) { badge.classList.add('unlocked'); window.mostrarToast("🏆 Logro: ¡Bestia del Gym!", "success"); }
                 }
             }
-
             if(activeInput) activeInput.style.borderColor = '#444';
             activeInput = null;
         }
@@ -796,37 +681,6 @@
             else { current += val; }
             if(current === '') { activeInput.innerText = '-- kg'; activeInput.classList.add('empty'); }
             else { activeInput.innerText = current + ' kg'; activeInput.classList.remove('empty'); }
-        }
-
-        function openPlateCalculator() {
-            if(!activeInput || activeInput.innerText === '-- kg') { window.mostrarToast("Ingresa un peso primero.", "warning"); return; }
-            let weight = parseFloat(activeInput.innerText);
-            if(weight < 20) { window.mostrarToast("El peso debe ser mayor a la barra (20kg).", "warning"); return; }
-            document.getElementById('plate-target').innerText = `Objetivo: ${weight}kg`;
-            const platesRender = document.getElementById('plates-render');
-            platesRender.innerHTML = '';
-            let perSide = (weight - 20) / 2;
-            const availablePlates = [ {w: 25, c: '#ff4444', h: 90, wPx: 18}, {w: 20, c: '#2277ff', h: 90, wPx: 16}, {w: 15, c: '#ffaa00', h: 75, wPx: 14}, {w: 10, c: '#00ffaa', h: 60, wPx: 12}, {w: 5, c: '#ffffff', h: 45, wPx: 10}, {w: 2.5,c: '#888888', h: 35, wPx: 8}, {w: 1.25,c:'#444444', h: 25, wPx: 6} ];
-            let usedPlates = [];
-            for(let p of availablePlates) { while(perSide >= p.w) { usedPlates.push(p); perSide -= p.w; } }
-            let textDesc = "Cada lado: ";
-            usedPlates.forEach((p, i) => {
-                platesRender.innerHTML += `<div class="plate-svg" style="height:${p.h}px; width:${p.wPx}px; background:${p.c}; border-radius:3px; border:1px solid #000;"></div>`;
-                textDesc += `${p.w}kg${i < usedPlates.length-1 ? ', ' : ''}`;
-            });
-            document.getElementById('plate-text-render').innerText = usedPlates.length ? textDesc : "Solo la barra";
-            document.getElementById('plate-modal').classList.add('active');
-        }
-
-        function openHistoryModal(exerciseName, idx) {
-            hapticTick();
-            document.getElementById('hist-title').innerText = exerciseName;
-            const firstInput = document.getElementById(`ex-${idx}-set-1`);
-            let w = firstInput && firstInput.innerText !== '-- kg' ? parseFloat(firstInput.innerText) : 60;
-            let reps = 10; 
-            let epley1RM = Math.round(w * (1 + (reps/30)));
-            document.getElementById('hist-1rm').innerText = `${epley1RM} kg (1RM)`;
-            document.getElementById('history-modal').classList.add('active');
         }
 
         function cycleType(btn) {
@@ -858,20 +712,16 @@
                         row.classList.toggle('completed');
                         hapticTick(true);
                         
-                        // Cálculo de Tonelaje
                         let inputVal = row.querySelector('.fake-input').innerText;
                         let weight = inputVal === '-- kg' ? 0 : parseFloat(inputVal);
                         if(weight > 0) {
-                            let repsAssumption = 10; // Promedio base hipertrofia
-                            let added = weight * repsAssumption;
+                            let added = weight * 10;
                             if(!wasCompleted) tonelajeDiario += added;
                             else tonelajeDiario -= added;
                             if(tonelajeDiario < 0) tonelajeDiario = 0;
                             document.getElementById('tonnage-display').innerText = tonelajeDiario + " kg";
                             checkLogros();
                         }
-
-                        if(!wasCompleted) startDynamicIslandTimer(parseInt(row.dataset.time));
                     } else {
                         row.style.transform = `translateX(0px)`;
                     }
@@ -879,450 +729,226 @@
             });
         }
 
-        // --- SISTEMA INTELIGENTE DE DÍAS ---
+        // --- SISTEMA INTELIGENTE DE DÍAS Y FONDOS ---
         const workoutData = [
-            { day: "Lunes", title: "Pecho y Tríceps", ex: [ {n: "Press de banca con mancuernas", s:4, r:"8-10 reps"}, {n: "Press inclinado en máquina Hammer", s:4, r:"12 reps"}, {n: "Cruce de poleas", s:4, r:"15 reps"}, {n: "Press francés sentado", s:4, r:"12 reps"}, {n: "Extensión de tríceps en polea", s:4, r:"Al fallo"} ] },
-            { day: "Martes", title: "Espalda y Bíceps", ex: [ {n: "Jalón al pecho (agarre neutro)", s:4, r:"10 reps"}, {n: "Remo en máquina sentado", s:4, r:"12 reps"}, {n: "Pull-over en polea alta", s:4, r:"15 reps"}, {n: "Curl de bíceps banco Scott", s:4, r:"12 reps"}, {n: "Curl martillo sentado", s:3, r:"12 reps"} ] },
-            { day: "Miércoles", title: "Pierna", ex: [ {n: "Prensa de piernas (Leg Press)", s:5, r:"15 reps"}, {n: "Extensiones de pierna", s:4, r:"20 reps"}, {n: "Subidas al Cajón (Step-Ups)", s:4, r:"12/pierna"}, {n: "Costurera (Pantorrilla)", s:5, r:"20 reps pesadas"} ] },
-            { day: "Jueves", title: "Hombro y Core", ex: [ {n: "Press de hombro sentado mancuernas", s:4, r:"10 reps"}, {n: "Elevaciones laterales", s:4, r:"15 reps"}, {n: "Face Pulls", s:4, r:"20 reps"}, {n: "Planchas Laterales y Frontal", s:3, r:"1m"} ] },
-            { day: "Viernes", title: "Posterior/Glúteo", ex: [ {n: "Curl femoral sentado", s:4, r:"15 reps"}, {n: "Hip Thrust en máquina", s:4, r:"12 reps"}, {n: "Subidas al Cajón Laterales", s:4, r:"10/pierna"}, {n: "Peso muerto rumano con mancuernas", s:4, r:"12 reps"} ] }
+            { day: "Lunes", title: "Pecho y Tríceps", ex: [ {n: "Press de banca con mancuernas", s:4, r:"8-10 reps"}, {n: "Press inclinado en máquina Hammer", s:4, r:"12 reps"}, {n: "Cruce de poleas", s:4, r:"15 reps"}, {n: "Press francés sentado", s:4, r:"12 reps"} ] },
+            { day: "Martes", title: "Espalda y Bíceps", ex: [ {n: "Jalón al pecho (agarre neutro)", s:4, r:"10 reps"}, {n: "Remo en máquina sentado", s:4, r:"12 reps"}, {n: "Pull-over en polea alta", s:4, r:"15 reps"}, {n: "Curl de bíceps banco Scott", s:4, r:"12 reps"} ] },
+            { day: "Miércoles", title: "Pierna", ex: [ {n: "Prensa de piernas (Leg Press)", s:5, r:"15 reps"}, {n: "Extensiones de pierna", s:4, r:"20 reps"}, {n: "Subidas al Cajón (Step-Ups)", s:4, r:"12/pierna"} ] },
+            { day: "Jueves", title: "Hombro y Core", ex: [ {n: "Press de hombro sentado", s:4, r:"10 reps"}, {n: "Elevaciones laterales", s:4, r:"15 reps"}, {n: "Face Pulls", s:4, r:"20 reps"} ] },
+            { day: "Viernes", title: "Posterior/Glúteo", ex: [ {n: "Curl femoral sentado", s:4, r:"15 reps"}, {n: "Hip Thrust en máquina", s:4, r:"12 reps"}, {n: "Peso muerto rumano", s:4, r:"12 reps"} ] }
         ];
 
-        const dailyDietData = [
-            { c1: "200g pechuga pollo + arroz + brócoli", c2: "200g filete res magro + camote + ensalada", oat: "Clásica de Poder: 1/2 plátano + crema cacahuate + canela" },
-            { c1: "200g lomo cerdo + frijoles + tortillas + guacamole", c2: "Fajitas de pollo con pimientos + espinacas", oat: "Frutos Rojos: fresas/arándanos + almendras" },
-            { c1: "200g carne molida res + pasta integral + ensalada", c2: "Omelette 4 claras, 2 huevos + champiñones", oat: "Choco-Cacahuate: cacao + crema cacahuate + Stevia" },
-            { c1: "200g fajitas pollo con nopales + quinoa + aguacate", c2: "200g chuleta cerdo ahumada + puré papa", oat: "Manzana-Canela: manzana verde + nueces + canela" },
-            { c1: "200g puntas de res salsa verde + arroz + nopalitos", c2: "Ensalada pechuga pollo + chips camote", oat: "Mix Montaña: plátano + frutos rojos + cacahuate" }
+        // Array de imágenes para que no se repitan los fondos
+        const exImages = [
+            'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=400&auto=format&fit=crop'
         ];
+
+        // Diccionario de Alternativas por si el aparato está ocupado
+        const altDict = {
+            "Press de banca con mancuernas": ["Press de banca con barra", "Máquina Smith Press", "Flexiones lastradas"],
+            "Jalón al pecho (agarre neutro)": ["Dominadas asistidas", "Jalón al pecho agarre prono", "Remo alto en polea"],
+            "Prensa de piernas (Leg Press)": ["Sentadilla Hack", "Sentadilla Búlgara", "Zancadas con mancuerna"],
+            "Press de hombro sentado": ["Press Militar de pie", "Press Arnold", "Elevación frontal con disco"]
+        };
 
         let currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+        let extCounter = 0; // Para IDs dinámicos de ejercicios extra
+
+        function openAlts(exName) {
+            hapticTick();
+            const alts = altDict[exName] || ["Usar peso libre (mancuernas)", "Máquina equivalente", "Polea desde el mismo ángulo"];
+            const render = document.getElementById('alt-list-render');
+            render.innerHTML = '';
+            alts.forEach(a => {
+                render.innerHTML += `<li onclick="window.mostrarToast('✅ Ejercicio cambiado a: ${a}', 'success'); document.getElementById('alt-modal').classList.remove('active');"><strong>${a}</strong> <span style="font-size:20px;">💪</span></li>`;
+            });
+            document.getElementById('alt-modal').classList.add('active');
+        }
+
+        // Función para renderizar el bloque HTML de un ejercicio
+        function buildExerciseHTML(ex, idx, isExtra = false) {
+            let setsHTML = '';
+            for(let i=1; i<=ex.s; i++) {
+                setsHTML += `
+                    <div class="set-wrapper">
+                        <div class="swipe-bg">✓ Completado</div>
+                        <div class="set-row swipeable" data-time="60">
+                            <button class="set-type normal" onclick="cycleType(this); event.stopPropagation();">N</button>
+                            <select class="rpe-select" onclick="event.stopPropagation();">
+                                <option value="8" selected>RPE 8</option><option value="9">RPE 9</option>
+                            </select>
+                            <div class="fake-input empty" id="ex-${isExtra ? 'ext-'+extCounter : idx}-set-${i}" onclick="openNumpad(this)">-- kg</div>
+                        </div>
+                    </div>`;
+            }
+            
+            // Elegir imagen de fondo sin repetir
+            let img = exImages[(idx + (isExtra ? extCounter : 0)) % exImages.length];
+
+            return `
+                <div class="exercise-card">
+                    <div class="ex-header" style="background-image: linear-gradient(to top, var(--surface-color) 0%, rgba(26,26,26,0) 100%), url('${img}');">
+                        <h2>${ex.n}</h2>
+                        <p>${ex.s} Series x ${ex.r}</p>
+                        
+                        <div class="ex-controls">
+                            <!-- Botón de Alternativas -->
+                            <div class="icon-btn" onclick="openAlts('${ex.n}'); event.stopPropagation();" title="Cambiar Ejercicio">🔄</div>
+                            <!-- Botón de Historial (1RM) -->
+                            <div class="icon-btn" onclick="openHistoryModal('${ex.n}', '${isExtra ? 'ext-'+extCounter : idx}'); event.stopPropagation();" title="Historial">📈</div>
+                        </div>
+                    </div>
+                    <div class="symmetry-ui">${setsHTML}</div>
+                </div>`;
+        }
 
         function changeDay(index) {
             hapticTick();
             currentDayIdx = index;
-            
             document.querySelectorAll('.day-pill').forEach((pill, i) => {
-                if(i === index) pill.classList.add('active');
-                else pill.classList.remove('active');
+                if(i === index) pill.classList.add('active'); else pill.classList.remove('active');
             });
-
-            const isWeekend = index === 5 || index === 6;
-            
-            const toggleTheme = document.getElementById('sunday-toggle-container');
-            if (index === 6) {
-                document.body.classList.add('sunday-mode');
-                document.documentElement.style.setProperty('--primary-color', '#ff5722');
-                toggleTheme.style.display = 'flex';
-                document.getElementById('sunday-toggle').checked = true;
-            } else {
-                document.body.classList.remove('sunday-mode');
-                document.documentElement.style.setProperty('--primary-color', '#00ffcc');
-                toggleTheme.style.display = 'none';
-            }
 
             const tContainer = document.getElementById('training-content');
             tContainer.innerHTML = '';
-            if (isWeekend) {
-                document.getElementById('train-header-title').innerText = "Expedición";
+            
+            if (index === 5 || index === 6) { // Fin de semana
                 tContainer.innerHTML = `
                     <div class="exercise-card" style="text-align:center; padding: 30px 15px;">
-                        <span style="font-size:50px;">🏔️</span>
-                        <h2 style="margin:15px 0;">Expedición Real (Cerro)</h2>
-                        <p style="color:var(--text-muted); margin-bottom: 15px;">Terreno con desnivel o sendero real. Duración: 60 a 90 minutos.</p>
-                        <p style="color:var(--warning); font-size:12px;">*No olvides registrar tu progreso en la pestaña de Analíticas.</p>
+                        <span style="font-size:50px;">🏔️</span><h2 style="margin:15px 0;">Expedición Real</h2>
+                        <p style="color:var(--text-muted);">Terreno con desnivel. Duración: 60-90 min.</p>
                     </div>`;
             } else {
-                document.getElementById('train-header-title').innerText = "Entrenamiento";
                 const todayWorkout = workoutData[index];
                 todayWorkout.ex.forEach((ex, idx) => {
-                    let setsHTML = '';
-                    for(let i=1; i<=ex.s; i++) {
-                        setsHTML += `
-                            <div class="set-wrapper">
-                                <div class="swipe-bg">✓ Completado</div>
-                                <div class="set-row swipeable" data-time="${todayWorkout.title.includes('Pierna')?120:60}">
-                                    <button class="set-type normal" onclick="cycleType(this); event.stopPropagation();">N</button>
-                                    <select class="rpe-select" onchange="checkRPE(this); event.stopPropagation();">
-                                        <option value="8" selected>RPE 8</option><option value="9">RPE 9</option><option value="10">RPE 10</option>
-                                    </select>
-                                    <div class="fake-input empty" id="ex-${idx}-set-${i}" onclick="openNumpad(this)">-- kg</div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    tContainer.innerHTML += `
-                        <div class="exercise-card">
-                            <div class="ex-header" onclick="openHistoryModal('${ex.n}', ${idx})">
-                                <h2>${ex.n}</h2>
-                                <p>${ex.s} Series x ${ex.r}</p>
-                            </div>
-                            <div class="symmetry-ui">${setsHTML}</div>
-                        </div>`;
+                    tContainer.innerHTML += buildExerciseHTML(ex, idx);
                 });
                 bindSwipeGestures();
             }
-
-            const nContainer = document.getElementById('diet-timeline-content');
-            const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-            document.getElementById('diet-day-name').innerText = dayNames[index];
-            
-            if(isWeekend) {
-                nContainer.innerHTML = `
-                    <div class="diet-event"><div class="diet-time">Día Libre / Mantenimiento</div>
-                    <div class="diet-content">Aprovecha para recargar energías, prioriza la proteína y mantén el agua alta. 🍔 (Usa el botón Cheat Meal si es necesario)</div></div>`;
-            } else {
-                const diet = dailyDietData[index];
-                nContainer.innerHTML = `
-                    <div class="diet-event"><div class="diet-time">06:00 AM</div><div class="diet-content">☕ <strong>Ayuno:</strong> Café negro.</div></div>
-                    <div class="diet-event"><div class="diet-time">08:30 AM</div><div class="diet-content">🥤 <strong>Post-Entreno:</strong> 1.5 scoops Carnivor.</div></div>
-                    <div class="diet-event"><div class="diet-time">02:00 PM</div><div class="diet-content">🍲 <strong>Comida 1:</strong> ${diet.c1}</div></div>
-                    <div class="diet-event"><div class="diet-time">06:00 PM</div><div class="diet-content">🥣 <strong>Oats:</strong> ${diet.oat}</div></div>
-                    <div class="diet-event"><div class="diet-time">09:30 PM</div><div class="diet-content">🥩 <strong>Comida 2:</strong> ${diet.c2}</div></div>`;
-            }
-
-            const heatColors = ['#ff4444', '#2277ff', '#00ffaa', '#ffaa00', '#ff00ff', '#555', '#ff5722']; 
-            const targetColor = heatColors[index];
-            
-            document.getElementById('hm-chest').setAttribute('fill', '#444'); 
-            document.getElementById('hm-core').setAttribute('fill', '#333'); 
-            ['hm-arms-l', 'hm-arms-r', 'hm-legs-l', 'hm-legs-r'].forEach(id => document.getElementById(id).setAttribute('stroke', '#333'));
-
-            if(index === 0) { document.getElementById('hm-chest').setAttribute('fill', targetColor); document.getElementById('hm-arms-l').setAttribute('stroke', targetColor); document.getElementById('hm-arms-r').setAttribute('stroke', targetColor); } 
-            else if(index === 1) { document.getElementById('hm-core').setAttribute('fill', targetColor); document.getElementById('hm-arms-l').setAttribute('stroke', targetColor); document.getElementById('hm-arms-r').setAttribute('stroke', targetColor); } 
-            else if(index === 2 || index === 4 || index === 6) { document.getElementById('hm-legs-l').setAttribute('stroke', targetColor); document.getElementById('hm-legs-r').setAttribute('stroke', targetColor); } 
-            else if(index === 3) { document.getElementById('hm-chest').setAttribute('fill', targetColor); document.getElementById('hm-core').setAttribute('fill', targetColor); }
         }
 
+        // --- FUNCIONES EXTRA: AÑADIR EJERCICIO Y CARDIO ---
+        function addExtraExercise() {
+            hapticTick();
+            let newExName = prompt("¿Qué ejercicio extra vas a hacer? (Ej. Curl de Bíceps)");
+            if(newExName) {
+                extCounter++;
+                const newEx = { n: newExName, s: 3, r: "10-12 reps" };
+                const tContainer = document.getElementById('training-content');
+                tContainer.insertAdjacentHTML('beforeend', buildExerciseHTML(newEx, 0, true));
+                bindSwipeGestures();
+                window.mostrarToast("➕ Ejercicio extra añadido a la rutina.", "success");
+            }
+        }
+
+        function addCardioBlock() {
+            hapticTick();
+            extCounter++;
+            const cardioHTML = `
+                <div class="exercise-card" style="border: 1px solid var(--danger);">
+                    <div class="ex-header" style="height: 80px; background-image: linear-gradient(to right, #ff4444, #ff0055);">
+                        <h2>🏃‍♂️ Cardio Post-Entreno</h2>
+                        <p>Máquina: Caminadora / Elíptica / Bici</p>
+                    </div>
+                    <div class="symmetry-ui">
+                        <div class="measurements-grid" style="margin:0;">
+                            <div class="input-group"><label>Minutos</label><input type="number" placeholder="Ej. 20"></div>
+                            <div class="input-group"><label>Kcal / Nivel</label><input type="number" placeholder="Ej. 150"></div>
+                        </div>
+                        <button class="focus-btn" style="margin-top: 15px; margin-bottom: 0;" onclick="this.style.background='var(--success)'; this.innerHTML='✓ Cardio Finalizado'; hapticTick(true);">Marcar como Finalizado</button>
+                    </div>
+                </div>`;
+            document.getElementById('training-content').insertAdjacentHTML('beforeend', cardioHTML);
+            window.scrollBy({ top: 200, behavior: 'smooth' });
+        }
+
+        // Inicializar vistas
         changeDay(currentDayIdx);
         
-        const marketItems = ["Pechuga de pollo", "Filete de res magro", "Lomo de cerdo", "Fajitas de pollo", "Carne molida magra", "Chuleta de cerdo ahumada", "Puntas de res", "Arroz blanco/integral", "Camote", "Frijoles negros", "Tortillas de maíz", "Pasta integral", "Quinoa", "Pan integral", "Aguacate", "Brócoli", "Espinacas", "Champiñones", "Nopales", "Ejotes", "Pico de gallo", "Avena en hojuelas", "Leche de almendras", "Yogur griego natural", "Semillas de linaza", "Crema de cacahuate", "Almendras / Nueces", "Plátanos", "Manzanas verdes", "Frutos rojos", "Canela", "Vainilla", "Cacao en polvo", "Stevia", "Carnivor (Proteína)"];
-        marketItems.forEach(i => document.getElementById('market-items').innerHTML += `<div class="market-item" onclick="hapticTick()"><input type="checkbox" id="m-${i.replace(/\s+/g, '-')}"><label for="m-${i.replace(/\s+/g, '-')}">${i}</label></div>`);
-
-    </script>
-
-    <script>
-        const apiKey = ""; // TOTALMENTE VACÍO (La API se leerá de localStorage)
-        window.historialMedidas = []; 
-
-        function formatMarkdown(text) {
-            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                       .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                       .replace(/\n/g, '<br>');
-        }
-
-        // --- FUNCIONALIDADES NUEVAS SOLICITADAS ---
-
-        // 1. HARDWARE INTEGRATION: OURA / APPLE WATCH
+        // --- FUNCIONES HARDWARE Y CHECKOUT ---
         function syncWearable() {
             hapticTick(true);
-            window.mostrarToast("⚠️ <strong>Alerta Oura/Apple Health:</strong> Dormiste solo 4 horas y tu HRV es muy bajo.<br><br>He ajustado automáticamente tu rutina de hoy: <strong>baje el volumen un 20%</strong> y eliminé las series al fallo (F).", "warning");
-            document.getElementById('wearable-widget').style.display = 'none'; // Se oculta tras sincronizar
+            document.getElementById('wearable-widget').style.display = 'none'; // Desaparece
+            window.mostrarToast("⚠️ <strong>Apple Health/Oura:</strong> Dormiste 4 hrs. He bajado el volumen 20% para evitar sobreentrenamiento.", "warning");
         }
 
-        // 2. AI VISION: BIOMECÁNICA
-        function openVisionAI() {
-            hapticTick();
-            const modal = document.getElementById('vision-modal');
-            const status = document.getElementById('vision-status');
-            const cam = document.getElementById('vision-cam');
-            
-            modal.classList.add('active');
-            status.innerText = "Analizando ángulos articulares...";
-            cam.innerHTML = '<div class="scan-line"></div><span style="color: #444; font-weight: bold;">[ Grabando Ejercicio ]</span>';
-
-            setTimeout(() => {
-                modal.classList.remove('active');
-                window.mostrarToast("👁️ <strong>Análisis Biomecánico:</strong><br>Tu espalda baja se está curveando en el grado 45 (Butt Wink). Baja el peso un 10% para evitar lesiones lumbares.", "ai");
-            }, 3000);
-        }
-
-        // 3. AUTO-CHECKOUT NUTRICIONAL (API Supermercados)
         function autoCheckoutAPI() {
             hapticTick();
-            window.mostrarToast("🛒 <strong>Conectando con Walmart API...</strong><br>Enviando ingredientes exactos de la semana a tu carrito.<br>✅ Listos para pagar y recibir en tu puerta.", "success");
+            window.mostrarToast("🛒 <strong>Conectando con Walmart API...</strong><br>Enviando ingredientes exactos de la semana a tu carrito.", "success");
         }
 
-        // 4. B2B COACH EDITION: MASS PLANS
+        // --- SISTEMA CRUD DE CLIENTES (COACH TAB) ---
+        let clients = [
+            { id: 1, init: "JP", name: "Juan Pérez", status: "Entrenando (Pierna)", statusColor: "var(--success)", ton: "3.2k kg" },
+            { id: 2, init: "MR", name: "María R.", status: "Riesgo de abandono", statusColor: "var(--danger)", ton: "0 kg" },
+            { id: 3, init: "DL", name: "Daniel López", status: "Plan modificado (AI)", statusColor: "var(--ai-color)", ton: "1.8k kg" }
+        ];
+
+        function renderClients() {
+            const list = document.getElementById('client-list-render');
+            list.innerHTML = '';
+            if(clients.length === 0) { list.innerHTML = '<p style="color:#555; text-align:center;">No tienes clientes activos.</p>'; return; }
+            
+            clients.forEach(c => {
+                list.innerHTML += `
+                <div class="client-item" id="client-${c.id}">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div class="client-avatar" style="background: ${c.statusColor === 'var(--danger)' ? '#888' : c.statusColor}; color: ${c.statusColor === 'var(--ai-color)' ? '#000' : '#fff'};">${c.init}</div>
+                        <div>
+                            <h4>${c.name}</h4>
+                            <p style="font-size: 12px; color: ${c.statusColor};">${c.status}</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <div style="text-align: right;">
+                            <p style="font-weight: bold; color: ${c.ton === '0 kg' ? '#888' : 'var(--primary-color)'};">${c.ton}</p>
+                            <p style="font-size: 10px; color: var(--text-muted);">Tonelaje</p>
+                        </div>
+                        <button class="btn-delete" onclick="deleteClient(${c.id})">🗑️</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function addClient() {
+            hapticTick();
+            let nombre = prompt("Ingresa el nombre del nuevo cliente:");
+            if(nombre) {
+                let initial = nombre.substring(0,2).toUpperCase();
+                clients.push({
+                    id: Date.now(),
+                    init: initial,
+                    name: nombre,
+                    status: "Recién añadido",
+                    statusColor: "var(--primary-color)",
+                    ton: "0 kg"
+                });
+                renderClients();
+                window.mostrarToast(`✅ Cliente ${nombre} añadido.`, "success");
+            }
+        }
+
+        function deleteClient(id) {
+            hapticTick(true);
+            if(confirm("¿Seguro que deseas eliminar a este cliente? Se borrará todo su registro.")) {
+                document.getElementById(`client-${id}`).style.opacity = '0';
+                setTimeout(() => {
+                    clients = clients.filter(c => c.id !== id);
+                    renderClients();
+                }, 300);
+            }
+        }
+        
+        // Renderizar inicial
+        renderClients();
+        
         function generateMassPlans() {
             hapticTick(true);
-            window.mostrarToast("✨ <strong>Gemini AI activado.</strong><br>Analizando progreso, tonelaje y macros de tus 50 clientes...<br>✅ Planes masivos redactados y actualizados en 3.2 segundos.", "ai");
-        }
-
-        // --- SISTEMA SEGURO DE API KEYS ---
-        function showApiKeyModal() {
-            hapticTick();
-            const modal = document.getElementById('api-key-prompt-modal');
-            const savedKey = localStorage.getItem('mi_gemini_key') || "";
-            const closeBtn = document.getElementById('close-key-modal-btn');
-            
-            if (savedKey) {
-                closeBtn.style.display = 'block';
-                document.getElementById('gemini-key-input').value = savedKey;
-            } else {
-                closeBtn.style.display = 'none';
-                document.getElementById('gemini-key-input').value = '';
-            }
-            modal.classList.add('active');
-        }
-
-        function closeApiKeyModal() {
-            hapticTick();
-            document.getElementById('api-key-prompt-modal').classList.remove('active');
-        }
-
-        function saveGeminiApiKey() {
-            hapticTick();
-            const keyInput = document.getElementById('gemini-key-input').value.trim();
-            if (!keyInput) {
-                window.mostrarToast("⚠️ La clave de API no puede estar vacía.", "warning");
-                return;
-            }
-            if (!keyInput.startsWith("AIzaSy")) {
-                window.mostrarToast("⚠️ El formato de la clave parece incorrecto (AIzaSy...).", "warning");
-            }
-            
-            localStorage.setItem('mi_gemini_key', keyInput);
-            window.mostrarToast("🔐 API Key guardada con éxito en tu dispositivo.", "success");
-            document.getElementById('api-key-prompt-modal').classList.remove('active');
-        }
-
-        function checkGeminiApiKey() {
-            const savedKey = localStorage.getItem('mi_gemini_key');
-            if (!savedKey && !apiKey) {
-                showApiKeyModal();
-            }
-        }
-
-        async function callGeminiAPI(prompt) {
-            const currentKey = localStorage.getItem('mi_gemini_key') || apiKey;
-            
-            if (!currentKey) {
-                window.mostrarToast("⚠️ Configura tu API Key de Gemini primero.", "warning");
-                showApiKeyModal();
-                throw new Error("API Key no configurada.");
-            }
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${currentKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: "Eres el coach virtual de Hyperform Pro, experto en fitness de alto rendimiento y nutrición. Responde siempre en español, con un tono ultra-motivador, directo, estricto y profesional. Usa emojis apropiados." }] }
-            };
-
-            const delays = [1000, 2000, 4000, 8000, 16000];
-            for (let attempt = 0; attempt < 6; attempt++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
-                } catch (error) {
-                    if (attempt < 5) await new Promise(res => setTimeout(res, delays[attempt]));
-                    else throw error;
-                }
-            }
-        }
-
-        function showAIModal() {
-            hapticTick(true);
-            document.getElementById('ai-modal').classList.add('active');
-            document.getElementById('ai-loading').style.display = 'block';
-            document.getElementById('ai-content').innerHTML = '';
-        }
-
-        async function generarRecetaIA() {
-            const checkedInputs = document.querySelectorAll('#market-items input[type="checkbox"]:checked');
-            if (checkedInputs.length === 0) {
-                window.mostrarToast("⚠️ Marca algunos ingredientes primero.", "warning");
-                return;
-            }
-
-            let ingredientes = [];
-            checkedInputs.forEach(input => {
-                ingredientes.push(input.nextElementSibling.innerText);
-            });
-
-            let lastReg = (window.historialMedidas && window.historialMedidas.length > 0) ? window.historialMedidas[window.historialMedidas.length - 1] : null;
-            let contextoFisico = lastReg ? `El atleta tiene actualmente ${lastReg.brazo}cm de brazo y ${lastReg.cintura}cm de cintura. Ajusta las porciones para seguir ganando masa muscular sin subir de cintura.` : "";
-
-            showAIModal();
-            const prompt = `Ingredientes disponibles: ${ingredientes.join(", ")}. Asume agua, sal, pimienta, aceite. ${contextoFisico} Genera UNA receta fitness rápida y alta en proteína. Menciona macros estimados. Sé conciso.`;
-
-            try {
-                const respuesta = await callGeminiAPI(prompt);
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-content').innerHTML = formatMarkdown(respuesta);
-            } catch (error) {
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-content').innerHTML = '<span style="color:var(--danger)">Error al contactar a la IA. Revisa tu API Key.</span>';
-            }
-        }
-
-        async function analizarProgresoIA() {
-            if (!window.historialMedidas || window.historialMedidas.length === 0) {
-                window.mostrarToast("⚠️ Guarda al menos un registro de medidas para analizar.", "warning");
-                return;
-            }
-
-            showAIModal();
-            let prompt = "";
-
-            if (window.historialMedidas.length === 1) {
-                let r = window.historialMedidas[0];
-                prompt = `El atleta José Ramón acaba de iniciar su plan midiendo: Pecho ${r.pecho}cm, Brazo ${r.brazo}cm, Pierna ${r.pierna}cm, Cintura ${r.cintura}cm. Escribe un mensaje de bienvenida ultra-motivador y hardcore (máximo 4 renglones) para arrancar la mutación.`;
-            } else {
-                let historyText = window.historialMedidas.map((r, i) => `Semana ${i+1}: Brazo ${r.brazo}cm, Pecho ${r.pecho}cm, Pierna ${r.pierna}cm, Cintura ${r.cintura}cm`).join(" | ");
-                prompt = `Aquí está el historial cronológico de crecimiento de Chelo: [${historyText}]. Analiza la tendencia matemáticamente. Predice cuánto medirán sus brazos, pecho y piernas en 8 a 12 semanas si mantiene esta progresión. Sé hardcore y felicítalo. Máximo 3 párrafos cortos.`;
-            }
-
-            try {
-                const respuesta = await callGeminiAPI(prompt);
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-content').innerHTML = `<div style="font-size: 16px; border-left: 4px solid var(--ai-color); padding-left: 15px; font-style: italic;">${formatMarkdown(respuesta)}</div>`;
-            } catch (error) {
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-content').innerHTML = '<span style="color:var(--danger)">Error de IA. Revisa tu API Key.</span>';
-            }
-        }
-
-        async function analizarRutinaIA() {
-            hapticTick(true);
-            const isWeekend = currentDayIdx === 5 || currentDayIdx === 6;
-            let prompt = "";
-
-            if (isWeekend) {
-                prompt = `El atleta José Ramón tiene hoy su Expedición (Senderismo, 60-90 mins con mochila). Actúa como su AI Spotter. Dale 3 tips hardcore sobre ritmo, respiración y enfoque mental para la montaña. Súper motivador.`;
-            } else {
-                const rutina = workoutData[currentDayIdx];
-                const ejercicios = rutina.ex.map(e => e.n).join(", ");
-                prompt = `El atleta José Ramón va a entrenar hoy: "${rutina.title}". Ejercicios: ${ejercicios}. Actúa como su AI Spotter. Dame una estrategia motivadora y 2 tips técnicos biomecánicos para esta rutina. Máximo 3 párrafos cortos.`;
-            }
-
-            showAIModal();
-            try {
-                const respuesta = await callGeminiAPI(prompt);
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-content').innerHTML = `<div style="font-size: 15px; border-left: 4px solid var(--ai-color); padding-left: 15px;">${formatMarkdown(respuesta)}</div>`;
-            } catch (error) {
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-content').innerHTML = '<span style="color:var(--danger)">Error al contactar a la IA. Revisa tu API Key.</span>';
-            }
-        }
-    </script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        let db, auth, appId;
-        let currentUser = null;
-
-        try {
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-            if (firebaseConfig) {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-                const initAuth = async () => {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                };
-                initAuth();
-
-                onAuthStateChanged(auth, async (user) => {
-                    currentUser = user;
-                    if(user && db) {
-                        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'progreso', 'historial_medidas');
-                        const docSnap = await getDoc(docRef);
-                        if (docSnap.exists()) {
-                            window.historialMedidas = docSnap.data().registros || [];
-                            
-                            if (window.historialMedidas.length > 0) {
-                                const lastData = window.historialMedidas[window.historialMedidas.length - 1];
-                                if(lastData.brazo) document.getElementById('m-brazo').placeholder = "Previo: " + lastData.brazo + " cm";
-                                if(lastData.pecho) document.getElementById('m-pecho').placeholder = "Previo: " + lastData.pecho + " cm";
-                                if(lastData.pierna) document.getElementById('m-pierna').placeholder = "Previo: " + lastData.pierna + " cm";
-                                if(lastData.cintura) document.getElementById('m-cintura').placeholder = "Previo: " + lastData.cintura + " cm";
-                            }
-                        } else {
-                            window.historialMedidas = []; 
-                        }
-                    }
-                });
-            }
-        } catch(e) {
-            console.error("Firebase local desactivado", e);
-        }
-
-        window.guardarMedidasApp = async () => {
-            if (!currentUser || !db) {
-                window.mostrarToast("⚠️ Modo de prueba: Medidas no guardadas.", "warning");
-                return;
-            }
-            const pecho = parseFloat(document.getElementById('m-pecho').value) || 0;
-            const brazo = parseFloat(document.getElementById('m-brazo').value) || 0;
-            const pierna = parseFloat(document.getElementById('m-pierna').value) || 0;
-            const cintura = parseFloat(document.getElementById('m-cintura').value) || 0;
-
-            if (brazo === 0 && pecho === 0 && pierna === 0) {
-                window.mostrarToast("⚠️ Ingresa al menos una medida para guardar.", "warning");
-                return;
-            }
-
-            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'progreso', 'historial_medidas');
-            try {
-                let prev = { pecho: 0, brazo: 0, pierna: 0, cintura: 0 };
-                if (!window.historialMedidas) window.historialMedidas = [];
-                if (window.historialMedidas.length > 0) { 
-                    prev = window.historialMedidas[window.historialMedidas.length - 1]; 
-                }
-
-                let mensajes = [];
-                if (brazo > prev.brazo && prev.brazo > 0) mensajes.push(`¡Brazo mutante: ${brazo}cm! 💪`);
-                if (pecho > prev.pecho && prev.pecho > 0) mensajes.push(`¡Espalda creció a ${pecho}cm! 🦍`);
-                if (pierna > prev.pierna && prev.pierna > 0) mensajes.push(`¡Potencia piernas: ${pierna}cm! 🦵`);
-                if (cintura < prev.cintura && prev.cintura > 0) mensajes.push(`¡Cintura bajó a ${cintura}cm! 🔥`);
-
-                const nuevoRegistro = { pecho, brazo, pierna, cintura, fecha: Date.now() };
-                window.historialMedidas.push(nuevoRegistro);
-
-                await setDoc(docRef, { registros: window.historialMedidas });
-
-                if (mensajes.length > 0) window.mostrarToast("🏆 " + mensajes.join(" | "), "success");
-                else window.mostrarToast("💾 Datos añadidos a tu historial evolutivo en la Nube.", "success");
-
-                if(brazo) document.getElementById('m-brazo').placeholder = "Previo: " + brazo + " cm";
-                if(pecho) document.getElementById('m-pecho').placeholder = "Previo: " + pecho + " cm";
-                if(pierna) document.getElementById('m-pierna').placeholder = "Previo: " + pierna + " cm";
-                if(cintura) document.getElementById('m-cintura').placeholder = "Previo: " + cintura + " cm";
-                
-                document.getElementById('m-pecho').value = ""; document.getElementById('m-brazo').value = "";
-                document.getElementById('m-pierna').value = ""; document.getElementById('m-cintura').value = "";
-            } catch (error) {
-                console.error(error);
-                window.mostrarToast("❌ Error de conexión al guardar historial.", "danger");
-            }
-        };
-
-        window.resetearFirebaseApp = async () => {
-            if (currentUser && db) {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'progreso', 'historial_medidas');
-                window.historialMedidas = [];
-                await setDoc(docRef, { registros: [] });
-                
-                document.getElementById('m-pecho').placeholder = "Ej. 105"; document.getElementById('m-brazo').placeholder = "Ej. 38";
-                document.getElementById('m-pierna').placeholder = "Ej. 60"; document.getElementById('m-cintura').placeholder = "Ej. 82";
-            }
+            window.mostrarToast("✨ <strong>Gemini AI activado.</strong><br>Analizando progreso, tonelaje y macros de tus clientes...<br>✅ Planes masivos redactados en 3.2 segundos.", "ai");
         }
     </script>
 </body>
