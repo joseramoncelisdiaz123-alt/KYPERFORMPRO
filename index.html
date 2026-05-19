@@ -33,8 +33,9 @@
         .btn-main:active { transform: scale(0.98); }
         .focus-btn { width: 100%; padding: 18px; border-radius: 15px; background: var(--primary-color); color: #000; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 10px;}
         
-        #dynamic-island { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); width: 120px; height: 35px; background: #000; border-radius: 20px; z-index: 10000; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; transition: 0.3s; opacity: 0; pointer-events: none; box-shadow: 0 5px 15px rgba(0,255,204,0.2);}
+        #dynamic-island { position: fixed; top: calc(env(safe-area-inset-top, 20px) + 10px); left: 50%; transform: translateX(-50%); width: 120px; height: 35px; background: #000; border-radius: 20px; z-index: 12000; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; font-size: 16px; transition: 0.3s; opacity: 0; pointer-events: none; box-shadow: 0 5px 15px rgba(0,255,204,0.3); border: 1px solid rgba(0,255,204,0.2);}
         #dynamic-island.active { opacity: 1; width: 150px; pointer-events: auto; }
+        
         #main-app { display: none; padding-bottom: calc(80px + var(--safe-bottom)); height: 100vh; overflow-y: auto; padding-top: var(--safe-top); }
 
         .day-selector { display: flex; justify-content: space-between; padding: 10px 20px; background: rgba(26,26,26,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -60,11 +61,11 @@
         .water-wave { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 212, 255, 0.3); transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
         .water-text { position: relative; z-index: 2; font-size: 24px; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 
-        /* --- EXERCISES --- */
+        /* --- EXERCISES & SWIPE --- */
         .exercise-card { background: var(--surface-color); border-radius: 20px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
         .ex-header { height: 120px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; position: relative; }
-        .ex-header h2 { font-size: 20px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); transition: color 0.3s; }
-        .ex-header p { font-size: 12px; color: var(--text-main); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .ex-header h2 { font-size: 20px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.9); transition: color 0.3s; color: white;}
+        .ex-header p { font-size: 12px; color: #ddd; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .ex-controls { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 10; }
         .icon-btn { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; transition: 0.2s; }
         
@@ -83,11 +84,6 @@
         .fake-input { height: 36px; min-width: 80px; border-radius: 8px; background: #111; border: 1px solid #444; color: white; padding: 0 10px; font-size: 14px; text-align: center; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
         .fake-input.empty { color: #666; font-weight: normal; }
 
-        /* --- CARDIO --- */
-        .cardio-display { font-size: 48px; font-weight: 900; text-align: center; color: var(--primary-color); font-variant-numeric: tabular-nums; letter-spacing: 2px; margin: 5px 0 15px 0; }
-        .cardio-controls { display: flex; justify-content: center; gap: 15px; }
-        .c-btn { width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; background: #333; color:white;}
-
         /* --- MODALS & NUMPAD --- */
         .overlay-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 11000; justify-content: center; align-items: center; padding: 20px; flex-direction: column; }
         .overlay-modal.active { display: flex; }
@@ -102,26 +98,26 @@
         .num-btn:active { background: #444; }
         .num-btn.action { background: #333; font-size: 16px; }
         .num-btn.done { background: var(--primary-color); color: #000; grid-column: span 2; }
+        .num-btn.unit-toggle { background: #5522ff; color: #fff; font-size: 16px; }
 
-        /* --- NUTRICIÓN --- */
-        .macro-tracker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .macro-box { background: var(--surface-color); padding: 15px; border-radius: 15px; text-align: center; }
-        .macro-box span { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
-        .macro-box strong { font-size: 18px; }
-        .macro-bar { height: 6px; background: #333; border-radius: 3px; margin-top: 10px; overflow: hidden; }
-        .macro-fill { height: 100%; background: transparent; width: 0%; transition: width 0.5s; } 
-
+        /* --- NUTRICIÓN MEJORADA (RESTAURADOS HORARIOS FUERA DE CAJA) --- */
         .diet-timeline { margin-bottom: 25px; position: relative; padding-left: 20px; border-left: 2px solid #333; }
-        .diet-event { position: relative; margin-bottom: 20px; }
-        .diet-event::before { content: ''; position: absolute; left: -27px; top: 15px; width: 12px; height: 12px; background: var(--primary-color); border-radius: 50%; box-shadow: 0 0 10px var(--primary-color); }
+        .diet-event { position: relative; margin-bottom: 25px; }
+        .diet-event::before { content: ''; position: absolute; left: -27px; top: 4px; width: 12px; height: 12px; background: var(--primary-color); border-radius: 50%; box-shadow: 0 0 10px var(--primary-color); }
+        .diet-time { font-size: 14px; color: var(--primary-color); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; display: block; }
         .diet-content { background: var(--surface-color); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.5; font-size: 14px; }
         
-        .diet-check-container { display: flex; align-items: center; gap: 15px; margin-top: 10px; background: #222; padding: 10px; border-radius: 10px; cursor: pointer; border: 1px solid #444;}
+        .diet-check-container { display: flex; align-items: center; gap: 15px; margin-top: 15px; background: #222; padding: 12px; border-radius: 10px; cursor: pointer; border: 1px solid #444;}
         .diet-checkbox { width: 28px; height: 28px; appearance: none; background: #111; border: 2px solid #555; border-radius: 6px; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
         .diet-checkbox:checked { background: var(--success); border-color: var(--success); }
         .diet-checkbox:checked::after { content: '✓'; color: #000; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 16px;}
         .diet-check-container span { font-weight: bold; color: var(--text-muted); }
 
+        .macro-tracker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .macro-box { background: var(--surface-color); padding: 15px; border-radius: 15px; text-align: center; }
+        .macro-box span { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        .macro-box strong { font-size: 18px; }
+        
         /* --- PROGRESO & GRÁFICAS --- */
         .chart-container { background: var(--surface-color); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);}
         .history-chart { width: 100%; height: 150px; background: #111; border-radius: 10px; margin-top: 15px; position: relative; overflow: hidden; border: 1px solid #333; }
@@ -179,7 +175,7 @@
             </div>
         </div>
 
-        <div id="tab-dashboard" class="container active" style="background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, var(--bg-color) 100%), url('icon.png') no-repeat center top; background-size: cover; min-height: 100vh;">
+        <div id="tab-dashboard" class="container active" style="background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, var(--bg-color) 100%), url('icon.png') no-repeat center top; background-size: cover; min-height: 100vh;">
             <div class="header">
                 <div><h1 id="dash-greeting">Hola, Chelo</h1><p style="color:#eee; font-weight:bold; font-size:14px;" id="dash-date-text">Listo para dominar el día.</p></div>
             </div>
@@ -345,9 +341,11 @@
             <button class="num-btn" onclick="numpadInput('1')">1</button>
             <button class="num-btn" onclick="numpadInput('2')">2</button>
             <button class="num-btn" onclick="numpadInput('3')">3</button>
+            <button class="num-btn unit-toggle" id="numpad-unit-toggle" onclick="toggleNumpadUnit()">KG</button>
             <button class="num-btn" onclick="numpadInput('4')">4</button>
             <button class="num-btn" onclick="numpadInput('5')">5</button>
             <button class="num-btn" onclick="numpadInput('6')">6</button>
+            <button class="num-btn action" style="background:var(--danger);" onclick="closeNumpad()">X</button>
             <button class="num-btn" onclick="numpadInput('7')">7</button>
             <button class="num-btn" onclick="numpadInput('8')">8</button>
             <button class="num-btn" onclick="numpadInput('9')">9</button>
@@ -429,12 +427,34 @@
             }
         }
 
-        // --- NUMPAD ---
-        let activeInput = null; let numpadMode = 'weight'; 
+        // --- NUMPAD Y BOTÓN DE KG/LB RESTAURADO ---
+        let activeInput = null; let numpadMode = 'weight'; let currentNumpadUnit = 'kg';
+        
         function openNumpad(el, mode) { 
             event.stopPropagation(); hapticTick(); activeInput = el; numpadMode = mode;
+            const btnUnit = document.getElementById('numpad-unit-toggle');
+            
+            if(mode === 'reps') {
+                btnUnit.style.display = 'none';
+                document.getElementById('custom-numpad').style.gridTemplateColumns = "repeat(3, 1fr)";
+            } else {
+                btnUnit.style.display = 'block';
+                document.getElementById('custom-numpad').style.gridTemplateColumns = "repeat(4, 1fr)";
+                currentNumpadUnit = el.innerText.includes('lb') ? 'lb' : 'kg';
+                btnUnit.innerText = currentNumpadUnit.toUpperCase();
+            }
             document.getElementById('custom-numpad').classList.add('active'); 
         }
+        
+        function toggleNumpadUnit() {
+            hapticTick(); currentNumpadUnit = currentNumpadUnit === 'kg' ? 'lb' : 'kg';
+            document.getElementById('numpad-unit-toggle').innerText = currentNumpadUnit.toUpperCase();
+            if (activeInput) {
+                let num = activeInput.innerText.replace(/[^\d.-]/g, '');
+                activeInput.innerText = num === '' ? '-- ' + currentNumpadUnit : num + ' ' + currentNumpadUnit;
+            }
+        }
+
         function closeNumpad() { hapticTick(true); document.getElementById('custom-numpad').classList.remove('active'); activeInput = null; RecalcularTonelajeVivo(); }
         
         function numpadInput(val) {
@@ -446,14 +466,15 @@
             else current += val;
             
             if(numpadMode === 'reps') { activeInput.innerText = current === '' ? '-- reps' : current + ' reps'; } 
-            else { activeInput.innerText = current === '' ? '-- kg' : current + ' kg'; }
+            else { activeInput.innerText = current === '' ? '-- ' + currentNumpadUnit : current + ' ' + currentNumpadUnit; }
+            
             if(current !== '') activeInput.classList.remove('empty'); else activeInput.classList.add('empty');
         }
 
         // --- ENTRENAMIENTO Y GESTOS ---
         function alternarTipoSerie(btn) {
             hapticTick();
-            // N -> C (Calentamiento) -> F (Fallo) -> N (Normal en Español)
+            // N (Normal) -> C (Calentamiento) -> F (Fallo) -> N
             if (btn.innerText === 'N') { btn.innerText = 'C'; btn.className = 'set-type warmup'; } 
             else if (btn.innerText === 'C') { btn.innerText = 'F'; btn.className = 'set-type failure'; } 
             else { btn.innerText = 'N'; btn.className = 'set-type normal'; }
@@ -485,7 +506,17 @@
                         </div>
                     </div>`;
             }
-            return `<div class="exercise-card" id="${cardId}"><div class="ex-header" style="background: #222;"><h2>${ex.n}</h2><p>${ex.s} Series</p><div class="ex-controls"><div class="icon-btn" onclick="openAlts('${ex.n}', '${cardId}'); event.stopPropagation();">🔄</div></div></div><div class="symmetry-ui">${setsHTML}</div></div>`;
+            
+            // Imágenes de Ejercicio (Restauradas)
+            const exImages = [
+                'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', 
+                'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', 
+                'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400',
+                'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400'
+            ];
+            let img = exImages[(idx + (isExtra ? extCounter : 0)) % exImages.length];
+
+            return `<div class="exercise-card" id="${cardId}"><div class="ex-header" style="background-image: linear-gradient(to top, var(--surface-color) 0%, rgba(26,26,26,0) 100%), url('${img}');"><h2>${ex.n}</h2><p>${ex.s} Series</p><div class="ex-controls"><div class="icon-btn" onclick="openAlts('${ex.n}', '${cardId}'); event.stopPropagation();">🔄</div></div></div><div class="symmetry-ui">${setsHTML}</div></div>`;
         }
 
         function bindSwipeGestures() {
@@ -496,7 +527,7 @@
                 row.addEventListener('touchend', e => {
                     if(!isDragging) return; isDragging = false; row.style.transition = 'transform 0.2s ease, opacity 0.3s ease'; 
                     let diff = e.changedTouches[0].clientX - startX;
-                    if(diff > 35) { // Muy fácil de deslizar
+                    if(diff > 35) { 
                         row.classList.toggle('completed'); hapticTick(true); 
                         if(row.classList.contains('completed')) activarTemporizadorIsla(60);
                     }
@@ -505,16 +536,26 @@
             });
         }
 
-        // --- RELOJ TIMER ---
+        // --- RELOJ TIMER EN ISLA DINÁMICA ---
         let diInterval;
         function formatTime(s) { let m = Math.floor(s/60).toString().padStart(2,'0'); let sc = (s%60).toString().padStart(2,'0'); return `${m}:${sc}`; }
         function activarTemporizadorIsla(duracion) {
-            clearInterval(diInterval); const island = document.getElementById('dynamic-island'); const timerSpan = document.getElementById('di-time');
-            island.classList.add('active'); let restante = duracion;
+            clearInterval(diInterval); 
+            const island = document.getElementById('dynamic-island'); 
+            const timerSpan = document.getElementById('di-time');
+            
+            island.classList.add('active'); 
+            let restante = duracion;
             timerSpan.innerText = formatTime(restante);
+            
             diInterval = setInterval(() => {
                 restante--; timerSpan.innerText = formatTime(restante);
-                if (restante <= 0) { clearInterval(diInterval); island.classList.remove('active'); hapticTick(true); window.mostrarToast("🔊 ¡Descanso concluido! Tira la siguiente serie.", "success"); }
+                if (restante <= 0) { 
+                    clearInterval(diInterval); 
+                    island.classList.remove('active'); 
+                    hapticTick(true); 
+                    window.mostrarToast("🔊 ¡Descanso concluido! Tira la siguiente serie.", "success"); 
+                }
             }, 1000);
         }
 
@@ -525,15 +566,18 @@
             document.querySelectorAll('.set-row.completed').forEach(row => {
                 let inputs = row.querySelectorAll('.fake-input');
                 let reps = parseFloat(inputs[0].innerText) || 0; let weight = parseFloat(inputs[1].innerText) || 0;
-                if (weight > 0 && reps > 0) {
-                    tonelajeDiario += (weight * reps); 
-                    // Cálculo Epley para 1RM Máximo del día
-                    let epley = weight * (1 + (reps/30));
+                
+                // Si el peso está en libras, lo convertimos a kg para sumar el tonelaje correctamente
+                let isLb = inputs[1].innerText.includes('lb');
+                let weightKg = isLb ? weight / 2.20462 : weight;
+
+                if (weightKg > 0 && reps > 0) {
+                    tonelajeDiario += (weightKg * reps); 
+                    let epley = weightKg * (1 + (reps/30));
                     if (epley > currentMaxEpley) currentMaxEpley = epley;
                 }
             });
             document.getElementById('tonnage-display').innerText = `${Math.round(tonelajeDiario)} kg`;
-            // Guardar temporalmente el 1RM de la sesión
             if(currentMaxEpley > 0) localStorage.setItem('temp_1rm', Math.round(currentMaxEpley));
         }
 
@@ -541,7 +585,6 @@
             hapticTick(true); RecalcularTonelajeVivo();
             if(tonelajeDiario === 0) { window.mostrarToast("⚠️ No has completado ninguna serie.", "warning"); return; }
             
-            // Guardar datos REALES
             historicoTonelaje.push(tonelajeDiario);
             localStorage.setItem('hyperform_tonnage_history', JSON.stringify(historicoTonelaje));
             
@@ -552,7 +595,7 @@
             }
 
             rachaDias += 1; localStorage.setItem('hyperform_racha', rachaDias); document.getElementById('racha-val').innerText = rachaDias;
-            drawRMChart(); // Dibuja la gráfica con los datos recién guardados
+            drawRMChart(); 
             
             window.mostrarToast(`💪 ¡Día Guardado! Volumen de hoy: ${Math.round(tonelajeDiario)} kg.`, "success");
         }
@@ -569,7 +612,7 @@
         function addExtraExercise() { hapticTick(); extCounter++; const newEx = { n: "Ejercicio Manual", s: 3, r: 10 }; document.getElementById('training-content').insertAdjacentHTML('beforeend', buildExerciseHTML(newEx, 0, true, `extra-${Date.now()}`)); bindSwipeGestures(); }
         function addCardioBlock() { window.mostrarToast("Cardio añadido.", "success"); }
 
-        // --- NUTRICIÓN COMPLETA (AYUNO, POST, COMIDA 1, SNACK, CENA) ---
+        // --- NUTRICIÓN (RESTAURADOS LOS HORARIOS EN LA LÍNEA DE TIEMPO) ---
         const dailyDietData = [
             { c1: "200g pechuga pollo + arroz + brócoli", c2: "200g filete res magro + camote", oat: "Avena + plátano + crema cacahuate" },
             { c1: "200g lomo cerdo + frijoles + aguacate", c2: "Fajitas de pollo + espinacas", oat: "Avena + fresas + almendras" },
@@ -584,15 +627,34 @@
             document.getElementById('diet-day-name').innerText = dayNames[index];
 
             if(index === 5 || index === 6) { 
-                nContainer.innerHTML = `<div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>Día Libre / Mantenimiento</strong><br><span style="color:#aaa;">Prioriza proteína y controla tus porciones.</span></div></div></div>`; 
+                nContainer.innerHTML = `
+                <div class="diet-event">
+                    <strong class="diet-time">TODO EL DÍA</strong>
+                    <div class="diet-content"><div style="flex-grow:1;"><strong>Día Libre / Mantenimiento</strong><br><span style="color:#aaa;">Prioriza proteína y controla tus porciones.</span></div></div>
+                </div>`; 
             } else { 
                 const diet = dailyDietData[index] || dailyDietData[0]; 
                 nContainer.innerHTML = `
-                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>06:00 AM - Ayuno</strong><br><span style="color:#aaa;">☕ Café negro sin azúcar.</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
-                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>08:30 AM - Post-Entreno</strong><br><span style="color:#aaa;">🥤 1.5 scoops Proteína Carnivor.</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
-                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>02:00 PM - Comida 1</strong><br><span style="color:#aaa;">🍲 ${diet.c1}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
-                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>06:00 PM - Snack</strong><br><span style="color:#aaa;">🥣 ${diet.oat}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
-                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>09:30 PM - Cena</strong><br><span style="color:#aaa;">🥩 ${diet.c2}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>`; 
+                <div class="diet-event">
+                    <strong class="diet-time">06:00 AM (AYUNO)</strong>
+                    <div class="diet-content"><div style="flex-grow:1;"><span style="color:#aaa;">☕ Café negro sin azúcar.</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div>
+                </div>
+                <div class="diet-event">
+                    <strong class="diet-time">08:30 AM (POST-ENTRENO)</strong>
+                    <div class="diet-content"><div style="flex-grow:1;"><span style="color:#aaa;">🥤 1.5 scoops Proteína Carnivor.</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div>
+                </div>
+                <div class="diet-event">
+                    <strong class="diet-time">02:00 PM (COMIDA 1)</strong>
+                    <div class="diet-content"><div style="flex-grow:1;"><span style="color:#aaa;">🍲 ${diet.c1}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div>
+                </div>
+                <div class="diet-event">
+                    <strong class="diet-time">06:00 PM (SNACK)</strong>
+                    <div class="diet-content"><div style="flex-grow:1;"><span style="color:#aaa;">🥣 ${diet.oat}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div>
+                </div>
+                <div class="diet-event">
+                    <strong class="diet-time">09:30 PM (CENA)</strong>
+                    <div class="diet-content"><div style="flex-grow:1;"><span style="color:#aaa;">🥩 ${diet.c2}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div>
+                </div>`; 
             }
         }
 
@@ -637,14 +699,12 @@
 
             let max = Math.max(...data) + 10; 
             if (data.length === 1) {
-                // Solo un punto
                 let y = 40 - (data[0]/max * 40);
                 svg.innerHTML = `<circle cx="50" cy="${y}" r="2" fill="var(--primary-color)"/>`;
                 document.getElementById('hist-1rm').innerText = `${Math.round(data[0])} kg (Máx RM)`;
                 return;
             }
 
-            // Múltiples puntos
             let pathD = `M 0,${40 - (data[0]/max*40)}`; 
             let circles = `<circle cx="0" cy="${40 - (data[0]/max*40)}" r="1.5" fill="#fff"/>`;
             for(let i=1; i<data.length; i++) { 
