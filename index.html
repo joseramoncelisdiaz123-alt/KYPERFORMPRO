@@ -32,8 +32,7 @@
         .btn-main { width: 100%; padding: 20px; border-radius: 15px; background: var(--primary-color); color: #000; font-weight: 800; font-size: 16px; border: none; cursor: pointer; transition: transform 0.1s; }
         .btn-main:active { transform: scale(0.98); }
         .focus-btn { width: 100%; padding: 18px; border-radius: 15px; background: var(--primary-color); color: #000; font-weight: 800; font-size: 16px; border: none; cursor: pointer; margin-bottom: 10px;}
-        .btn-ai { background: linear-gradient(45deg, #8a2be2, #00ffcc); color: #000; border: none; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
-
+        
         #dynamic-island { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); width: 120px; height: 35px; background: #000; border-radius: 20px; z-index: 10000; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; transition: 0.3s; opacity: 0; pointer-events: none; box-shadow: 0 5px 15px rgba(0,255,204,0.2);}
         #dynamic-island.active { opacity: 1; width: 150px; pointer-events: auto; }
         #main-app { display: none; padding-bottom: calc(80px + var(--safe-bottom)); height: 100vh; overflow-y: auto; padding-top: var(--safe-top); }
@@ -61,7 +60,7 @@
         .water-wave { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 212, 255, 0.3); transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
         .water-text { position: relative; z-index: 2; font-size: 24px; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 
-        /* --- EXERCISES & SWIPE CORREGIDO --- */
+        /* --- EXERCISES --- */
         .exercise-card { background: var(--surface-color); border-radius: 20px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
         .ex-header { height: 120px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; position: relative; }
         .ex-header h2 { font-size: 20px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); transition: color 0.3s; }
@@ -71,10 +70,8 @@
         
         .symmetry-ui { padding: 15px; overflow: hidden; }
         .set-wrapper { position: relative; margin-bottom: 12px; border-radius: 12px; overflow: hidden; background: #111; border: 1px solid rgba(255,255,255,0.05); }
-        
         .set-row { position: relative; display: flex; justify-content: space-between; align-items: center; background: #222; padding: 10px; border-radius: 12px; z-index: 2; transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease, border 0.3s ease; touch-action: pan-y; }
-        .set-row.completed { opacity: 0.6; border: 1px solid var(--success); background: #1a1a1a;} /* Diseño elegante y no saturado */
-        
+        .set-row.completed { opacity: 0.6; border: 1px solid var(--success); background: #1a1a1a;} 
         .swipe-bg { position: absolute; inset: 0; background: var(--success); display: flex; align-items: center; padding-left: 20px; color: #000; font-weight: 900; z-index: 1; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
         
         .set-controls-left { display: flex; gap: 10px; align-items: center;}
@@ -106,22 +103,25 @@
         .num-btn.action { background: #333; font-size: 16px; }
         .num-btn.done { background: var(--primary-color); color: #000; grid-column: span 2; }
 
-        /* --- NUTRICIÓN MEJORADA --- */
+        /* --- NUTRICIÓN --- */
+        .macro-tracker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .macro-box { background: var(--surface-color); padding: 15px; border-radius: 15px; text-align: center; }
+        .macro-box span { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        .macro-box strong { font-size: 18px; }
+        .macro-bar { height: 6px; background: #333; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+        .macro-fill { height: 100%; background: transparent; width: 0%; transition: width 0.5s; } 
+
         .diet-timeline { margin-bottom: 25px; position: relative; padding-left: 20px; border-left: 2px solid #333; }
         .diet-event { position: relative; margin-bottom: 20px; }
         .diet-event::before { content: ''; position: absolute; left: -27px; top: 15px; width: 12px; height: 12px; background: var(--primary-color); border-radius: 50%; box-shadow: 0 0 10px var(--primary-color); }
         .diet-content { background: var(--surface-color); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.5; font-size: 14px; }
         
-        /* Botones grandes de nutrición */
         .diet-check-container { display: flex; align-items: center; gap: 15px; margin-top: 10px; background: #222; padding: 10px; border-radius: 10px; cursor: pointer; border: 1px solid #444;}
         .diet-checkbox { width: 28px; height: 28px; appearance: none; background: #111; border: 2px solid #555; border-radius: 6px; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
         .diet-checkbox:checked { background: var(--success); border-color: var(--success); }
         .diet-checkbox:checked::after { content: '✓'; color: #000; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 16px;}
         .diet-check-container span { font-weight: bold; color: var(--text-muted); }
 
-        .macro-tracker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .macro-box { background: var(--surface-color); padding: 15px; border-radius: 15px; text-align: center; }
-        
         /* --- PROGRESO & GRÁFICAS --- */
         .chart-container { background: var(--surface-color); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);}
         .history-chart { width: 100%; height: 150px; background: #111; border-radius: 10px; margin-top: 15px; position: relative; overflow: hidden; border: 1px solid #333; }
@@ -134,6 +134,8 @@
         .tab-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; transition: color 0.2s; flex: 1; }
         .tab-item.active { color: var(--primary-color); }
         .tab-item.active-coach { color: var(--warning); } 
+        .tab-icon { font-size: 20px; }
+        .tab-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .watchdog-toast { position: fixed; top: -100px; left: 20px; right: 20px; background: var(--danger); color: white; padding: 15px; border-radius: 15px; font-weight: bold; text-align: center; z-index: 12000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .watchdog-toast.show { transform: translateY(calc(100px + var(--safe-top))); }
@@ -182,7 +184,7 @@
                 <div><h1 id="dash-greeting">Hola, Chelo</h1><p style="color:#eee; font-weight:bold; font-size:14px;" id="dash-date-text">Listo para dominar el día.</p></div>
             </div>
 
-            <button class="focus-btn" onclick="sincronizarAppleHealth(this)" style="background: rgba(17,17,17,0.8); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
+            <button class="focus-btn" onclick="window.mostrarToast('✅ Datos Exportados a Apple Health', 'success')" style="background: rgba(17,17,17,0.8); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
                 <span style="font-size: 20px;">🍎</span> Sincronizar con Apple Fitness
             </button>
 
@@ -242,7 +244,6 @@
             
             <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;">
                 <button class="focus-btn" onclick="verResultadoHoy()" style="margin: 0; padding: 15px; font-size: 16px; background: linear-gradient(45deg, var(--primary-color), var(--success)); color:#000;">📈 Ver Resultado del Día de Hoy</button>
-                
                 <button class="focus-btn" onclick="analizarProgresoLocal('hoy')" style="margin: 0; padding: 12px; font-size: 14px; background: #222; color: #fff;">📊 Analizar Entrenamiento (Local)</button>
                 <button class="focus-btn" onclick="analizarProgresoLocal('semana')" style="margin: 0; padding: 12px; font-size: 14px; background: #222; color: #fff;">🗓️ Comparar vs Semana Anterior</button>
             </div>
@@ -250,15 +251,66 @@
             <div class="chart-container">
                 <h3 style="margin-bottom: 5px; font-size: 16px;">Volumen Total (Tonelaje)</h3>
                 <p style="font-size: 32px; font-weight: 900; color: var(--primary-color);" id="tonnage-display">0 kg</p>
+                <p style="font-size: 11px; color: var(--text-muted); text-align: center;">Métrica basada 100% en las series de hoy.</p>
             </div>
 
             <div class="chart-container" style="align-items: stretch;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-size: 16px; color: var(--primary-color);">📈 Evolución 1RM</h3>
-                    <select id="rm-select" onchange="drawRMChart()" style="background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; font-size:12px;"><option value="banca">Press Banca</option><option value="sentadilla">Sentadilla</option><option value="muerto">Peso Muerto</option></select>
+                    <h3 style="font-size: 16px; color: var(--primary-color);">📈 Evolución 1RM (Real)</h3>
                 </div>
                 <h2 id="hist-1rm" style="font-size:24px; margin-top:10px;">0 kg</h2>
-                <div class="history-chart" id="rm-chart-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" width="100%" height="100%" preserveAspectRatio="none" id="rm-svg"></svg></div>
+                <div class="history-chart" id="rm-chart-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" width="100%" height="100%" preserveAspectRatio="none" id="rm-svg">
+                        <line x1="0" y1="38" x2="100" y2="38" stroke="var(--primary-color)" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 10px; font-size: 16px;">Radar de Rendimiento</h3>
+                <p style="font-size:10px; color:var(--text-muted); margin-bottom:10px;">Ingresa tus medidas abajo para alterar la gráfica.</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 100 100" style="max-width: 180px;">
+                    <polygon points="50,10 84.6,30 84.6,70 50,90 15.4,70 15.4,30" fill="none" stroke="#333" stroke-width="1"/>
+                    <polygon points="50,30 67.3,40 67.3,60 50,70 32.7,60 32.7,40" fill="none" stroke="#333" stroke-width="1"/>
+                    <line x1="50" y1="50" x2="50" y2="10" stroke="#333" stroke-width="1"/><line x1="50" y1="50" x2="84.6" y2="30" stroke="#333" stroke-width="1"/>
+                    <line x1="50" y1="50" x2="84.6" y2="70" stroke="#333" stroke-width="1"/><line x1="50" y1="50" x2="50" y2="90" stroke="#333" stroke-width="1"/>
+                    <line x1="50" y1="50" x2="15.4" y2="70" stroke="#333" stroke-width="1"/><line x1="50" y1="50" x2="15.4" y2="30" stroke="#333" stroke-width="1"/>
+                    <polygon id="radar-data" points="50,50 50,50 50,50 50,50 50,50 50,50" fill="var(--primary-color)" fill-opacity="0.4" stroke="var(--primary-color)" stroke-width="2" style="transition: all 0.5s ease;"/>
+                    
+                    <text x="50" y="8" font-size="5" fill="#888" text-anchor="middle">PECHO</text>
+                    <text x="86" y="32" font-size="5" fill="#888" text-anchor="start">ABDOMEN</text>
+                    <text x="86" y="72" font-size="5" fill="#888" text-anchor="start">CINTURA</text>
+                    <text x="50" y="96" font-size="5" fill="#888" text-anchor="middle">MUSLO</text>
+                    <text x="14" y="72" font-size="5" fill="#888" text-anchor="end">GEMELO</text>
+                    <text x="14" y="32" font-size="5" fill="#888" text-anchor="end">BÍCEPS</text>
+                </svg>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 10px; font-size: 16px;">Mapa de Calor Vivo</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 100 200" style="max-width: 120px; transition: all 0.5s ease;">
+                    <circle cx="50" cy="20" r="15" fill="#333"/>
+                    <rect x="35" y="40" width="30" height="60" rx="10" fill="#333" id="hm-core" style="transition: fill 0.5s;"/>
+                    <path d="M 35 45 Q 50 60 65 45 Z" fill="#333" id="hm-chest" style="transition: fill 0.5s;"/>
+                    <path d="M 25 45 Q 10 70 15 100" stroke="#333" stroke-width="12" fill="none" stroke-linecap="round" id="hm-arms-l" style="transition: stroke 0.5s;"/>
+                    <path d="M 75 45 Q 90 70 85 100" stroke="#333" stroke-width="12" fill="none" stroke-linecap="round" id="hm-arms-r" style="transition: stroke 0.5s;"/>
+                    <path d="M 40 100 L 35 145" stroke="#333" stroke-width="15" fill="none" stroke-linecap="round" id="hm-thigh-l" style="transition: stroke 0.5s;"/>
+                    <path d="M 60 100 L 65 145" stroke="#333" stroke-width="15" fill="none" stroke-linecap="round" id="hm-thigh-r" style="transition: stroke 0.5s;"/>
+                    <path d="M 35 145 L 30 185" stroke="#333" stroke-width="11" fill="none" stroke-linecap="round" id="hm-calf-l" style="transition: stroke 0.5s;"/>
+                    <path d="M 65 145 L 70 185" stroke="#333" stroke-width="11" fill="none" stroke-linecap="round" id="hm-calf-r" style="transition: stroke 0.5s;"/>
+                </svg>
+            </div>
+
+            <div style="background: var(--surface-color); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">Tus Medidas (Cm)</h3>
+                <div class="measurements-grid">
+                    <div class="input-group"><label>Pecho</label><input type="number" id="m-pecho" placeholder="Ej. 105" oninput="actualizarGraficasVivas()"></div>
+                    <div class="input-group"><label>Bíceps</label><input type="number" id="m-biceps" placeholder="Ej. 38" oninput="actualizarGraficasVivas()"></div>
+                    <div class="input-group"><label>Abdomen</label><input type="number" id="m-abdomen" placeholder="Ej. 85" oninput="actualizarGraficasVivas()"></div>
+                    <div class="input-group"><label>Cintura</label><input type="number" id="m-cintura" placeholder="Ej. 82" oninput="actualizarGraficasVivas()"></div>
+                    <div class="input-group"><label>Muslo</label><input type="number" id="m-muslo" placeholder="Ej. 60" oninput="actualizarGraficasVivas()"></div>
+                    <div class="input-group"><label>Gemelo</label><input type="number" id="m-gemelo" placeholder="Ej. 40" oninput="actualizarGraficasVivas()"></div>
+                </div>
             </div>
 
             <button class="focus-btn btn-reset" onclick="resetearApp()" style="margin-top:20px;">🚨 Reiniciar App a Ceros</button>
@@ -271,7 +323,6 @@
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
                 <h3 style="margin: 0;">Tus Clientes</h3>
-                <button onclick="window.mostrarToast('Función PRO: Añadir clientes.', 'warning')" style="background:var(--primary-color); border:none; border-radius:5px; font-weight:bold; padding:5px 10px; cursor:pointer; color:#000;">+ Añadir</button>
             </div>
             <div class="client-list" id="client-list-render" style="margin-top: 15px;">
                 <p style="color:#666; text-align:center;">Lista de clientes en vivo...</p>
@@ -334,16 +385,19 @@
             globalToastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
 
-        // --- CONTROL GLOBAL ---
+        // --- VARIABLES GLOBALES (CERO DATOS FALSOS) ---
         let rachaDias = parseInt(localStorage.getItem('hyperform_racha')) || 0;
-        let tonelajeDiario = 0; let totalKcalCardio = 0;
+        let tonelajeDiario = 0; 
         let waterLevel = 0; let extCounter = 0;
         let currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+        // Historial real guardado
+        let historicoTonelaje = JSON.parse(localStorage.getItem('hyperform_tonnage_history')) || [];
+        let historico1RM = JSON.parse(localStorage.getItem('hyperform_1rm_history')) || [];
 
         function handleLogin(e) { 
             if(e) e.preventDefault(); hapticTick(true); 
             document.getElementById('login-screen').style.opacity = '0';
-            setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'block'; document.getElementById('racha-val').innerText = rachaDias; }, 400);
+            setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'block'; document.getElementById('racha-val').innerText = rachaDias; drawRMChart(); }, 400);
         }
         
         function switchTab(tabId, el) {
@@ -359,6 +413,19 @@
             if(waterLevel < 3000) {
                 waterLevel += 250; let pct = (waterLevel / 3000) * 100;
                 document.getElementById('water-wave').style.transform = `translateY(${100 - pct}%)`; document.getElementById('water-text').innerText = `${waterLevel} / 3000 ml`;
+            }
+        }
+
+        function resetearApp() {
+            hapticTick(true);
+            if(confirm("¿Seguro que quieres borrar todo tu historial real y reiniciar a cero?")) {
+                localStorage.clear();
+                rachaDias = 0; tonelajeDiario = 0; waterLevel = 0; historicoTonelaje = []; historico1RM = [];
+                document.getElementById('racha-val').innerText = "0";
+                document.getElementById('tonnage-display').innerText = "0 kg";
+                document.getElementById('water-wave').style.transform = `translateY(100%)`; document.getElementById('water-text').innerText = `0 / 3000 ml`;
+                drawRMChart();
+                window.mostrarToast("🧹 Todo tu progreso local ha sido eliminado.", "success");
             }
         }
 
@@ -383,10 +450,10 @@
             if(current !== '') activeInput.classList.remove('empty'); else activeInput.classList.add('empty');
         }
 
-        // --- ENTRENAMIENTO (REPARADO DISEÑO Y ESPAÑOL) ---
+        // --- ENTRENAMIENTO Y GESTOS ---
         function alternarTipoSerie(btn) {
             hapticTick();
-            // N -> C (Calentamiento) -> F (Fallo) -> N
+            // N -> C (Calentamiento) -> F (Fallo) -> N (Normal en Español)
             if (btn.innerText === 'N') { btn.innerText = 'C'; btn.className = 'set-type warmup'; } 
             else if (btn.innerText === 'C') { btn.innerText = 'F'; btn.className = 'set-type failure'; } 
             else { btn.innerText = 'N'; btn.className = 'set-type normal'; }
@@ -403,10 +470,9 @@
         function buildExerciseHTML(ex, idx, isExtra = false, customId = null) {
             let setsHTML = ''; let cardId = customId || `ex-card-${idx}`;
             for(let i=1; i<=ex.s; i++) {
-                // Nuevo diseño de Row (Elegante y funcional)
                 setsHTML += `
                     <div class="set-wrapper">
-                        <div class="swipe-bg">✓ COMPLETADO</div>
+                        <div class="swipe-bg">✓ REALIZADO</div>
                         <div class="set-row swipeable">
                             <div class="set-controls-left">
                                 <button class="set-type normal" onclick="alternarTipoSerie(this); event.stopPropagation();">N</button>
@@ -430,7 +496,7 @@
                 row.addEventListener('touchend', e => {
                     if(!isDragging) return; isDragging = false; row.style.transition = 'transform 0.2s ease, opacity 0.3s ease'; 
                     let diff = e.changedTouches[0].clientX - startX;
-                    if(diff > 40) { // Umbral MUCHO más sensible
+                    if(diff > 35) { // Muy fácil de deslizar
                         row.classList.toggle('completed'); hapticTick(true); 
                         if(row.classList.contains('completed')) activarTemporizadorIsla(60);
                     }
@@ -439,33 +505,56 @@
             });
         }
 
-        // --- RELOJ TIMER (CORREGIDO) ---
+        // --- RELOJ TIMER ---
         let diInterval;
         function formatTime(s) { let m = Math.floor(s/60).toString().padStart(2,'0'); let sc = (s%60).toString().padStart(2,'0'); return `${m}:${sc}`; }
         function activarTemporizadorIsla(duracion) {
             clearInterval(diInterval); const island = document.getElementById('dynamic-island'); const timerSpan = document.getElementById('di-time');
             island.classList.add('active'); let restante = duracion;
-            timerSpan.innerText = formatTime(restante); // Imprime inmediatamente
+            timerSpan.innerText = formatTime(restante);
             diInterval = setInterval(() => {
                 restante--; timerSpan.innerText = formatTime(restante);
                 if (restante <= 0) { clearInterval(diInterval); island.classList.remove('active'); hapticTick(true); window.mostrarToast("🔊 ¡Descanso concluido! Tira la siguiente serie.", "success"); }
             }, 1000);
         }
 
+        // --- CÁLCULO DE VOLUMEN (100% REAL) ---
         function RecalcularTonelajeVivo() {
             tonelajeDiario = 0;
+            let currentMaxEpley = 0;
             document.querySelectorAll('.set-row.completed').forEach(row => {
                 let inputs = row.querySelectorAll('.fake-input');
                 let reps = parseFloat(inputs[0].innerText) || 0; let weight = parseFloat(inputs[1].innerText) || 0;
-                if (weight > 0 && reps > 0) tonelajeDiario += (weight * reps); 
+                if (weight > 0 && reps > 0) {
+                    tonelajeDiario += (weight * reps); 
+                    // Cálculo Epley para 1RM Máximo del día
+                    let epley = weight * (1 + (reps/30));
+                    if (epley > currentMaxEpley) currentMaxEpley = epley;
+                }
             });
             document.getElementById('tonnage-display').innerText = `${Math.round(tonelajeDiario)} kg`;
+            // Guardar temporalmente el 1RM de la sesión
+            if(currentMaxEpley > 0) localStorage.setItem('temp_1rm', Math.round(currentMaxEpley));
         }
 
         function guardarDiaEntrenamiento() {
             hapticTick(true); RecalcularTonelajeVivo();
+            if(tonelajeDiario === 0) { window.mostrarToast("⚠️ No has completado ninguna serie.", "warning"); return; }
+            
+            // Guardar datos REALES
+            historicoTonelaje.push(tonelajeDiario);
+            localStorage.setItem('hyperform_tonnage_history', JSON.stringify(historicoTonelaje));
+            
+            let temp1RM = parseFloat(localStorage.getItem('temp_1rm')) || 0;
+            if (temp1RM > 0) {
+                historico1RM.push(temp1RM);
+                localStorage.setItem('hyperform_1rm_history', JSON.stringify(historico1RM));
+            }
+
             rachaDias += 1; localStorage.setItem('hyperform_racha', rachaDias); document.getElementById('racha-val').innerText = rachaDias;
-            window.mostrarToast(`💪 ¡Día Guardado! Volumen de hoy: ${Math.round(tonelajeDiario)} kg. Racha +1.`, "success");
+            drawRMChart(); // Dibuja la gráfica con los datos recién guardados
+            
+            window.mostrarToast(`💪 ¡Día Guardado! Volumen de hoy: ${Math.round(tonelajeDiario)} kg.`, "success");
         }
 
         function changeDay(index) {
@@ -478,59 +567,111 @@
         }
         changeDay(new Date().getDay() === 0 ? 6 : new Date().getDay() - 1);
         function addExtraExercise() { hapticTick(); extCounter++; const newEx = { n: "Ejercicio Manual", s: 3, r: 10 }; document.getElementById('training-content').insertAdjacentHTML('beforeend', buildExerciseHTML(newEx, 0, true, `extra-${Date.now()}`)); bindSwipeGestures(); }
-        function addCardioBlock() { window.mostrarToast("Cardio añadido abajo de tu rutina.", "success"); }
+        function addCardioBlock() { window.mostrarToast("Cardio añadido.", "success"); }
 
-        // --- NUTRICIÓN (BOTÓN MARCAR COMO HECHO OBVIO) ---
-        const dailyDietData = [ { c1: "Pechuga pollo + arroz", c2: "Filete res + camote", oat: "Avena + plátano" }, { c1: "Lomo cerdo + frijoles", c2: "Fajitas pollo", oat: "Avena + fresas" } ];
+        // --- NUTRICIÓN COMPLETA (AYUNO, POST, COMIDA 1, SNACK, CENA) ---
+        const dailyDietData = [
+            { c1: "200g pechuga pollo + arroz + brócoli", c2: "200g filete res magro + camote", oat: "Avena + plátano + crema cacahuate" },
+            { c1: "200g lomo cerdo + frijoles + aguacate", c2: "Fajitas de pollo + espinacas", oat: "Avena + fresas + almendras" },
+            { c1: "200g carne molida res + pasta", c2: "Omelette 4 claras + champiñones", oat: "Avena + cacao + cacahuate" },
+            { c1: "200g fajitas pollo + quinoa", c2: "200g chuleta cerdo + puré", oat: "Avena + manzana + nueces" },
+            { c1: "200g puntas de res + arroz", c2: "Ensalada pechuga pollo", oat: "Avena + mix berries" }
+        ];
+
         function renderDietCheckboxes(index) {
             const nContainer = document.getElementById('diet-timeline-content');
             const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
             document.getElementById('diet-day-name').innerText = dayNames[index];
 
-            if(index === 5 || index === 6) { nContainer.innerHTML = `<p style="color:#888;">Día libre. Controla porciones.</p>`; } else { 
+            if(index === 5 || index === 6) { 
+                nContainer.innerHTML = `<div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>Día Libre / Mantenimiento</strong><br><span style="color:#aaa;">Prioriza proteína y controla tus porciones.</span></div></div></div>`; 
+            } else { 
                 const diet = dailyDietData[index] || dailyDietData[0]; 
                 nContainer.innerHTML = `
-                <div class="diet-event">
-                    <div class="diet-content">
-                        <div style="flex-grow:1;"><strong>Comida 1</strong><br><span style="color:#aaa;">${diet.c1}</span></div>
-                    </div>
-                    <label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar como completado</span></label>
-                </div>
-                <div class="diet-event">
-                    <div class="diet-content">
-                        <div style="flex-grow:1;"><strong>Comida 2</strong><br><span style="color:#aaa;">${diet.c2}</span></div>
-                    </div>
-                    <label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar como completado</span></label>
-                </div>`; 
+                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>06:00 AM - Ayuno</strong><br><span style="color:#aaa;">☕ Café negro sin azúcar.</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
+                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>08:30 AM - Post-Entreno</strong><br><span style="color:#aaa;">🥤 1.5 scoops Proteína Carnivor.</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
+                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>02:00 PM - Comida 1</strong><br><span style="color:#aaa;">🍲 ${diet.c1}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
+                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>06:00 PM - Snack</strong><br><span style="color:#aaa;">🥣 ${diet.oat}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>
+                <div class="diet-event"><div class="diet-content"><div style="flex-grow:1;"><strong>09:30 PM - Cena</strong><br><span style="color:#aaa;">🥩 ${diet.c2}</span></div><label class="diet-check-container"><input type="checkbox" class="diet-checkbox"><span>Marcar hecho</span></label></div></div>`; 
             }
         }
 
-        // --- ANÁLISIS LOCAL PRO TAB ---
+        // --- ANÁLISIS LOCAL PRO TAB (100% REAL) ---
         function verResultadoHoy() {
-            hapticTick();
-            RecalcularTonelajeVivo();
-            window.mostrarToast(`📊 Resultado de Hoy:<br> Has desplazado <strong>${Math.round(tonelajeDiario)} kg</strong> en tu entrenamiento. Buen trabajo.`, 'success');
+            hapticTick(); RecalcularTonelajeVivo();
+            if (tonelajeDiario === 0) window.mostrarToast("⚠️ No has metido datos hoy en la pestaña Entreno.", "warning");
+            else window.mostrarToast(`📊 Has desplazado <strong>${Math.round(tonelajeDiario)} kg</strong> en tu entrenamiento de hoy.`, 'success');
         }
 
         function analizarProgresoLocal(tipo) {
             hapticTick(); 
             if(tipo === 'hoy') {
-                window.mostrarToast(`🧠 <strong>Análisis Local:</strong> El volumen de hoy generó una excelente sobrecarga progresiva. Prioriza el descanso.`, 'ai');
-            } else {
-                window.mostrarToast(`🗓️ <strong>Comparativa Local:</strong> Tu volumen aumentó un 5% vs la semana pasada. ¡No te estanques!`, 'ai');
+                if (tonelajeDiario === 0) {
+                    window.mostrarToast(`⚠️ No hay datos registrados en el entrenamiento de hoy. Desliza una serie para comenzar.`, 'warning');
+                } else {
+                    window.mostrarToast(`🧠 <strong>Análisis Local:</strong> El volumen de ${Math.round(tonelajeDiario)} kg indica un buen estímulo para hipertrofia.`, 'ai');
+                }
+            } else if(tipo === 'semana') {
+                if(historicoTonelaje.length < 2) {
+                    window.mostrarToast(`⚠️ Necesitas guardar al menos 2 sesiones de entrenamiento en la semana para comparar.`, 'warning');
+                } else {
+                    let hoy = historicoTonelaje[historicoTonelaje.length-1];
+                    let ayer = historicoTonelaje[historicoTonelaje.length-2];
+                    let diff = ((hoy - ayer) / ayer * 100).toFixed(1);
+                    if(diff > 0) window.mostrarToast(`📈 <strong>Comparativa:</strong> Tu volumen aumentó un ${diff}% vs tu última sesión guardada.`, 'success');
+                    else window.mostrarToast(`📉 <strong>Comparativa:</strong> Tu volumen bajó un ${Math.abs(diff)}% vs tu última sesión.`, 'warning');
+                }
             }
         }
 
         function drawRMChart() {
-            const svg = document.getElementById('rm-svg'); const selector = document.getElementById('rm-select').value;
-            let data = selector === 'banca' ? [60, 70, 75, 85, 95, 105] : [100, 120, 140, 150, 170, 185];
-            let max = Math.max(...data) + 20; let pathD = `M 0,${40 - (data[0]/max*40)}`; let circles = `<circle cx="0" cy="${40 - (data[0]/max*40)}" r="1.5" fill="#fff"/>`;
-            for(let i=1; i<data.length; i++) { let x = i * (100 / (data.length - 1)); let y = 40 - (data[i]/max * 40); pathD += ` L ${x},${y}`; circles += `<circle cx="${x}" cy="${y}" r="1.5" fill="#fff"/>`; }
+            const svg = document.getElementById('rm-svg'); 
+            const data = historico1RM;
+            
+            if (data.length === 0) {
+                // Línea plana en 0 si no hay datos
+                svg.innerHTML = `<line x1="0" y1="38" x2="100" y2="38" stroke="#444" stroke-width="2"/>`;
+                document.getElementById('hist-1rm').innerText = `0 kg`;
+                return;
+            }
+
+            let max = Math.max(...data) + 10; 
+            if (data.length === 1) {
+                // Solo un punto
+                let y = 40 - (data[0]/max * 40);
+                svg.innerHTML = `<circle cx="50" cy="${y}" r="2" fill="var(--primary-color)"/>`;
+                document.getElementById('hist-1rm').innerText = `${Math.round(data[0])} kg (Máx RM)`;
+                return;
+            }
+
+            // Múltiples puntos
+            let pathD = `M 0,${40 - (data[0]/max*40)}`; 
+            let circles = `<circle cx="0" cy="${40 - (data[0]/max*40)}" r="1.5" fill="#fff"/>`;
+            for(let i=1; i<data.length; i++) { 
+                let x = i * (100 / (data.length - 1)); 
+                let y = 40 - (data[i]/max * 40); 
+                pathD += ` L ${x},${y}`; circles += `<circle cx="${x}" cy="${y}" r="1.5" fill="#fff"/>`; 
+            }
             svg.innerHTML = `<path d="${pathD}" fill="none" stroke="var(--primary-color)" stroke-width="2"/>${circles}<path d="${pathD} L 100,40 L 0,40 Z" fill="var(--primary-color)" opacity="0.2"/>`;
-            document.getElementById('hist-1rm').innerText = `${data[data.length-1]} kg`;
+            document.getElementById('hist-1rm').innerText = `${Math.round(data[data.length-1])} kg (Máx RM)`;
         }
 
-        function sincronizarAppleHealth(btn) { hapticTick(true); btn.innerHTML = `✅ Datos Exportados`; btn.style.background = "var(--success)"; btn.style.color = "#000"; window.mostrarToast("Sincronizado", "success"); }
+        // --- MAPA DE CALOR Y RADAR ---
+        function actualizarGraficasVivas() {
+            let pecho = parseFloat(document.getElementById('m-pecho').value) || 0; let biceps = parseFloat(document.getElementById('m-biceps').value) || 0; let abdomen = parseFloat(document.getElementById('m-abdomen').value) || 0; let cintura = parseFloat(document.getElementById('m-cintura').value) || 0; let muslo = parseFloat(document.getElementById('m-muslo').value) || 0; let gemelo = parseFloat(document.getElementById('m-gemelo').value) || 0;
+            
+            let vPecho = Math.min(100, (pecho / 120) * 100); let vAbdomen = Math.min(100, (abdomen / 100) * 100); let vCintura = Math.max(10, 100 - (cintura / 120 * 100)); let vMuslo = Math.min(100, (muslo / 80) * 100); let vGemelo = Math.min(100, (gemelo / 50) * 100); let vBiceps = Math.min(100, (biceps / 50) * 100);
+            let arr = [vPecho, vAbdomen, vCintura, vMuslo, vGemelo, vBiceps]; let angles = [0, 60, 120, 180, 240, 300]; let pointsStr = "";
+            for(let i=0; i<6; i++) { let rad = (angles[i] - 90) * Math.PI / 180; let r = (arr[i] / 100) * 40; if(r < 5) r = 5; let cx = 50 + r * Math.cos(rad); let cy = 50 + r * Math.sin(rad); pointsStr += `${cx.toFixed(1)},${cy.toFixed(1)} `; }
+            document.getElementById('radar-data').setAttribute('points', pointsStr.trim());
+            
+            let colorActivo = "var(--primary-color)"; let colorMutante = "#ff4444"; let colorBase = "#333";
+            document.getElementById('hm-core').style.fill = (abdomen > 0 || cintura > 0) ? ((cintura < 80 && cintura>0) ? colorMutante : colorActivo) : colorBase;
+            document.getElementById('hm-chest').style.fill = pecho > 105 ? colorMutante : (pecho > 0 ? colorActivo : colorBase);
+            document.getElementById('hm-arms-l').style.stroke = biceps > 40 ? colorMutante : (biceps > 0 ? colorActivo : colorBase); document.getElementById('hm-arms-r').style.stroke = biceps > 40 ? colorMutante : (biceps > 0 ? colorActivo : colorBase);
+            document.getElementById('hm-thigh-l').style.stroke = muslo > 65 ? colorMutante : (muslo > 0 ? colorActivo : colorBase); document.getElementById('hm-thigh-r').style.stroke = muslo > 65 ? colorMutante : (muslo > 0 ? colorActivo : colorBase);
+            document.getElementById('hm-calf-l').style.stroke = gemelo > 42 ? colorMutante : (gemelo > 0 ? colorActivo : colorBase); document.getElementById('hm-calf-r').style.stroke = gemelo > 42 ? colorMutante : (gemelo > 0 ? colorActivo : colorBase);
+        }
     </script>
 </body>
 </html>
