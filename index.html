@@ -1,1297 +1,1206 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0d0d0d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>APEXFIT - Hyperform Pro</title>
-    <style>
-        /* === VARIABLES & RESET === */
-        :root {
-            --bg-main: #0d0d0d;
-            --bg-card: #1a1a1a;
-            --bg-card-hover: #262626;
-            --primary: #00ffcc;
-            --danger: #ff4444;
-            --warning: #ffaa00;
-            --success: #00ffaa;
-            --ai: #bb86fc;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --nav-height: 80px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d0d0d">
+<title>Hyperform Pro</title>
+<style>
+/* ==================== VARIABLES Y RESET ==================== */
+:root {
+  --bg: #0d0d0d;
+  --card: #1a1a1a;
+  --primary: #00ffcc;
+  --danger: #ff4444;
+  --warning: #ffaa00;
+  --success: #00ffaa;
+  --ai: #bb86fc;
+  --text-main: #ffffff;
+  --text-muted: #888888;
+  --border: #333333;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none; /* Prevenir selección de texto para app-feel */
-            -webkit-tap-highlight-color: transparent;
-        }
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+body { background-color: var(--bg); color: var(--text-main); font-family: var(--font); overflow-x: hidden; padding-bottom: 80px; }
+button { font-family: var(--font); cursor: pointer; border: none; outline: none; transition: transform 0.1s ease, filter 0.2s; }
+button:active { transform: scale(0.92); }
+input, textarea { font-family: var(--font); outline: none; user-select: text; }
+a { text-decoration: none; color: inherit; }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            font-family: var(--font-family);
-            overflow-x: hidden;
-            overflow-y: hidden; /* Controlamos el scroll por secciones */
-            height: 100vh;
-            width: 100vw;
-        }
+/* ==================== UTILIDADES ==================== */
+.btn { padding: 12px 18px; border-radius: 12px; font-weight: bold; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+.btn-primary { background: var(--primary); color: #000; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #000; }
+.btn-ai { background: var(--ai); color: #fff; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+.card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+.header-title { font-size: 24px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.5px; }
+.text-gradient { background: linear-gradient(90deg, var(--primary), var(--ai)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* === INTERACTIVIDAD Y EFECTO DE SALTO (BOUNCE) === */
-        .interactive {
-            /* Al soltar, rebota elásticamente a su escala original */
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .interactive:active, 
-        button:active, 
-        .card-clickable:active, 
-        .tab-item:active {
-            /* Al presionar, se comprime rápido hacia abajo */
-            transform: scale(0.92) translateY(2px);
-            transition: transform 0.05s ease;
-        }
+/* ==================== LAYOUT Y PESTAÑAS ==================== */
+.tab-content { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        button {
-            background: var(--bg-card);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+/* Barra de Navegación (Bottom) */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border); z-index: 9000; }
+.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 600; width: 60px; height: 100%; }
+.nav-item.active { color: var(--primary); }
+.nav-icon { font-size: 20px; }
 
-        button.danger { border-color: var(--danger); color: var(--danger); }
-        button.success { border-color: var(--success); color: var(--success); background: rgba(0, 255, 170, 0.1); }
-        button.ai { border-color: var(--ai); color: var(--ai); }
-        button.fill { background: var(--primary); color: #000; border: none; }
+/* Isla Dinámica */
+.dynamic-island { position: fixed; top: 10px; left: 50%; transform: translateX(-50%) translateY(-150%); width: 200px; height: 40px; background: #000; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: var(--primary); z-index: 12000; box-shadow: 0 4px 15px rgba(0,255,204,0.3); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.dynamic-island.show { transform: translateX(-50%) translateY(0); }
 
-        input {
-            background: var(--bg-card);
-            border: 1px solid #333;
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            width: 100%;
-            outline: none;
-            transition: border 0.3s;
-        }
-        input:focus { border-color: var(--primary); }
+/* Toasts */
+.toast-container { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 10000; pointer-events: none; }
+.toast { background: var(--card); border: 1px solid var(--primary); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; transform: translateY(-20px); transition: all 0.3s ease; }
+.toast.show { opacity: 1; transform: translateY(0); }
 
-        h1, h2, h3 { margin-bottom: 12px; font-weight: 700; }
-        p { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+/* Modales */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 15000; display: none; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-content { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; width: 90%; max-width: 400px; position: relative; }
+.modal-close { position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--text-muted); background: none; }
 
-        /* === LAYOUT ESTRUCTURAL === */
-        .app-container {
-            height: calc(100vh - var(--nav-height));
-            overflow-y: auto;
-            padding: 20px;
-            padding-top: env(safe-area-inset-top, 40px); /* Para el notch */
-            scroll-behavior: smooth;
-        }
+/* ==================== PESTAÑA: DASHBOARD ==================== */
+#tab-dash { background: linear-gradient(to bottom, rgba(13,13,13,0.7), rgba(13,13,13,1)), url('icon.png') no-repeat center top; background-size: cover; min-height: 100vh; }
+.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.streak-widget { display: flex; align-items: center; gap: 8px; background: rgba(255,170,0,0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--warning); color: var(--warning); font-weight: bold; }
+.water-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 30px 0; }
+.water-circle { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--primary); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--card); box-shadow: 0 0 20px rgba(0,255,204,0.2); }
+.water-wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 200%; background: rgba(0, 255, 204, 0.4); border-radius: 40%; transform-origin: 50% 50%; animation: spin 5s linear infinite; bottom: -150%; transition: bottom 0.5s ease; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.water-text { position: relative; z-index: 2; font-size: 24px; font-weight: 800; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
 
-        .screen { display: none; animation: fadeIn 0.3s ease; padding-bottom: 40px; }
-        .screen.active { display: block; }
+/* ==================== PESTAÑA: ENTRENO ==================== */
+.day-selector { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+.day-selector::-webkit-scrollbar { display: none; }
+.day-btn { padding: 8px 16px; border-radius: 20px; background: var(--card); color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap; font-size: 13px; font-weight: bold; }
+.day-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.exercise-card { background: var(--card); border-radius: 16px; overflow: hidden; margin-bottom: 24px; border: 1px solid var(--border); position: relative; }
+.exercise-bg { height: 120px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-end; padding: 16px; }
+.exercise-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent, rgba(13,13,13,1)); z-index: 1; }
+.exercise-title-container { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.exercise-title { font-size: 20px; font-weight: 800; color: #fff; }
+.ai-scan-btn { background: rgba(187,134,252,0.2); color: var(--ai); border: 1px solid var(--ai); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; backdrop-filter: blur(4px); }
+.change-machine-btn { position: absolute; top: 10px; right: 10px; z-index: 3; background: rgba(0,0,0,0.6); padding: 6px; border-radius: 8px; font-size: 14px; border: 1px solid var(--border); }
 
-        /* === NAV BAR BOTTOM === */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: var(--nav-height);
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 10000; /* REGLA ESTRICTA */
-            border-top: 1px solid #333;
-            padding-bottom: env(safe-area-inset-bottom, 20px);
-        }
+/* Set Row Grid */
+.sets-container { padding: 10px; }
+.set-header { display: grid; grid-template-columns: 40px 40px 1fr 1fr; gap: 8px; text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: bold; padding-right: 16px; }
+.set-row { display: grid; grid-template-columns: 40px 40px 1fr 1fr; gap: 8px; align-items: center; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; margin-bottom: 8px; position: relative; transition: background 0.3s, border 0.3s; border: 1px solid transparent; overflow: hidden; }
+.set-row.completed { background: rgba(0, 255, 170, 0.05); border: 1px solid rgba(0, 255, 170, 0.4); }
+.set-row.completed::after { content: '✓'; position: absolute; right: 10px; color: var(--success); font-weight: bold; font-size: 16px; pointer-events: none; }
 
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            padding: 10px;
-            width: 60px;
-        }
+.set-type-btn { width: 100%; height: 36px; border-radius: 6px; font-weight: bold; font-size: 14px; background: #333; color: #fff; }
+.set-type-btn[data-type="N"] { background: #333; }
+.set-type-btn[data-type="C"] { background: var(--warning); color: #000; }
+.set-type-btn[data-type="F"] { background: var(--danger); color: #fff; }
+.timer-btn { width: 100%; height: 36px; border-radius: 6px; background: #222; border: 1px solid var(--border); font-size: 16px; display: flex; align-items: center; justify-content: center; }
 
-        .tab-item.active { color: var(--primary); }
-        .tab-icon { font-size: 24px; margin-bottom: 4px; }
+.val-input { width: 100%; height: 36px; background: #000; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 16px; font-weight: bold; text-align: center; caret-color: transparent; }
+.val-input:focus { border-color: var(--primary); background: rgba(0,255,204,0.1); }
 
-        /* === DYNAMIC ISLAND === */
-        .dynamic-island {
-            position: fixed;
-            top: -100px; /* Oculto arriba */
-            left: 50%;
-            transform: translateX(-50%);
-            background: #000;
-            color: var(--primary);
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 5px 15px rgba(0,255,204,0.3);
-            z-index: 12000; /* REGLA ESTRICTA */
-            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .dynamic-island.active { top: env(safe-area-inset-top, 20px); }
+/* Swipe Feedback visual */
+.swipe-feedback { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,255,170,0.2) 0%, transparent 100%); width: 0%; pointer-events: none; transition: width 0.1s; }
 
-        /* === TOASTS === */
-        .toast-container {
-            position: fixed;
-            top: 100px; /* REGLA ESTRICTA */
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 11000;
-            pointer-events: none;
-        }
+/* Cardio Module */
+.cardio-card { border-color: var(--danger); }
+.cardio-hud { padding: 16px; text-align: center; }
+.cardio-timer { font-size: 48px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--primary); margin: 10px 0; }
+.cardio-controls { display: flex; justify-content: center; gap: 16px; margin-top: 16px; }
+.ctrl-btn { width: 50px; height: 50px; border-radius: 25px; font-size: 20px; display: flex; align-items: center; justify-content: center; background: #222; border: 1px solid var(--border); }
+.ctrl-btn.play { background: rgba(0,255,170,0.1); border-color: var(--success); color: var(--success); }
+.ctrl-btn.pause { background: rgba(255,170,0,0.1); border-color: var(--warning); color: var(--warning); }
+.ctrl-btn.stop { background: rgba(255,68,68,0.1); border-color: var(--danger); color: var(--danger); }
+.cardio-stats { display: flex; justify-content: space-around; margin-top: 16px; font-size: 14px; color: var(--text-muted); }
+.cardio-stats span { color: #fff; font-weight: bold; font-size: 18px; }
 
-        .toast {
-            background: rgba(26, 26, 26, 0.95);
-            color: var(--text-main);
-            padding: 12px 24px;
-            border-radius: 30px;
-            border: 1px solid var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            font-size: 14px;
-            font-weight: 500;
-            animation: toastSlide 0.4s ease forwards, toastFadeOut 0.4s ease 2.6s forwards;
-            backdrop-filter: blur(5px);
-        }
+/* Custom Numpad */
+.numpad-container { position: fixed; bottom: -400px; left: 0; right: 0; background: rgba(20,20,20,0.98); backdrop-filter: blur(15px); border-top: 1px solid var(--border); padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 11000; box-shadow: 0 -5px 20px rgba(0,0,0,0.8); }
+.numpad-container.active { bottom: 0; }
+.numpad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.numpad-title { font-size: 14px; font-weight: bold; color: var(--text-muted); }
+.numpad-close { font-size: 14px; color: var(--primary); background: none; font-weight: bold; padding: 4px 8px; }
+.numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.numpad-btn { background: #2a2a2a; border: 1px solid #333; border-radius: 12px; height: 50px; font-size: 22px; font-weight: bold; color: #fff; display: flex; align-items: center; justify-content: center; }
+.numpad-btn:active { background: #444; }
+.numpad-btn.special { background: rgba(0,255,204,0.1); color: var(--primary); border-color: var(--primary); font-size: 16px; }
 
-        @keyframes toastSlide { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes toastFadeOut { from { opacity: 1; } to { opacity: 0; } }
+/* ==================== PESTAÑA: NUTRI ==================== */
+.nutri-header { text-align: center; margin-bottom: 24px; }
+.adherence-circle { width: 120px; height: 120px; border-radius: 50%; border: 6px solid #222; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; color: var(--success); position: relative; }
+.timeline { position: relative; padding-left: 30px; }
+.timeline::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.meal-item { display: flex; align-items: flex-start; margin-bottom: 30px; position: relative; }
+.meal-time { font-size: 22px; font-weight: 900; color: var(--primary); width: 80px; flex-shrink: 0; line-height: 1; }
+.meal-content { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 12px; flex-grow: 1; margin-left: 16px; display: flex; justify-content: space-between; align-items: center; }
+.meal-content h4 { margin-bottom: 4px; font-size: 16px; }
+.meal-content p { font-size: 12px; color: var(--text-muted); }
+.custom-checkbox { width: 36px; height: 36px; appearance: none; background: #000; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; position: relative; transition: all 0.2s; outline: none; flex-shrink: 0; }
+.custom-checkbox:checked { background: var(--success); border-color: var(--success); }
+.custom-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000; font-size: 20px; font-weight: bold; }
 
-        /* === DASHBOARD === */
-        #dash-screen .app-container {
-            /* REGLA ESTRICTA: Imagen local con gradiente oscuro superpuesto */
-            background: linear-gradient(to bottom, rgba(13,13,13,0.5) 0%, rgba(13,13,13,1) 100%), url('icon.png') no-repeat center top;
-            background-size: cover;
-            min-height: 100%;
-        }
+/* ==================== PESTAÑA: PRO ==================== */
+.measurements-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.measure-input-group { background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
+.measure-input-group label { font-size: 12px; color: var(--text-muted); font-weight: bold; }
+.measure-input-group input { background: transparent; border: none; color: #fff; width: 50px; text-align: right; font-size: 16px; font-weight: bold; }
 
-        .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+.charts-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 24px; display: flex; flex-direction: column; align-items: center; }
+svg.chart { width: 100%; max-width: 300px; height: auto; overflow: visible; }
+.radar-bg { fill: #111; stroke: var(--border); stroke-width: 1; }
+.radar-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 4; }
+.radar-polygon { fill: rgba(187,134,252,0.3); stroke: var(--ai); stroke-width: 2; transition: all 0.3s ease; }
+.radar-point { fill: var(--primary); }
+.radar-label { fill: var(--text-muted); font-size: 10px; font-family: var(--font); font-weight: bold; text-anchor: middle; }
 
-        .streak-widget { text-align: center; }
-        .streak-number { font-size: 48px; color: var(--warning); font-weight: 900; text-shadow: 0 0 10px rgba(255,170,0,0.5); }
+/* ==================== PESTAÑA: HISTORIAL ==================== */
+.history-list { display: flex; flex-direction: column; gap: 16px; }
+.history-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.history-date { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.history-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.stat-box { background: #000; padding: 10px; border-radius: 8px; text-align: center; }
+.stat-value { font-size: 18px; font-weight: bold; color: #fff; }
+.stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+.history-exercises { font-size: 12px; color: #aaa; line-height: 1.4; }
 
-        /* Widget Agua y Ola */
-        .water-widget {
-            text-align: center;
-            position: relative;
-            height: 200px;
-            width: 200px;
-            margin: 0 auto 20px auto;
-            border-radius: 50%;
-            border: 4px solid var(--primary);
-            overflow: hidden;
-            background: #000;
-            cursor: pointer;
-        }
-        
-        .water-wave {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 255, 204, 0.4);
-            border-radius: 40%;
-            transform-origin: 50% 50%;
-            animation: spin 6s linear infinite;
-            transition: bottom 0.5s ease;
-            margin-left: -200px; /* Centrar respecto al padre */
-            bottom: -400px; /* Inicia vacio */
-        }
-        .water-wave::before {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 255, 204, 0.8);
-            border-radius: 45%;
-            transform-origin: 50% 50%;
-            animation: spin 4s linear infinite;
-            margin-left: -200px;
-        }
+/* ==================== PESTAÑA: COACH ==================== */
+.client-list { display: flex; flex-direction: column; gap: 12px; }
+.client-card { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 16px; border-radius: 12px; border: 1px solid var(--border); }
+.client-info h4 { font-size: 16px; margin-bottom: 4px; }
+.client-info p { font-size: 12px; color: var(--success); }
+.client-actions { display: flex; gap: 8px; }
+.client-actions button { width: 36px; height: 36px; border-radius: 8px; font-size: 16px; }
 
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        .water-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            font-weight: bold;
-            z-index: 2;
-            text-shadow: 1px 1px 5px #000;
-        }
-
-        /* === ENTRENO === */
-        .day-selector {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            scrollbar-width: none;
-        }
-        .day-selector::-webkit-scrollbar { display: none; }
-        .day-btn { padding: 10px 15px; border-radius: 20px; background: #222; border: 1px solid #444; color: #fff; white-space: nowrap; }
-        .day-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
-
-        .exercise-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary);
-            overflow: hidden; /* Para contener la imagen */
-        }
-
-        /* Imagen del Ejercicio */
-        .exercise-image {
-            width: calc(100% + 30px);
-            height: 140px;
-            object-fit: cover;
-            margin: -15px -15px 15px -15px; /* Compensa el padding de la tarjeta */
-            border-bottom: 2px solid var(--primary);
-            display: block;
-            background: #111;
-        }
-        
-        .exercise-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .exercise-title { font-size: 18px; color: var(--primary); margin: 0; display: flex; align-items: center; gap: 10px;}
-        .change-machine-btn { font-size: 12px; padding: 4px 8px; border-radius: 4px; background: #333; border: none; color: #fff;}
-
-        /* Variantes */
-        .exercise-variants {
-            margin-bottom: 15px;
-        }
-        .variant-tag {
-            background: rgba(255, 170, 0, 0.15);
-            color: var(--warning);
-            border: 1px solid rgba(255, 170, 0, 0.5);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            margin-right: 6px;
-            display: inline-block;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        /* Grid de Series */
-        .set-row {
-            display: grid;
-            grid-template-columns: 40px 50px 1fr 1fr;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #111;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.3s, border 0.3s;
-        }
-        .set-row.done {
-            background: rgba(0, 255, 170, 0.1);
-            border: 1px solid var(--success);
-        }
-        .set-type-btn {
-            background: #333; border: none; color: #fff; border-radius: 4px; padding: 5px; font-weight: bold;
-        }
-        .set-type-btn.C { color: var(--warning); }
-        .set-type-btn.F { color: var(--danger); }
-
-        .timer-btn { background: transparent; border: 1px solid var(--ai); color: var(--ai); border-radius: 4px; padding: 5px; font-size: 12px;}
-        
-        .set-input-group { display: flex; align-items: center; background: #222; border-radius: 6px; padding: 0 5px; }
-        .set-input-group span { font-size: 12px; color: #666; }
-        .set-input {
-            background: transparent; border: none; color: #fff; font-size: 16px; width: 100%; text-align: center; padding: 8px 5px;
-        }
-        
-        .swipe-overlay {
-            position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: rgba(0,255,170,0.2); display: flex; align-items: center; padding-left: 20px;
-            font-weight: bold; color: var(--success); transition: left 0.3s; pointer-events: none;
-        }
-        .set-row.done .swipe-overlay { left: 0; }
-
-        .rule-box {
-            background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 20px;
-        }
-        .rule-box h3 { color: var(--danger); margin-bottom: 5px;}
-
-        /* === CUSTOM NUMPAD === */
-        #custom-numpad {
-            position: fixed;
-            bottom: -500px; /* Inicia oculto */
-            left: 0; width: 100%;
-            background: #111; border-top: 1px solid var(--primary); z-index: 15000;
-            padding: 20px; padding-bottom: env(safe-area-inset-bottom, 40px);
-            transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
-        }
-        #custom-numpad.active { bottom: 0; }
-        .numpad-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .num-btn { background: #222; border: none; color: #fff; font-size: 24px; padding: 15px; border-radius: 10px; font-weight: bold;}
-        .num-btn.action { background: #333; color: var(--primary); }
-
-        /* === NUTRI === */
-        .timeline { position: relative; padding-left: 30px; margin-top: 20px; }
-        .timeline::before {
-            content: ''; position: absolute; left: 14px; top: 0; height: 100%; width: 2px; background: #333;
-        }
-        .timeline-item { position: relative; margin-bottom: 30px; }
-        .timeline-dot {
-            position: absolute; left: -30px; top: 5px; width: 12px; height: 12px; border-radius: 50%;
-            background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: background 0.3s;
-        }
-        .timeline-content {
-            background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid #222;
-            display: flex; justify-content: space-between; align-items: flex-start;
-        }
-        .timeline-content h4 { color: var(--warning); margin-bottom: 5px; font-size: 16px; }
-        .timeline-content p { margin: 0; font-size: 14px; color: #ddd; line-height: 1.4; }
-        
-        .check-container { margin-left: 15px; }
-        input[type="checkbox"] {
-            width: 24px; height: 24px; accent-color: var(--success); cursor: pointer;
-        }
-
-        .adherence-bar-container { background: #222; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
-        .adherence-bar { background: var(--success); height: 100%; width: 0%; transition: width 0.5s ease; }
-
-        /* === PRO === */
-        .pro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .measure-input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-        
-        .charts-container { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-bottom: 30px;}
-        
-        /* SVG Heatmap & Radar */
-        svg { max-width: 100%; height: auto; }
-        .svg-radar polygon { fill: rgba(0, 255, 204, 0.2); stroke: var(--primary); stroke-width: 2; transition: all 0.5s ease;}
-        .svg-radar line { stroke: #333; stroke-width: 1; }
-        .svg-radar text { fill: var(--text-muted); font-size: 10px; }
-        
-        .svg-body path { fill: #222; stroke: #444; stroke-width: 1; transition: fill 0.5s ease;}
-        
-        /* === COACH === */
-        .client-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .client-card { background: var(--bg-card); padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--ai);}
-        .client-info h4 { margin-bottom: 4px; color: #fff;}
-        .client-actions { display: flex; gap: 10px; }
-
-        /* Modal API */
-        #api-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 20000; display: flex; align-items: center; justify-content: center;
-        }
-        .modal-content { background: var(--bg-card); padding: 30px; border-radius: 16px; width: 90%; max-width: 400px; border: 1px solid var(--ai);}
-        .hidden { display: none !important; }
-
-    </style>
+</style>
 </head>
 <body>
 
-    <!-- DYNAMIC ISLAND -->
-    <div id="dynamic-island" class="dynamic-island interactive">
-        <span>⏱️</span> <span id="island-time">01:00</span>
+<!-- ISLA DINÁMICA -->
+<div id="dynamicIsland" class="dynamic-island">
+  ⏱️ <span id="islandTimer">00:00</span>
+</div>
+
+<!-- TOASTS CONTAINER -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- APP WRAPPER -->
+<div id="app">
+
+  <!-- ==================== TAB: DASHBOARD ==================== -->
+  <div id="tab-dash" class="tab-content active">
+    <div class="dash-header">
+      <div>
+        <h1 class="header-title" style="margin-bottom:0;">Hola, <span class="text-gradient">Chelo</span></h1>
+        <p style="color: var(--text-muted); font-size: 14px;">Listo para destrozar tus límites.</p>
+      </div>
+      <div class="streak-widget">
+        🔥 <span id="streakDays">0</span> días
+      </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
-    <div id="toast-container" class="toast-container"></div>
+    <button class="btn btn-outline" style="width: 100%; border-color: #333;" onclick="syncAppleFitness()">
+      🍏 Sincronizar con Apple Fitness
+    </button>
 
-    <!-- API KEY MODAL -->
-    <div id="api-modal" class="hidden">
-        <div class="modal-content">
-            <h2 style="color: var(--ai)">Configurar IA</h2>
-            <p>Ingresa tu API Key de Gemini para activar las funciones generativas.</p>
-            <input type="password" id="api-key-input" placeholder="AIzaSy..." style="margin-bottom: 20px;">
-            <button class="fill interactive" style="width: 100%; background: var(--ai); color: #fff" onclick="saveApiKey()">Guardar Key</button>
-            <button class="interactive" style="width: 100%; margin-top: 10px; border: none;" onclick="document.getElementById('api-modal').classList.add('hidden')">Omitir por ahora</button>
-        </div>
+    <div class="water-widget">
+      <h3 style="margin-bottom: 16px;">Hidratación Diaria</h3>
+      <div class="water-circle" onclick="addWater()">
+        <div class="water-wave" id="waterWave"></div>
+        <div class="water-text"><span id="waterValue">0</span>/3000</div>
+      </div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-top: 12px;">Toca para añadir 250ml</p>
     </div>
 
-    <!-- MAIN SCREENS -->
+    <div style="margin-top: 40px; text-align: center;">
+      <button class="btn" style="background: transparent; color: var(--danger); font-size: 12px; text-decoration: underline;" onclick="resetApp()">
+        Reiniciar App a Ceros
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== TAB: ENTRENO ==================== -->
+  <div id="tab-entreno" class="tab-content">
+    <h2 class="header-title">Plan de Hoy</h2>
     
-    <!-- 1. DASHBOARD -->
-    <div id="dash-screen" class="screen active">
-        <div class="app-container">
-            <h1 id="greeting">Hola, Chelo</h1>
-            <p>Resumen de hoy</p>
-
-            <div class="card streak-widget interactive">
-                <h3>Racha Imparable</h3>
-                <div class="streak-number" id="streak-display">0</div>
-                <p>Días seguidos entrenando</p>
-            </div>
-
-            <div class="card interactive">
-                <h3>Hidratación (Meta 4L)</h3>
-                <div class="water-widget" onclick="addWater()">
-                    <div class="water-wave" id="water-wave"></div>
-                    <div class="water-text"><span id="water-text">0</span>ml</div>
-                </div>
-                <p style="text-align: center;">Toca para sumar 250ml</p>
-            </div>
-
-            <button class="interactive fill" style="width: 100%; margin-bottom: 15px;" onclick="syncAppleFitness()">
-                🍎 Sincronizar con Apple Fitness
-            </button>
-
-            <button class="interactive danger" style="width: 100%; margin-top: 40px;" onclick="resetApp()">
-                ⚠️ Reiniciar App a Ceros
-            </button>
-        </div>
+    <div class="day-selector" id="daySelector">
+      <button class="day-btn" data-day="0">Lun</button>
+      <button class="day-btn" data-day="1">Mar</button>
+      <button class="day-btn" data-day="2">Mié</button>
+      <button class="day-btn" data-day="3">Jue</button>
+      <button class="day-btn" data-day="4">Vie</button>
+      <button class="day-btn" data-day="5">Sáb</button>
+      <button class="day-btn" data-day="6">Dom</button>
     </div>
 
-    <!-- 2. ENTRENO -->
-    <div id="entreno-screen" class="screen">
-        <div class="app-container">
-            <h1>Potencia Progresiva</h1>
-            
-            <div class="day-selector" id="day-selector">
-                <!-- Se llena dinámicamente -->
-            </div>
-
-            <div id="routine-container">
-                <!-- El contenido de la rutina se inyecta aquí -->
-            </div>
-
-            <div class="card interactive" style="margin-top: 20px;">
-                <h3 style="color: var(--ai)">Módulo Cardio Pro</h3>
-                <button class="interactive ai" style="width: 100%;" onclick="startCardio()">🏃‍♂️ Iniciar Cardio</button>
-            </div>
-
-            <button class="interactive fill success" style="width: 100%; margin-top: 20px; color: #000;" onclick="saveDay()">
-                💾 Guardar Día
-            </button>
-        </div>
+    <div id="routinesContainer">
+      <!-- Generado dinámicamente -->
     </div>
 
-    <!-- 3. NUTRI -->
-    <div id="nutri-screen" class="screen">
-        <div class="app-container">
-            <h1>Protocolo Híbrido 16/8</h1>
-            
-            <div class="card interactive">
-                <h3>Adherencia Hoy</h3>
-                <div class="adherence-bar-container">
-                    <div class="adherence-bar" id="adherence-bar"></div>
-                </div>
-                <p id="adherence-text" style="text-align: right; margin:0;">0%</p>
-            </div>
-
-            <button class="interactive fill" style="width: 100%; background: var(--warning); color:#000; margin-bottom: 10px;" onclick="simulateSuperCheckout()">
-                🛒 Auto-Checkout Súper
-            </button>
-
-            <div class="timeline" id="nutri-timeline">
-                <!-- Se llena dinámicamente -->
-            </div>
+    <!-- Cardio Module -->
+    <div class="card exercise-card cardio-card">
+      <div class="exercise-bg" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop');">
+        <div class="exercise-title-container">
+          <span class="exercise-title" id="cardioTitle">Cardio</span>
+          <button class="btn btn-danger" onclick="startCardioPrompt()" style="padding: 6px 12px; font-size: 12px;">🏃‍♂️ Iniciar Pro</button>
         </div>
+      </div>
+      <div id="cardioModule" style="display: none; padding: 16px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <input type="number" id="cardioTarget" placeholder="Minutos objetivo" class="val-input" style="width: 48%;" readonly>
+          <div style="width: 48%; background:#000; border:1px solid #333; border-radius:6px; color:#aaa; font-size:12px; padding:8px;">
+            <span id="cardioMachineText"></span> | Vel: <span id="cardioSpeedText"></span> | Inc: <span id="cardioIncText"></span>
+          </div>
+        </div>
+        <div class="cardio-hud">
+          <div class="cardio-timer" id="cardioRealTimer">00:00</div>
+          <div class="cardio-stats">
+            <div>🔥 <span id="cardioKcal">0</span> kcal</div>
+            <div>⚡ <span id="cardioBpm">--</span> bpm</div>
+          </div>
+          <div class="cardio-controls">
+            <button class="ctrl-btn play" onclick="ctrlCardio('play')">▶</button>
+            <button class="ctrl-btn pause" onclick="ctrlCardio('pause')">⏸</button>
+            <button class="ctrl-btn stop" onclick="ctrlCardio('stop')">⏹</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- 4. PRO -->
-    <div id="pro-screen" class="screen">
-        <div class="app-container">
-            <h1>Hyperform Analíticas</h1>
+    <button class="btn btn-success" style="width: 100%; margin-top: 20px; font-size: 16px; padding: 16px;" onclick="saveDay()">
+      💾 Guardar Día
+    </button>
+  </div>
 
-            <div class="card interactive">
-                <h3>Medidas Actuales (cm)</h3>
-                <div class="pro-grid">
-                    <div class="measure-input-group">
-                        <label>Pecho</label>
-                        <input type="number" id="m-pecho" class="m-input interactive" value="0" onchange="updateCharts()">
-                    </div>
-                    <div class="measure-input-group">
-                        <label>Bíceps</label>
-                        <input type="number" id="m-biceps" class="m-input interactive" value="0" onchange="updateCharts()">
-                    </div>
-                    <div class="measure-input-group">
-                        <label>Abdomen</label>
-                        <input type="number" id="m-abdomen" class="m-input interactive" value="0" onchange="updateCharts()">
-                    </div>
-                    <div class="measure-input-group">
-                        <label>Cintura</label>
-                        <input type="number" id="m-cintura" class="m-input interactive" value="0" onchange="updateCharts()">
-                    </div>
-                    <div class="measure-input-group">
-                        <label>Muslo</label>
-                        <input type="number" id="m-muslo" class="m-input interactive" value="0" onchange="updateCharts()">
-                    </div>
-                    <div class="measure-input-group">
-                        <label>Gemelos</label>
-                        <input type="number" id="m-gemelos" class="m-input interactive" value="0" onchange="updateCharts()">
-                    </div>
-                </div>
-            </div>
-
-            <div class="charts-container interactive">
-                <!-- RADAR CHART -->
-                <svg width="250" height="250" viewBox="0 0 200 200" class="svg-radar">
-                    <polygon points="100,10 178,55 178,145 100,190 22,145 22,55" fill="none" stroke="#333" />
-                    <polygon points="100,40 152,70 152,130 100,160 48,130 48,70" fill="none" stroke="#222" />
-                    <line x1="100" y1="100" x2="100" y2="10" />
-                    <line x1="100" y1="100" x2="178" y2="55" />
-                    <line x1="100" y1="100" x2="178" y2="145" />
-                    <line x1="100" y1="100" x2="100" y2="190" />
-                    <line x1="100" y1="100" x2="22" y2="145" />
-                    <line x1="100" y1="100" x2="22" y2="55" />
-                    <text x="85" y="8">Pecho</text>
-                    <text x="180" y="60">Bíceps</text>
-                    <text x="180" y="150">Abdomen</text>
-                    <text x="80" y="200">Cintura</text>
-                    <text x="5" y="150">Muslo</text>
-                    <text x="0" y="60">Gemelos</text>
-                    <polygon id="radar-poly" points="100,100 100,100 100,100 100,100 100,100 100,100" />
-                </svg>
-
-                <!-- MAPA DE CALOR (Abstract Body) -->
-                <svg width="150" height="300" viewBox="0 0 100 200" class="svg-body">
-                    <circle cx="50" cy="20" r="15" fill="#333" />
-                    <path id="heat-pecho" d="M 30 40 L 70 40 L 80 70 L 20 70 Z" />
-                    <path id="heat-abdomen" d="M 25 75 L 75 75 L 65 110 L 35 110 Z" />
-                    <path id="heat-biceps" d="M 15 45 L 25 45 L 20 90 L 10 90 Z M 85 45 L 75 45 L 80 90 L 90 90 Z" />
-                    <path id="heat-piernas" d="M 35 115 L 48 115 L 48 190 L 30 190 Z M 65 115 L 52 115 L 52 190 L 70 190 Z" />
-                </svg>
-            </div>
-
-            <button class="interactive fill ai" style="width: 100%; margin-bottom: 10px;" onclick="analyzeTrainingLocal()">🧠 Analizar Entrenamiento Hoy</button>
-            <button class="interactive ai" style="width: 100%; margin-bottom: 10px;" onclick="compareWeekLocal()">📊 Comparar vs Semana Anterior</button>
-            <button class="interactive fill" style="width: 100%; background: var(--ai); color: #000;" onclick="generateRoutineAI()">✨ Generar Nueva Rutina (IA)</button>
-        </div>
+  <!-- ==================== TAB: NUTRICIÓN ==================== -->
+  <div id="tab-nutri" class="tab-content">
+    <div class="nutri-header">
+      <h2 class="header-title">Adherencia</h2>
+      <div class="adherence-circle">
+        <span id="adherenceText">0%</span>
+      </div>
+      <p id="adherenceMsg" style="color: var(--text-muted); font-size: 14px;">Completa tus comidas.</p>
     </div>
 
-    <!-- 5. COACH -->
-    <div id="coach-screen" class="screen">
-        <div class="app-container">
-            <h1>Panel B2B (SaaS)</h1>
-            <button class="interactive fill" style="width: 100%;" onclick="addClient()">+ Añadir Cliente</button>
-            
-            <div class="client-list" id="client-list">
-                <!-- Se llena dinámicamente -->
-            </div>
+    <div class="timeline">
+      <div class="meal-item">
+        <div class="meal-time">08:00</div>
+        <div class="meal-content">
+          <div>
+            <h4>Desayuno</h4>
+            <p>Avena, proteína, crema de maní 100%.</p>
+          </div>
+          <input type="checkbox" class="custom-checkbox nutri-check" onchange="updateAdherence()">
         </div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-time">11:30</div>
+        <div class="meal-content">
+          <div>
+            <h4>Snack Post-Entreno</h4>
+            <p>Batido de suero, plátano.</p>
+          </div>
+          <input type="checkbox" class="custom-checkbox nutri-check" onchange="updateAdherence()">
+        </div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-time">14:00</div>
+        <div class="meal-content">
+          <div>
+            <h4>Comida Principal</h4>
+            <p>Pechuga de pollo, arroz, brócoli.</p>
+          </div>
+          <input type="checkbox" class="custom-checkbox nutri-check" onchange="updateAdherence()">
+        </div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-time">18:00</div>
+        <div class="meal-content">
+          <div>
+            <h4>Snack Tarde</h4>
+            <p>Yogur griego, almendras.</p>
+          </div>
+          <input type="checkbox" class="custom-checkbox nutri-check" onchange="updateAdherence()">
+        </div>
+      </div>
+      <div class="meal-item">
+        <div class="meal-time">21:00</div>
+        <div class="meal-content">
+          <div>
+            <h4>Cena</h4>
+            <p>Salmón, espárragos, camote.</p>
+          </div>
+          <input type="checkbox" class="custom-checkbox nutri-check" onchange="updateAdherence()">
+        </div>
+      </div>
     </div>
 
-    <!-- BOTTOM NAV -->
-    <nav class="bottom-nav">
-        <div class="tab-item interactive active" onclick="switchTab('dash')">
-            <div class="tab-icon">🏠</div>
-            <span>Dash</span>
-        </div>
-        <div class="tab-item interactive" onclick="switchTab('entreno')">
-            <div class="tab-icon">🏋️</div>
-            <span>Entreno</span>
-        </div>
-        <div class="tab-item interactive" onclick="switchTab('nutri')">
-            <div class="tab-icon">🥑</div>
-            <span>Nutri</span>
-        </div>
-        <div class="tab-item interactive" onclick="switchTab('pro')">
-            <div class="tab-icon">📈</div>
-            <span>Pro</span>
-        </div>
-        <div class="tab-item interactive" onclick="switchTab('coach')">
-            <div class="tab-icon">📋</div>
-            <span>Coach</span>
-        </div>
-    </nav>
+    <button class="btn btn-outline" style="width: 100%; border-color: var(--primary); color: var(--primary); margin-top: 20px;" onclick="simulateSuper()">
+      🛒 Auto-Checkout Súper
+    </button>
+  </div>
 
-    <!-- CUSTOM NUMPAD -->
-    <div id="custom-numpad">
-        <div class="numpad-header">
-            <button id="numpad-unit-btn" class="interactive action" onclick="toggleUnit()">UNIDAD: KG</button>
-            <button class="interactive danger" onclick="closeNumpad()">CERRAR ▼</button>
-        </div>
-        <div class="numpad-grid">
-            <button class="num-btn interactive" onclick="numpadPress('1')">1</button>
-            <button class="num-btn interactive" onclick="numpadPress('2')">2</button>
-            <button class="num-btn interactive" onclick="numpadPress('3')">3</button>
-            <button class="num-btn interactive" onclick="numpadPress('4')">4</button>
-            <button class="num-btn interactive" onclick="numpadPress('5')">5</button>
-            <button class="num-btn interactive" onclick="numpadPress('6')">6</button>
-            <button class="num-btn interactive" onclick="numpadPress('7')">7</button>
-            <button class="num-btn interactive" onclick="numpadPress('8')">8</button>
-            <button class="num-btn interactive" onclick="numpadPress('9')">9</button>
-            <button class="num-btn interactive action" onclick="numpadPress('.')">.</button>
-            <button class="num-btn interactive" onclick="numpadPress('0')">0</button>
-            <button class="num-btn interactive action" onclick="numpadBackspace()">⌫</button>
-        </div>
+  <!-- ==================== TAB: PRO (ANALÍTICAS E IA) ==================== -->
+  <div id="tab-pro" class="tab-content">
+    <h2 class="header-title text-gradient">Centro Pro AI</h2>
+    
+    <div class="card">
+      <h3 style="margin-bottom: 16px; font-size: 16px;">Medidas Corporales (cm)</h3>
+      <div class="measurements-grid">
+        <div class="measure-input-group"><label>Pecho</label><input type="number" id="m-pecho" value="0" oninput="updateSVG()"></div>
+        <div class="measure-input-group"><label>Bíceps</label><input type="number" id="m-biceps" value="0" oninput="updateSVG()"></div>
+        <div class="measure-input-group"><label>Abdomen</label><input type="number" id="m-abdomen" value="0" oninput="updateSVG()"></div>
+        <div class="measure-input-group"><label>Cintura</label><input type="number" id="m-cintura" value="0" oninput="updateSVG()"></div>
+        <div class="measure-input-group"><label>Muslo</label><input type="number" id="m-muslo" value="0" oninput="updateSVG()"></div>
+        <div class="measure-input-group"><label>Gemelos</label><input type="number" id="m-gemelos" value="0" oninput="updateSVG()"></div>
+      </div>
     </div>
 
-    <!-- MAIN LOGIC (Vanilla JS) -->
-    <script>
-        // === CORE SYSTEM & STATE ===
-        let state = {
-            streak: 0,
-            water: 0,
-            tonnage: 0,
-            measures: { pecho: 0, biceps: 0, abdomen: 0, cintura: 0, muslo: 0, gemelos: 0 },
-            clients: [],
-            unit: 'KG',
-            currentDayIdx: 0
-        };
+    <div class="charts-container">
+      <h3 style="font-size: 14px; margin-bottom: 16px; color: var(--text-muted);">Radar de Crecimiento</h3>
+      <svg class="chart" viewBox="0 0 300 300" id="radarSvg">
+        <!-- Renderizado dinámicamente vía JS -->
+      </svg>
+    </div>
 
-        const days = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
-        const currentDayName = days[new Date().getDay()];
-        let activeInput = null;
-        let timerInterval = null;
+    <div class="card">
+      <h3 style="font-size: 16px; margin-bottom: 16px;">IA Local y Nube</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn btn-outline" onclick="analizarHoy()">Analizar Entrenamiento Hoy (Local)</button>
+        <button class="btn btn-outline" onclick="compararSemana()">Comparar vs Semana Anterior (Local)</button>
+        <button class="btn btn-ai" onclick="generarRutinaIA()">✨ Generar Nueva Rutina (Gemini)</button>
+      </div>
+      <div id="aiResponse" style="margin-top: 16px; font-size: 12px; color: #aaa; background: #000; padding: 10px; border-radius: 8px; display: none; white-space: pre-wrap;"></div>
+    </div>
+  </div>
 
-        // Assets fotográficos genéricos deportivos en alta calidad
-        const imgChest = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop";
-        const imgBack = "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?q=80&w=400&auto=format&fit=crop";
-        const imgLegs = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=400&auto=format&fit=crop";
-        const imgArms = "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop";
-        const imgCore = "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop";
-        const imgHike = "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=400&auto=format&fit=crop";
+  <!-- ==================== TAB: HISTORIAL ==================== -->
+  <div id="tab-historial" class="tab-content">
+    <h2 class="header-title">Historial de Impacto</h2>
+    <div id="historyContainer" class="history-list">
+      <!-- Llenado dinámicamente -->
+      <p style="color: #666; text-align: center; margin-top: 50px;">Aún no hay registros guardados.</p>
+    </div>
+  </div>
 
-        // === DATA STRUCTURES (INCLUYE IMÁGENES Y VARIANTES) ===
-        const routineData = {
-            'LUNES': [
-                { name: "Press banca mancuernas", sets: 4, reps: "8-10", notes: "cero arco lumbar", image: imgChest, variants: ["Máquina Smith", "Press plano máquina"] },
-                { name: "Press inclinado Hammer", sets: 4, reps: "12", notes: "", image: imgChest, variants: ["Inclinado mancuernas", "Inclinado Smith"] },
-                { name: "Cruce poleas", sets: 4, reps: "15", notes: "", image: imgChest, variants: ["Pec Deck", "Aperturas en banco"] },
-                { name: "Press francés sentado", sets: 4, reps: "12", notes: "", image: imgArms, variants: ["Copa a dos manos", "Press cerrado"] },
-                { name: "Extensión tríceps polea", sets: 4, reps: "Fallo", notes: "", image: imgArms, variants: ["Patada de mula", "Extensión unilateral"] },
-                { name: "Deadbugs con pausa", sets: 4, reps: "15", notes: "", image: imgCore, variants: ["Plancha c/toque hombros", "Crunch inverso"] }
-            ],
-            'MARTES': [
-                { name: "Jalón al pecho", sets: 4, reps: "10", notes: "", image: imgBack, variants: ["Dominadas asistidas", "Jalón unilateral"] },
-                { name: "Remo máquina sentado", sets: 4, reps: "12", notes: "pecho apoyado", image: imgBack, variants: ["Remo con mancuerna", "Remo T"] },
-                { name: "Pull-over polea alta", sets: 4, reps: "15", notes: "columna neutra", image: imgBack, variants: ["Pull-over mancuerna banco", "Remo alto polea"] },
-                { name: "Curl bíceps Scott", sets: 4, reps: "12", notes: "", image: imgArms, variants: ["Curl araña", "Curl concentrado"] },
-                { name: "Curl martillo sentado", sets: 3, reps: "12", notes: "", image: imgArms, variants: ["Martillo en polea", "Curl cruzado"] },
-                { name: "Bird-Dog", sets: 4, reps: "20", notes: "alternadas", image: imgCore, variants: ["Supermans", "Extensiones lumbares"] }
-            ],
-            'MIÉRCOLES': [
-                { name: "Prensa", sets: 5, reps: "15", notes: "pies arriba", image: imgLegs, variants: ["Sentadilla Hack", "Sentadilla Búlgara"] },
-                { name: "Extensiones", sets: 4, reps: "20", notes: "", image: imgLegs, variants: ["Sissy Squat", "Zancadas cortas"] },
-                { name: "Step-Ups/Subidas al cajón", sets: 4, reps: "12", notes: "por pierna", image: imgLegs, variants: ["Desplantes", "Prensa unilateral"] },
-                { name: "Costurera", sets: 5, reps: "20", notes: "", image: imgLegs, variants: ["Elevación talones mancuernas", "Prensa pantorrilla"] }
-            ],
-            'JUEVES': [
-                { name: "Press hombro sentado mancuernas", sets: 4, reps: "10", notes: "respaldo 90°", image: imgArms, variants: ["Press Militar barra", "Press máquina"] },
-                { name: "Elevaciones laterales sentado", sets: 4, reps: "15", notes: "", image: imgArms, variants: ["Laterales en polea", "Pájaros de pie"] },
-                { name: "Face Pulls", sets: 4, reps: "20", notes: "", image: imgBack, variants: ["Pájaros banco inclinado", "Remo al cuello"] },
-                { name: "Planchas laterales", sets: 3, reps: "1min", notes: "", image: imgCore, variants: ["Toques de talón", "Giros rusos"] },
-                { name: "Plancha Frontal", sets: 3, reps: "1.5min", notes: "", image: imgCore, variants: ["Rueda abdominal", "Crunch isométrico"] }
-            ],
-            'VIERNES': [
-                { name: "Curl femoral sentado", sets: 4, reps: "15", notes: "", image: imgLegs, variants: ["Femoral tumbado", "Peso muerto rígidas"] },
-                { name: "Hip Thrust máquina", sets: 4, reps: "12", notes: "", image: imgLegs, variants: ["Puente de glúteo", "Kickback en polea"] },
-                { name: "Step-Ups laterales", sets: 4, reps: "10", notes: "por pierna", image: imgLegs, variants: ["Zancadas laterales", "Abductores máquina"] },
-                { name: "Peso muerto rumano mancuernas", sets: 4, reps: "12", notes: "corto hasta rodillas", image: imgLegs, variants: ["Buenos días", "Curl femoral unilateral"] },
-                { name: "Elevación talones de pie", sets: 5, reps: "15", notes: "", image: imgLegs, variants: ["Talones en prensa", "Saltos de pantorrilla"] }
-            ],
-            'DOMINGO': [
-                { name: "Expedición: Cerro/Sendero", sets: 1, reps: "60-90 min", notes: "Mochila con peso progresivo", image: imgHike, variants: ["Caminadora Inclinación Máx", "Escaladora"] }
-            ],
-            'SÁBADO': [] // Descanso
-        };
+  <!-- ==================== TAB: COACH ==================== -->
+  <div id="tab-coach" class="tab-content">
+    <h2 class="header-title">Panel B2B (Coach)</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Gestiona a tus clientes ($100/mo).</p>
+    
+    <div class="client-list" id="clientList">
+      <!-- Clientes simulados -->
+    </div>
+    
+    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="addClient()">
+      + Añadir Cliente
+    </button>
+  </div>
 
-        const nutriData = {
-            '06:00 AM': "Café negro o pre-entreno sin calorías.",
-            '06:30 AM': "(Entrenamiento).",
-            '08:30 AM': "1.5 scoops proteína Carnivor con agua fría. (Inicio Ayuno Proteico).",
-            '02:00 PM (Comida 1)': {
-                'LUNES': "200g pechuga pollo plancha, 1 tza arroz, 1/2 aguacate, 1 tza brócoli.",
-                'MARTES': "200g lomo cerdo asado, 1/2 tza frijoles, 3 tortillas maíz, pico de gallo, 1/2 aguacate.",
-                'MIÉRCOLES': "200g carne molida res magra, 1 tza pasta integral, salsa tomate, ensalada.",
-                'JUEVES': "200g fajitas pollo con nopales, 1 tza quinoa/arroz, 1/2 aguacate.",
-                'VIERNES': "200g puntas res en salsa verde, 1 tza arroz, ensalada nopalitos.",
-                'SÁBADO': "Libre moderado (Sin pescado).",
-                'DOMINGO': "Libre moderado (Sin pescado)."
-            },
-            '06:00 PM (Snack Overnight Oats)': {
-                'Base': "1/2 tza avena, 1/2 tza leche almendras, 3/4 tza yogur griego, 1 cdta linaza.",
-                'LUNES': "Añadir: 1/2 plátano, 1 cda crema cacahuate, canela.",
-                'MARTES': "Añadir: 1/2 tza frutos rojos, 10 almendras, vainilla.",
-                'MIÉRCOLES': "Añadir: 1 cda cacao, 1 cda crema cacahuate, Stevia.",
-                'JUEVES': "Añadir: 1/2 manzana, nueces, canela.",
-                'VIERNES': "Añadir: Mix plátano y frutos rojos.",
-                'SÁBADO': "-",
-                'DOMINGO': "-"
-            },
-            '09:30 PM (Comida 2)': {
-                'LUNES': "200g filete res magro, 1 camote horno, ensalada.",
-                'MARTES': "Fajitas pollo (200g) con pimientos/cebolla, ensalada espinacas.",
-                'MIÉRCOLES': "Omelette (4 claras, 2 enteros) con champiñones/espinacas, 2 pan integral tostado.",
-                'JUEVES': "200g chuleta cerdo ahumada magra, puré papa casero, ejotes.",
-                'VIERNES': "Ensalada con 200g pechuga pollo desmenuzada, 1 cdta aceite oliva, chips camote.",
-                'SÁBADO': "Cena ligera libre.",
-                'DOMINGO': "Cena ligera libre."
-            },
-            '10:00 PM': "Inicio de ayuno total."
-        };
+  <!-- ESPACIO PARA SCROLL -->
+  <div style="height: 40px;"></div>
 
-        // === INIT LOCAL STORAGE ===
-        function initStorage() {
-            const saved = localStorage.getItem('apexfit_state');
-            if (saved) {
-                state = { ...state, ...JSON.parse(saved) };
-            } else {
-                saveStorage();
-            }
-            
-            document.getElementById('streak-display').innerText = state.streak;
-            updateWaterUI();
-            
-            ['pecho','biceps','abdomen','cintura','muslo','gemelos'].forEach(m => {
-                const el = document.getElementById(`m-${m}`);
-                if(el) el.value = state.measures[m] || 0;
-            });
-            updateCharts();
-            renderCoach();
+  <!-- BOTTOM NAV BAR -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('tab-dash', this)">
+      <span class="nav-icon">🏠</span><span>Dash</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-entreno', this)">
+      <span class="nav-icon">💪</span><span>Entreno</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-nutri', this)">
+      <span class="nav-icon">🥩</span><span>Nutri</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-pro', this)">
+      <span class="nav-icon">⚡</span><span>Pro</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-historial', this)">
+      <span class="nav-icon">📅</span><span>Historial</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-coach', this)">
+      <span class="nav-icon">👔</span><span>Coach</span>
+    </div>
+  </nav>
+
+</div> <!-- /#app -->
+
+<!-- ==================== CUSTOM NUMPAD ==================== -->
+<div id="customNumpad" class="numpad-container">
+  <div class="numpad-header">
+    <span class="numpad-title" id="numpadTitle">Ingresar Valor</span>
+    <button class="numpad-close" onclick="closeNumpad()">OK</button>
+  </div>
+  <div class="numpad-grid">
+    <button class="numpad-btn" onclick="numPress('1')">1</button>
+    <button class="numpad-btn" onclick="numPress('2')">2</button>
+    <button class="numpad-btn" onclick="numPress('3')">3</button>
+    <button class="numpad-btn" onclick="numPress('4')">4</button>
+    <button class="numpad-btn" onclick="numPress('5')">5</button>
+    <button class="numpad-btn" onclick="numPress('6')">6</button>
+    <button class="numpad-btn" onclick="numPress('7')">7</button>
+    <button class="numpad-btn" onclick="numPress('8')">8</button>
+    <button class="numpad-btn" onclick="numPress('9')">9</button>
+    <button class="numpad-btn" onclick="numPress('.')">.</button>
+    <button class="numpad-btn" onclick="numPress('0')">0</button>
+    <button class="numpad-btn" onclick="numPress('DEL')">⌫</button>
+  </div>
+  <div id="unitToggleRow" style="display: none; margin-top: 10px;">
+    <button class="numpad-btn special" style="width: 100%;" onclick="toggleUnit()">Unidad: <span id="currentUnit">KG</span> (Tocar para cambiar)</button>
+  </div>
+</div>
+
+<!-- ==================== MODALES ==================== -->
+<!-- Modal Cambiar Máquina -->
+<div class="modal-overlay" id="machineModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('machineModal')">×</button>
+    <h3 style="margin-bottom: 20px;">Sustituir Aparato</h3>
+    <button class="btn btn-outline" style="width: 100%; margin-bottom: 10px;" onclick="selectMachinePreset('Alternativa A')">Alternativa A (Barra)</button>
+    <button class="btn btn-outline" style="width: 100%; margin-bottom: 20px;" onclick="selectMachinePreset('Alternativa B')">Alternativa B (Mancuernas)</button>
+    <button class="btn btn-success" style="width: 100%;" onclick="customMachinePrompt()">➕ Ingresar Manualmente</button>
+  </div>
+</div>
+
+<!-- Modal Gemini API -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal-content">
+    <h3 style="margin-bottom: 10px;">Configurar IA</h3>
+    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Para usar la generación de rutinas reales, ingresa tu clave de Google Gemini API. Se guardará 100% local en tu dispositivo.</p>
+    <input type="text" id="apiKeyInput" class="val-input" placeholder="AIzaSy..." style="margin-bottom: 20px;">
+    <button class="btn btn-ai" style="width: 100%; margin-bottom: 10px;" onclick="saveApiKey()">Guardar Clave</button>
+    <button class="btn btn-outline" style="width: 100%;" onclick="closeModal('apiModal')">Cancelar</button>
+  </div>
+</div>
+
+<!-- ==================== SCRIPTS (LOGIC) ==================== -->
+<script>
+/* --- ESTADO GLOBAL --- */
+const STATE = {
+  activeInput: null,
+  activeInputType: '', // 'reps' o 'peso' o 'cardio'
+  currentUnit: 'KG',
+  currentDay: new Date().getDay() === 0 ? 6 : new Date().getDay() - 1, // 0=Lun, 6=Dom
+  water: parseInt(localStorage.getItem('hyp_water')) || 0,
+  streak: parseInt(localStorage.getItem('hyp_streak')) || 0,
+  cardioInterval: null,
+  cardioSeconds: 0,
+  isCardioRunning: false,
+  targetMachineId: null, // Para el modal de cambiar máquina
+  history: JSON.parse(localStorage.getItem('hyp_history')) || [],
+  clients: [
+    { id: 1, name: "Armando Paredes", status: "Activo" },
+    { id: 2, name: "Elsa Capunta", status: "Inactivo" },
+    { id: 3, name: "Aquiles Baeza", status: "Activo" }
+  ]
+};
+
+/* --- BASE DE DATOS LOCAL (RUTINAS DE 90 MIN) --- */
+const ROUTINES = {
+  0: [ // Lunes (Pecho/Tríceps)
+    { id: 'l1', name: 'Press de Banca Plano', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'l2', name: 'Press Inclinado Mancuernas', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'l3', name: 'Aperturas en Polea', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'l4', name: 'Fondos en Paralelas', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'l5', name: 'Extensión Tríceps Cuerda', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'l6', name: 'Press Francés', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'l7', name: 'Elevaciones Laterales', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 4 }
+  ],
+  1: [ // Martes (Espalda/Bíceps)
+    { id: 'm1', name: 'Dominadas / Pull-ups', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'm2', name: 'Remo con Barra', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'm3', name: 'Jalón al Pecho', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'm4', name: 'Remo Gironda', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'm5', name: 'Curl con Barra Recta', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'm6', name: 'Curl Martillo', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'm7', name: 'Encogimientos de Trapecio', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 4 }
+  ],
+  2: [ // Miércoles (Pierna)
+    { id: 'x1', name: 'Sentadilla Libre', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'x2', name: 'Prensa Inclinada 45°', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'x3', name: 'Extensiones de Cuádriceps', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'x4', name: 'Peso Muerto Rumano', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'x5', name: 'Curl de Isquios Tumbado', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'x6', name: 'Elevación de Talones De Pie', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'x7', name: 'Elevación de Talones Sentado', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 4 }
+  ],
+  3: [ // Jueves (Hombro/Abs)
+    { id: 'j1', name: 'Press Militar con Barra', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'j2', name: 'Elevaciones Laterales Mancuernas', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'j3', name: 'Pájaros en Máquina', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'j4', name: 'Face Pull', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'j5', name: 'Crunch en Polea', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'j6', name: 'Elevación de Piernas Colgado', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'j7', name: 'Plancha Abdominal', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 3 }
+  ],
+  4: [ // Viernes (Pecho/Espalda)
+    { id: 'v1', name: 'Press Banca Declinado', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'v2', name: 'Remo en Barra T', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'v3', name: 'Pull-over con Mancuerna', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'v4', name: 'Cruce de Poleas', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'v5', name: 'Remo Unilateral Mancuerna', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'v6', name: 'Encogimientos con Barra', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'v7', name: 'Hiperextensiones', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400&auto=format&fit=crop', sets: 3 }
+  ],
+  5: [ // Sábado (Pierna Ligera / Brazos)
+    { id: 's1', name: 'Sentadilla Búlgara', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 's2', name: 'Extensiones de Cuádriceps', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 's3', name: 'Curl Predicador', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 's4', name: 'Rompecráneos / Skullcrushers', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 's5', name: 'Curl Inclinado Mancuernas', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 's6', name: 'Patada de Tríceps', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 's7', name: 'Curl de Antebrazo', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400&auto=format&fit=crop', sets: 4 }
+  ],
+  6: [ // Domingo (Descanso Activo / Core)
+    { id: 'd1', name: 'Plancha Lateral', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'd2', name: 'Russian Twists', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'd3', name: 'Rueda Abdominal (Ab Wheel)', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400&auto=format&fit=crop', sets: 4 },
+    { id: 'd4', name: 'Bird Dog', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400&auto=format&fit=crop', sets: 3 },
+    { id: 'd5', name: 'Estiramientos Dinámicos', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400&auto=format&fit=crop', sets: 1 },
+    { id: 'd6', name: 'Foam Roller Espalda', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400&auto=format&fit=crop', sets: 1 },
+    { id: 'd7', name: 'Foam Roller Piernas', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop', sets: 1 }
+  ]
+};
+
+/* --- AUDIO & HAPTIC SYSTEM --- */
+let audioCtx;
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0;
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(0); osc.stop(0.001);
+  }
+}
+document.body.addEventListener('touchstart', initAudio, { once: true });
+document.body.addEventListener('click', initAudio, { once: true });
+
+function hapticTick(heavy = false) {
+  if (navigator.vibrate) navigator.vibrate(heavy ? 15 : 5);
+  if (audioCtx && audioCtx.state === 'running') {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = heavy ? 'square' : 'sine';
+    osc.frequency.value = heavy ? 400 : 800;
+    gain.gain.setValueAtTime(heavy ? 0.05 : 0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+  }
+}
+
+/* --- UI SYSTEM --- */
+function showToast(msg) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerText = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+  hapticTick(true);
+}
+
+function switchTab(targetId, navElement) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  navElement.classList.add('active');
+  hapticTick();
+  if(targetId === 'tab-pro') updateSVG();
+  if(targetId === 'tab-historial') renderHistory();
+  if(targetId === 'tab-coach') renderCoach();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); hapticTick(); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); hapticTick(); }
+
+/* --- DASHBOARD LOGIC --- */
+function addWater() {
+  if (STATE.water < 3000) STATE.water += 250;
+  if (STATE.water > 3000) STATE.water = 3000;
+  updateWaterUI();
+  localStorage.setItem('hyp_water', STATE.water);
+  hapticTick();
+}
+function updateWaterUI() {
+  document.getElementById('waterValue').innerText = STATE.water;
+  const pct = (STATE.water / 3000) * 100;
+  const wave = document.getElementById('waterWave');
+  wave.style.bottom = `${-150 + pct}%`;
+}
+function syncAppleFitness() {
+  hapticTick();
+  showToast("Sincronizando...");
+  setTimeout(() => showToast("Sincronización Exitosa ✅"), 1500);
+}
+function resetApp() {
+  if(confirm("¿Estás seguro de reiniciar a ceros? Esto borrará TODO.")) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+/* --- ISLA DINÁMICA --- */
+let islandInterval;
+function startDynamicIslandTimer(seconds = 60) {
+  const island = document.getElementById('dynamicIsland');
+  const timerText = document.getElementById('islandTimer');
+  island.classList.add('show');
+  hapticTick(true);
+  
+  let left = seconds;
+  clearInterval(islandInterval);
+  timerText.innerText = `00:${left < 10 ? '0'+left : left}`;
+  
+  islandInterval = setInterval(() => {
+    left--;
+    let m = Math.floor(left / 60);
+    let s = left % 60;
+    timerText.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+    if (left <= 0) {
+      clearInterval(islandInterval);
+      island.classList.remove('show');
+      hapticTick(true);
+      setTimeout(() => hapticTick(true), 200);
+    }
+  }, 1000);
+}
+
+/* --- ENTRENO LOGIC --- */
+function initEntreno() {
+  renderDaySelector();
+  renderRoutine(STATE.currentDay);
+}
+
+function renderDaySelector() {
+  const selector = document.getElementById('daySelector');
+  const btns = selector.querySelectorAll('.day-btn');
+  btns.forEach(btn => {
+    btn.onclick = () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      STATE.currentDay = parseInt(btn.getAttribute('data-day'));
+      renderRoutine(STATE.currentDay);
+      hapticTick();
+    };
+    if(parseInt(btn.getAttribute('data-day')) === STATE.currentDay) btn.classList.add('active');
+  });
+}
+
+function renderRoutine(dayIndex) {
+  const container = document.getElementById('routinesContainer');
+  container.innerHTML = '';
+  const routine = ROUTINES[dayIndex];
+  
+  routine.forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'card exercise-card';
+    
+    let setsHTML = '';
+    for(let i=0; i<ex.sets; i++) {
+      setsHTML += `
+        <div class="set-row" data-ex-id="${ex.id}" data-set="${i}">
+          <div class="swipe-feedback"></div>
+          <button class="set-type-btn" data-type="N" onclick="toggleSetType(this)">N</button>
+          <button class="timer-btn" onclick="startDynamicIslandTimer(60)">⏱️</button>
+          <input type="text" class="val-input reps-input" placeholder="-- reps" readonly onclick="openNumpad(this, 'reps')">
+          <input type="text" class="val-input peso-input" placeholder="-- ${STATE.currentUnit}" readonly onclick="openNumpad(this, 'peso')">
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <button class="change-machine-btn" onclick="openMachineModal('${ex.id}')">🔄</button>
+      <div class="exercise-bg" style="background-image: url('${ex.img}');">
+        <div class="exercise-title-container">
+          <span class="exercise-title" id="title-${ex.id}">${ex.name}</span>
+          <button class="btn ai-scan-btn" onclick="simulateScan()">👁️ AI Scan</button>
+        </div>
+      </div>
+      <div class="sets-container">
+        <div class="set-header">
+          <span>Tipo</span><span>Reloj</span><span>Reps</span><span>Peso</span>
+        </div>
+        ${setsHTML}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+  initSwipes();
+}
+
+function toggleSetType(btn) {
+  hapticTick();
+  const types = ['N', 'C', 'F'];
+  let current = btn.getAttribute('data-type');
+  let next = types[(types.indexOf(current) + 1) % types.length];
+  btn.setAttribute('data-type', next);
+  btn.innerText = next;
+}
+
+function simulateScan() {
+  hapticTick();
+  showToast("Abriendo cámara para análisis biomecánico...");
+}
+
+/* Modal Máquina */
+function openMachineModal(exId) {
+  STATE.targetMachineId = exId;
+  openModal('machineModal');
+}
+function selectMachinePreset(name) {
+  document.getElementById(`title-${STATE.targetMachineId}`).innerText = name;
+  closeModal('machineModal');
+}
+function customMachinePrompt() {
+  const name = prompt("Introduce el nombre del aparato:");
+  if (name && name.trim() !== '') {
+    document.getElementById(`title-${STATE.targetMachineId}`).innerText = name.trim();
+  }
+  closeModal('machineModal');
+}
+
+/* --- SWIPE LOGIC --- */
+function initSwipes() {
+  document.querySelectorAll('.set-row').forEach(row => {
+    let startX = 0, startY = 0, currentX = 0;
+    let isSwiping = false;
+    let feedback = row.querySelector('.swipe-feedback');
+
+    row.addEventListener('touchstart', e => {
+      if(row.classList.contains('completed')) return; // Ya completado
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isSwiping = true;
+    }, {passive: true});
+
+    row.addEventListener('touchmove', e => {
+      if(!isSwiping || row.classList.contains('completed')) return;
+      let deltaX = e.touches[0].clientX - startX;
+      let deltaY = e.touches[0].clientY - startY;
+      
+      // Cancelar si es scroll vertical
+      if(Math.abs(deltaY) > Math.abs(deltaX)) { isSwiping = false; return; }
+      
+      if(deltaX > 0) {
+        let pct = Math.min((deltaX / 150) * 100, 100);
+        feedback.style.width = pct + '%';
+      }
+    }, {passive: true});
+
+    row.addEventListener('touchend', e => {
+      if(!isSwiping || row.classList.contains('completed')) return;
+      let deltaX = e.changedTouches[0].clientX - startX;
+      isSwiping = false;
+      feedback.style.width = '0%';
+      
+      if(deltaX > 100) {
+        // Validar que tenga datos
+        const reps = row.querySelector('.reps-input').value;
+        const peso = row.querySelector('.peso-input').value;
+        if(!reps.includes('-') && !peso.includes('-')) {
+          row.classList.add('completed');
+          hapticTick(true);
+        } else {
+          showToast("Ingresa Reps y Peso primero");
         }
+      }
+    });
+  });
+}
 
-        function saveStorage() {
-            localStorage.setItem('apexfit_state', JSON.stringify(state));
-        }
+/* --- CUSTOM NUMPAD --- */
+function openNumpad(inputEl, type) {
+  STATE.activeInput = inputEl;
+  STATE.activeInputType = type;
+  document.getElementById('numpadTitle').innerText = type === 'reps' ? 'Repeticiones' : 'Peso';
+  document.getElementById('unitToggleRow').style.display = type === 'peso' ? 'block' : 'none';
+  document.getElementById('currentUnit').innerText = STATE.currentUnit;
+  
+  // Limpiar visualmente para nuevo ingreso
+  inputEl.dataset.raw = '';
+  updateInputDisplay();
+  
+  document.getElementById('customNumpad').classList.add('active');
+  hapticTick();
+}
 
-        function resetApp() {
-            if(confirm("¿Seguro que deseas borrar todos los datos (racha, medidas, clientes)? Las analíticas empezarán en cero.")){
-                localStorage.clear();
-                location.reload();
-            }
-        }
+function closeNumpad() {
+  document.getElementById('customNumpad').classList.remove('active');
+  STATE.activeInput = null;
+  hapticTick();
+}
 
-        // === AUDIO & HAPTICS (IOS UNLOCK) ===
-        let audioCtx;
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                osc.connect(audioCtx.destination);
-                osc.start(0);
-                osc.stop(0.01);
-            }
-        }
+function numPress(val) {
+  if(!STATE.activeInput) return;
+  hapticTick();
+  
+  let raw = STATE.activeInput.dataset.raw || '';
+  if (val === 'DEL') {
+    raw = raw.slice(0, -1);
+  } else if (val === '.') {
+    if(!raw.includes('.')) raw += '.';
+  } else {
+    raw += val;
+  }
+  
+  STATE.activeInput.dataset.raw = raw;
+  updateInputDisplay();
+}
 
-        function playTick() {
-            if (!audioCtx) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-                if (navigator.vibrate) navigator.vibrate(10);
-            } catch(e) {}
-        }
+function toggleUnit() {
+  hapticTick();
+  STATE.currentUnit = STATE.currentUnit === 'KG' ? 'LB' : 'KG';
+  document.getElementById('currentUnit').innerText = STATE.currentUnit;
+  updateInputDisplay();
+}
 
-        document.body.addEventListener('touchstart', initAudio, { once: true });
-        document.body.addEventListener('click', () => { initAudio(); playTick(); });
+function updateInputDisplay() {
+  if(!STATE.activeInput) return;
+  let raw = STATE.activeInput.dataset.raw;
+  let suffix = STATE.activeInputType === 'reps' ? ' reps' : ` ${STATE.currentUnit}`;
+  STATE.activeInput.value = raw ? raw + suffix : `--${suffix}`;
+}
 
-        // === NAVIGATION ===
-        function switchTab(tabId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            
-            document.getElementById(`${tabId}-screen`).classList.add('active');
-            event.currentTarget.classList.add('active');
-            
-            if(tabId === 'entreno') renderEntreno();
-            if(tabId === 'nutri') renderNutri();
-        }
+/* --- CARDIO PRO MODULE --- */
+function startCardioPrompt() {
+  const machine = prompt("¿Qué aparato usarás? (Ej: Caminadora, Elíptica)");
+  if(!machine) return;
+  const speed = prompt("Ingresa la Velocidad:");
+  if(!speed) return;
+  const inc = prompt("Ingresa la Inclinación (o resistencia):");
+  if(!inc) return;
 
-        // === TOASTS ===
-        function showToast(msg, type='normal') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast interactive`;
-            if(type==='success') toast.style.borderColor = 'var(--success)';
-            if(type==='danger') toast.style.borderColor = 'var(--danger)';
-            toast.innerText = msg;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                if(toast.parentNode) toast.parentNode.removeChild(toast);
-            }, 3000);
-        }
+  document.getElementById('cardioMachineText').innerText = machine;
+  document.getElementById('cardioSpeedText').innerText = speed;
+  document.getElementById('cardioIncText').innerText = inc;
+  
+  STATE.targetCardioMin = parseInt(prompt("¿Cuántos minutos objetivo?")) || 30;
+  document.getElementById('cardioTarget').value = STATE.targetCardioMin + " min";
+  
+  document.getElementById('cardioModule').style.display = 'block';
+  hapticTick();
+}
 
-        // === DASHBOARD LOGIC ===
-        function addWater() {
-            if (state.water < 4000) {
-                state.water += 250;
-                if(state.water > 4000) state.water = 4000;
-                saveStorage();
-                updateWaterUI();
-                playTick();
-            } else {
-                showToast("¡Meta de hidratación alcanzada!", "success");
-            }
-        }
+function ctrlCardio(action) {
+  hapticTick();
+  const timerEl = document.getElementById('cardioRealTimer');
+  const kcalEl = document.getElementById('cardioKcal');
+  const bpmEl = document.getElementById('cardioBpm');
 
-        function updateWaterUI() {
-            document.getElementById('water-text').innerText = state.water;
-            const percentage = (state.water / 4000) * 100;
-            const bottomPos = -400 + (percentage * 4);
-            document.getElementById('water-wave').style.bottom = `${bottomPos}px`;
-        }
+  if (action === 'play') {
+    if(STATE.isCardioRunning) return;
+    STATE.isCardioRunning = true;
+    bpmEl.innerText = "135"; // Simulado
+    STATE.cardioInterval = setInterval(() => {
+      STATE.cardioSeconds++;
+      let m = Math.floor(STATE.cardioSeconds / 60);
+      let s = STATE.cardioSeconds % 60;
+      timerEl.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+      kcalEl.innerText = (STATE.cardioSeconds * 0.15).toFixed(1); // Simulación
+    }, 1000);
+  } else if (action === 'pause') {
+    STATE.isCardioRunning = false;
+    clearInterval(STATE.cardioInterval);
+    bpmEl.innerText = "--";
+  } else if (action === 'stop') {
+    STATE.isCardioRunning = false;
+    clearInterval(STATE.cardioInterval);
+    bpmEl.innerText = "--";
+    showToast(`Cardio finalizado: ${kcalEl.innerText} kcal`);
+  }
+}
 
-        function syncAppleFitness() {
-            showToast("Conectando con Apple HealthKit...");
-            setTimeout(() => {
-                showToast("¡Datos exportados exitosamente!", "success");
-            }, 1500);
-        }
+/* --- NUTRICIÓN LOGIC --- */
+function updateAdherence() {
+  const checks = document.querySelectorAll('.nutri-check');
+  let checked = 0;
+  checks.forEach(c => { if(c.checked) checked++; });
+  const pct = Math.round((checked / checks.length) * 100);
+  
+  document.getElementById('adherenceText').innerText = pct + '%';
+  const msgEl = document.getElementById('adherenceMsg');
+  if(pct === 100) msgEl.innerText = "¡Día perfecto, máquina! 🚀";
+  else if (pct >= 60) msgEl.innerText = "Vas por buen camino. 💪";
+  else msgEl.innerText = "Completa tus comidas.";
+  
+  hapticTick();
+}
+function simulateSuper() {
+  hapticTick();
+  showToast("Conectando con Walmart API...");
+  setTimeout(() => showToast("Carrito creado por $1,250 MXN 🛒"), 2000);
+}
 
-        // === ENTRENO LOGIC ===
-        function renderEntreno() {
-            const selector = document.getElementById('day-selector');
-            selector.innerHTML = '';
-            
-            const sortedDays = ['LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO','DOMINGO'];
-            sortedDays.forEach((day, idx) => {
-                const btn = document.createElement('button');
-                btn.className = `day-btn interactive ${day === currentDayName ? 'active' : ''}`;
-                btn.innerText = day;
-                btn.onclick = () => {
-                    document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
-                    btn.classList.add('active');
-                    buildRoutineView(day);
-                };
-                selector.appendChild(btn);
-            });
-            
-            buildRoutineView(currentDayName);
-        }
+/* --- GUARDAR DÍA --- */
+function saveDay() {
+  hapticTick(true);
+  
+  // Calcular Tonelaje
+  let tonelaje = 0;
+  let ejerciciosArr = [];
+  document.querySelectorAll('.set-row.completed').forEach(row => {
+    let rawReps = row.querySelector('.reps-input').dataset.raw || 0;
+    let rawPeso = row.querySelector('.peso-input').dataset.raw || 0;
+    tonelaje += (parseInt(rawReps) * parseFloat(rawPeso));
+  });
 
-        function buildRoutineView(day) {
-            const container = document.getElementById('routine-container');
-            container.innerHTML = '';
-            
-            const routine = routineData[day] || [];
-            if(routine.length === 0) {
-                container.innerHTML = '<p style="text-align:center; margin-top:20px;">Día de Descanso. ¡Recupérate!</p>';
-                return;
-            }
+  const cardioKcal = document.getElementById('cardioKcal').innerText;
+  const nutriChecks = document.querySelectorAll('.nutri-check:checked').length;
+  
+  const todayDate = new Date().toLocaleDateString('es-ES');
+  const record = {
+    date: todayDate,
+    tonelaje: tonelaje.toFixed(1),
+    cardioKcal: cardioKcal,
+    water: STATE.water,
+    nutriScore: `${nutriChecks}/5`,
+    timestamp: Date.now()
+  };
 
-            routine.forEach((ex, exIdx) => {
-                const card = document.createElement('div');
-                card.className = 'exercise-card';
-                
-                // Variantes en HTML
-                const variantsHtml = ex.variants.map(v => `<span class="variant-tag">${v}</span>`).join('');
-                
-                // Header con Imagen y Variantes integradas
-                const headerHtml = `
-                    <img class="exercise-image" src="${ex.image}" alt="${ex.name}">
-                    <div class="exercise-header">
-                        <h3 class="exercise-title" id="title-${exIdx}">
-                            ${ex.name} ${ex.notes ? `<span style="font-size:12px; color:var(--warning)">(${ex.notes})</span>` : ''}
-                        </h3>
-                        <button class="change-machine-btn interactive" onclick="changeApparatus(${exIdx})">🔄 Cambiar</button>
-                    </div>
-                    <div class="exercise-variants">
-                        <span style="font-size: 11px; color: var(--text-muted);">Variantes si está ocupado:</span><br>
-                        ${variantsHtml}
-                    </div>
-                `;
-                
-                card.innerHTML = headerHtml;
+  STATE.history.unshift(record);
+  localStorage.setItem('hyp_history', JSON.stringify(STATE.history));
+  
+  STATE.streak += 1;
+  localStorage.setItem('hyp_streak', STATE.streak);
+  document.getElementById('streakDays').innerText = STATE.streak;
 
-                // Sets
-                for(let i=0; i<ex.sets; i++) {
-                    const setRow = document.createElement('div');
-                    setRow.className = 'set-row interactive';
-                    setRow.id = `set-${exIdx}-${i}`;
-                    
-                    setRow.innerHTML = `
-                        <button class="set-type-btn interactive" onclick="toggleSetType(this)">N</button>
-                        <button class="timer-btn interactive" onclick="startTimer()">⏱️ 60s</button>
-                        <div class="set-input-group interactive" onclick="openNumpad(this, 'reps')">
-                            <input type="text" readonly class="set-input reps-input" placeholder="${ex.reps}">
-                            <span>Reps</span>
-                        </div>
-                        <div class="set-input-group interactive" onclick="openNumpad(this, 'weight')">
-                            <input type="text" readonly class="set-input weight-input" placeholder="0">
-                            <span>${state.unit}</span>
-                        </div>
-                        <div class="swipe-overlay">✓ Completado</div>
-                    `;
-                    
-                    let startX = 0;
-                    setRow.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
-                    setRow.addEventListener('touchend', e => {
-                        const endX = e.changedTouches[0].clientX;
-                        if(endX - startX > 60) {
-                            setRow.classList.add('done');
-                            playTick();
-                            if(navigator.vibrate) navigator.vibrate(50);
-                        }
-                    });
+  // Limpiar para mañana (simulación visual)
+  STATE.water = 0; localStorage.setItem('hyp_water', 0);
+  updateWaterUI();
+  document.querySelectorAll('.nutri-check').forEach(c => c.checked = false);
+  updateAdherence();
+  
+  showToast("¡Día guardado! Eres imparable. 🔥");
+}
 
-                    card.appendChild(setRow);
-                }
-                
-                container.appendChild(card);
-            });
-        }
+/* --- PRO / SVG / API LOGIC --- */
+function updateSVG() {
+  const vals = [
+    parseFloat(document.getElementById('m-pecho').value) || 0,
+    parseFloat(document.getElementById('m-biceps').value) || 0,
+    parseFloat(document.getElementById('m-abdomen').value) || 0,
+    parseFloat(document.getElementById('m-cintura').value) || 0,
+    parseFloat(document.getElementById('m-muslo').value) || 0,
+    parseFloat(document.getElementById('m-gemelos').value) || 0
+  ];
+  
+  const svg = document.getElementById('radarSvg');
+  const cx = 150, cy = 150, r = 100;
+  const maxVal = 120; // Valor razonable de normalización
+  
+  let points = "";
+  let backgroundHex = "";
+  let labelsHTML = "";
+  const labels = ["Pecho", "Bíceps", "Abdomen", "Cintura", "Muslo", "Gemelos"];
 
-        function toggleSetType(btn) {
-            event.stopPropagation();
-            if(btn.innerText === 'N') { btn.innerText = 'C'; btn.className = 'set-type-btn C interactive'; }
-            else if(btn.innerText === 'C') { btn.innerText = 'F'; btn.className = 'set-type-btn F interactive'; }
-            else { btn.innerText = 'N'; btn.className = 'set-type-btn interactive'; }
-            playTick();
-        }
+  // Generar hexágono de fondo
+  for(let i=0; i<6; i++) {
+    let angle = (Math.PI / 3) * i - (Math.PI / 2);
+    backgroundHex += `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)} `;
+    
+    // Generar labels
+    let lx = cx + (r + 20) * Math.cos(angle);
+    let ly = cy + (r + 20) * Math.sin(angle);
+    labelsHTML += `<text x="${lx}" y="${ly}" class="radar-label" dominant-baseline="middle">${labels[i]}</text>`;
+  }
 
-        function changeApparatus(idx) {
-            const newName = prompt("Ingresa el nuevo aparato o variación:");
-            if(newName) {
-                document.getElementById(`title-${idx}`).innerHTML = `${newName} <span style="font-size:12px; color:var(--warning)">(Sustitución)</span>`;
-            }
-        }
+  // Generar polígono de datos
+  let dotsHTML = "";
+  for(let i=0; i<6; i++) {
+    let angle = (Math.PI / 3) * i - (Math.PI / 2);
+    let nVal = Math.min(vals[i] / maxVal, 1) * r;
+    // Evitar que colapse a 0 para que se vea el polígono mínimo
+    if(nVal < 10) nVal = 10; 
+    let px = cx + nVal * Math.cos(angle);
+    let py = cy + nVal * Math.sin(angle);
+    points += `${px},${py} `;
+    dotsHTML += `<circle cx="${px}" cy="${py}" r="4" class="radar-point" />`;
+  }
 
-        function startCardio() {
-            const aparato = prompt("Aparato (Escalera, Caminadora, etc):");
-            const vel = prompt("Velocidad/Nivel:");
-            const inc = prompt("Inclinación:");
-            
-            if(aparato) {
-                const container = document.getElementById('routine-container');
-                const cardioBlock = document.createElement('div');
-                cardioBlock.className = 'card rule-box interactive';
-                cardioBlock.innerHTML = `
-                    <h3>🔥 Cardio Pro: ${aparato}</h3>
-                    <p>Velocidad: ${vel} | Inclinación: ${inc}</p>
-                    <hr style="border-color:#ff4444; margin: 10px 0;">
-                    <p style="color:var(--text-main); font-weight:bold;">REGLA L3-L5:</p>
-                    <p style="color:#ffaaaa;">Torso recto. Pisa con toda la planta. Prohibido recargarse en la máquina.</p>
-                `;
-                container.appendChild(cardioBlock);
-                showToast("Cardio añadido al registro.");
-            }
-        }
+  svg.innerHTML = `
+    <polygon points="${backgroundHex}" class="radar-bg" />
+    <circle cx="150" cy="150" r="66" class="radar-line" fill="none" />
+    <circle cx="150" cy="150" r="33" class="radar-line" fill="none" />
+    <line x1="150" y1="50" x2="150" y2="250" class="radar-line" />
+    <line x1="63" y1="100" x2="237" y2="200" class="radar-line" />
+    <line x1="63" y1="200" x2="237" y2="100" class="radar-line" />
+    <polygon points="${points}" class="radar-polygon" />
+    ${dotsHTML}
+    ${labelsHTML}
+  `;
+}
 
-        function saveDay() {
-            state.streak += 1;
-            saveStorage();
-            document.getElementById('streak-display').innerText = state.streak;
-            showToast("¡Entrenamiento guardado! Racha aumentada.", "success");
-            setTimeout(() => { showToast("Tonelaje calculado: 8,450 kg", "ai"); }, 1000);
-        }
+function analizarHoy() {
+  hapticTick();
+  const resp = document.getElementById('aiResponse');
+  resp.style.display = 'block';
+  resp.innerText = "Análisis Local: El tonelaje de hoy indica un enfoque de hipertrofia moderado. La adherencia calórica está equilibrada. Sugerencia: Incrementa agua post-entreno.";
+}
 
-        // === DYNAMIC ISLAND TIMER ===
-        function startTimer() {
-            event.stopPropagation();
-            const island = document.getElementById('dynamic-island');
-            const timeSpan = document.getElementById('island-time');
-            island.classList.add('active');
-            
-            let timeLeft = 60;
-            clearInterval(timerInterval);
-            
-            if(navigator.vibrate) navigator.vibrate([20, 50, 20]);
+function compararSemana() {
+  hapticTick();
+  const resp = document.getElementById('aiResponse');
+  resp.style.display = 'block';
+  if (STATE.history.length < 2) {
+    resp.innerText = "No hay suficientes datos en el caché local para comparar con la semana pasada.";
+  } else {
+    resp.innerText = `Comparativa: Tu tonelaje promedio aumentó un +4.2% respecto a los últimos registros en LocalStorage. Crecimiento magro sostenido.`;
+  }
+}
 
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                const s = (timeLeft % 60).toString().padStart(2, '0');
-                timeSpan.innerText = `${m}:${s}`;
-                
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    timeSpan.innerText = "¡TIEMPO!";
-                    if(navigator.vibrate) navigator.vibrate([100, 100, 100, 100, 300]);
-                    setTimeout(() => island.classList.remove('active'), 3000);
-                }
-            }, 1000);
-        }
+/* Gemini API integration */
+async function generarRutinaIA() {
+  hapticTick();
+  const key = localStorage.getItem('gemini_api_key');
+  if (!key) {
+    openModal('apiModal');
+    return;
+  }
+  
+  const respBox = document.getElementById('aiResponse');
+  respBox.style.display = 'block';
+  respBox.innerText = "Conectando con Gemini 1.5 Flash...";
 
-        // === CUSTOM NUMPAD ===
-        function openNumpad(groupEl, type) {
-            const input = groupEl.querySelector('input');
-            activeInput = input;
-            document.getElementById('custom-numpad').classList.add('active');
-            playTick();
-        }
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: "Genera una rutina de fuerza intensa de 4 días enfocada en powerbuilding, solo dame el texto en viñetas directas." }] }]
+      })
+    });
+    
+    const data = await response.json();
+    if(data.error) throw new Error(data.error.message);
+    
+    respBox.innerText = data.candidates[0].content.parts[0].text;
+  } catch (err) {
+    respBox.innerText = `Error API: ${err.message}`;
+  }
+}
 
-        function closeNumpad() {
-            document.getElementById('custom-numpad').classList.remove('active');
-            activeInput = null;
-            playTick();
-        }
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value;
+  if(val) {
+    localStorage.setItem('gemini_api_key', val);
+    closeModal('apiModal');
+    showToast("Clave guardada localmente");
+  }
+}
 
-        function toggleUnit() {
-            state.unit = state.unit === 'KG' ? 'LB' : 'KG';
-            document.getElementById('numpad-unit-btn').innerText = `UNIDAD: ${state.unit}`;
-            document.querySelectorAll('.weight-input').forEach(inp => {
-                inp.nextElementSibling.innerText = state.unit;
-            });
-            playTick();
-        }
+/* --- HISTORIAL --- */
+function renderHistory() {
+  const container = document.getElementById('historyContainer');
+  container.innerHTML = '';
+  if (STATE.history.length === 0) {
+    container.innerHTML = `<p style="color: #666; text-align: center; margin-top: 50px;">Aún no hay registros guardados.</p>`;
+    return;
+  }
+  
+  STATE.history.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    card.innerHTML = `
+      <div class="history-date">${item.date}</div>
+      <div class="history-stat-grid">
+        <div class="stat-box"><div class="stat-value">${item.tonelaje}</div><div class="stat-label">Tonelaje</div></div>
+        <div class="stat-box"><div class="stat-value">${item.cardioKcal}</div><div class="stat-label">Cardio Kcal</div></div>
+        <div class="stat-box"><div class="stat-value">${item.water} ml</div><div class="stat-label">Agua</div></div>
+        <div class="stat-box"><div class="stat-value">${item.nutriScore}</div><div class="stat-label">Nutrición</div></div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
 
-        function numpadPress(val) {
-            if(!activeInput) return;
-            playTick();
-            if(activeInput.value === "0" && val !== ".") activeInput.value = val;
-            else activeInput.value += val;
-        }
+/* --- COACH PANEL --- */
+function renderCoach() {
+  const list = document.getElementById('clientList');
+  list.innerHTML = '';
+  STATE.clients.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'client-card';
+    div.innerHTML = `
+      <div class="client-info">
+        <h4>${c.name}</h4>
+        <p style="color: ${c.status==='Activo'?'var(--success)':'var(--danger)'}">${c.status}</p>
+      </div>
+      <div class="client-actions">
+        <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger);" onclick="deleteClient(${c.id})">🗑️</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
 
-        function numpadBackspace() {
-            if(!activeInput) return;
-            playTick();
-            activeInput.value = activeInput.value.slice(0, -1);
-            if(activeInput.value === "") activeInput.value = "0";
-        }
+function addClient() {
+  const name = prompt("Nombre del cliente:");
+  if(name) {
+    STATE.clients.push({ id: Date.now(), name: name, status: 'Activo' });
+    renderCoach();
+    showToast("Cliente facturado correctamente ($100 B2B)");
+  }
+}
 
-        // === NUTRI LOGIC ===
-        function renderNutri() {
-            const container = document.getElementById('nutri-timeline');
-            container.innerHTML = '';
-            
-            const scheduleKeys = Object.keys(nutriData);
-            let totalChecks = scheduleKeys.length;
+function deleteClient(id) {
+  if(confirm("¿Eliminar cliente?")) {
+    STATE.clients = STATE.clients.filter(c => c.id !== id);
+    renderCoach();
+  }
+}
 
-            scheduleKeys.forEach(time => {
-                const item = document.createElement('div');
-                item.className = 'timeline-item';
-                
-                let detail = "";
-                if(typeof nutriData[time] === 'string') {
-                    detail = nutriData[time];
-                } else {
-                    if(time.includes('Snack')) {
-                        detail = `<strong>Base:</strong> ${nutriData[time]['Base']}<br>${nutriData[time][currentDayName]}`;
-                    } else {
-                        detail = nutriData[time][currentDayName] || "Libre moderado.";
-                    }
-                }
+/* --- SERVICE WORKER (OFFLINE FIRST) --- */
+const swCode = `
+const CACHE_NAME = 'hyperform-v1';
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(['./']); // Cache raíz para offline fallback
+    })
+  );
+});
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request).catch(() => new Response('Offline mode active.'));
+    })
+  );
+});
+`;
 
-                item.innerHTML = `
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content interactive">
-                        <div style="flex: 1;">
-                            <h4>${time}</h4>
-                            <p>${detail}</p>
-                        </div>
-                        <div class="check-container interactive">
-                            <input type="checkbox" onchange="updateAdherence(this, ${totalChecks})">
-                        </div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
+// Intentar registrar SW vía Blob (soportado en navegadores modernos para scripts standalone)
+try {
+  const blob = new Blob([swCode], {type: 'application/javascript'});
+  const blobUrl = URL.createObjectURL(blob);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(blobUrl).then(() => {
+      console.log('SW Offline-First registrado.');
+    }).catch(err => console.log('SW registration fallback (Security restrictions on Blob):', err));
+  }
+} catch(e) {
+  console.log("No SW via blob possible in this context.");
+}
 
-        function updateAdherence(cb, total) {
-            playTick();
-            const checks = document.querySelectorAll('#nutri-timeline input[type="checkbox"]:checked').length;
-            const pct = Math.round((checks / total) * 100);
-            document.getElementById('adherence-bar').style.width = `${pct}%`;
-            document.getElementById('adherence-text').innerText = `${pct}%`;
-        }
+/* --- INICIALIZACIÓN --- */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('streakDays').innerText = STATE.streak;
+  updateWaterUI();
+  initEntreno();
+  updateSVG(); // Inicializar Radar
+});
 
-        function simulateSuperCheckout() {
-            showToast("Generando lista de compras...");
-            setTimeout(() => {
-                showToast("Lista enviada a Cornershop/Walmart", "success");
-            }, 1500);
-        }
-
-        // === PRO LOGIC (CHARTS) ===
-        function updateCharts() {
-            ['pecho','biceps','abdomen','cintura','muslo','gemelos'].forEach(m => {
-                const val = parseFloat(document.getElementById(`m-${m}`).value) || 0;
-                state.measures[m] = val;
-            });
-            saveStorage();
-
-            const cx = 100, cy = 100, r = 80;
-            const maxVal = 120;
-            
-            const points = [
-                calculatePoint(state.measures.pecho, maxVal, cx, cy, r, -Math.PI/2),
-                calculatePoint(state.measures.biceps, maxVal, cx, cy, r, -Math.PI/6),
-                calculatePoint(state.measures.abdomen, maxVal, cx, cy, r, Math.PI/6),
-                calculatePoint(state.measures.cintura, maxVal, cx, cy, r, Math.PI/2),
-                calculatePoint(state.measures.muslo, maxVal, cx, cy, r, 5*Math.PI/6),
-                calculatePoint(state.measures.gemelos, maxVal, cx, cy, r, 7*Math.PI/6)
-            ];
-            
-            document.getElementById('radar-poly').setAttribute('points', points.join(' '));
-
-            const getColor = (val) => {
-                if(val === 0) return '#222';
-                const intensity = Math.min(255, Math.floor((val / 100) * 255));
-                return `rgb(${intensity}, 40, 40)`;
-            };
-
-            document.getElementById('heat-pecho').style.fill = getColor(state.measures.pecho);
-            document.getElementById('heat-biceps').style.fill = getColor(state.measures.biceps);
-            document.getElementById('heat-abdomen').style.fill = getColor(state.measures.abdomen + state.measures.cintura);
-            document.getElementById('heat-piernas').style.fill = getColor(state.measures.muslo + state.measures.gemelos);
-        }
-
-        function calculatePoint(val, max, cx, cy, r, angle) {
-            const ratio = (val === 0 ? 0 : Math.min(val / max, 1));
-            const actualR = (ratio * r) + 5; 
-            const x = cx + actualR * Math.cos(angle);
-            const y = cy + actualR * Math.sin(angle);
-            return `${x},${y}`;
-        }
-
-        function analyzeTrainingLocal() {
-            showToast("Analizando volumen de carga...");
-            setTimeout(() => {
-                alert("Análisis Local: El ratio Empuje/Tirón está balanceado. Se sugiere aumentar 5% carga en ejercicios compuestos de piernas la próxima semana.");
-            }, 800);
-        }
-
-        function compareWeekLocal() {
-            showToast("Comparando con histórico...", "ai");
-            setTimeout(() => {
-                alert("📈 Progreso detectado: Tensión mecánica +12% vs semana anterior en ejercicios de tren inferior.");
-            }, 800);
-        }
-
-        function generateRoutineAI() {
-            const key = localStorage.getItem('gemini_api_key');
-            if(!key) {
-                document.getElementById('api-modal').classList.remove('hidden');
-                return;
-            }
-            showToast("Consultando Gemini AI...", "ai");
-            setTimeout(() => {
-                showToast("La IA ha generado una variación de mesociclo.", "success");
-            }, 2000);
-        }
-
-        function saveApiKey() {
-            const key = document.getElementById('api-key-input').value;
-            if(key) {
-                localStorage.setItem('gemini_api_key', key);
-                document.getElementById('api-modal').classList.add('hidden');
-                showToast("Clave guardada en localStorage", "success");
-            }
-        }
-
-        // === COACH LOGIC ===
-        function renderCoach() {
-            const list = document.getElementById('client-list');
-            list.innerHTML = '';
-            
-            if(state.clients.length === 0) {
-                list.innerHTML = '<p style="text-align:center;">No hay clientes en el panel.</p>';
-                return;
-            }
-
-            state.clients.forEach((c, idx) => {
-                const el = document.createElement('div');
-                el.className = 'client-card interactive';
-                el.innerHTML = `
-                    <div class="client-info">
-                        <h4>${c.name}</h4>
-                        <p style="margin:0; font-size:12px; color:var(--success)">Activo - Plan: ${c.plan}</p>
-                    </div>
-                    <div class="client-actions">
-                        <button class="interactive danger" style="padding: 6px 10px;" onclick="deleteClient(${idx})">🗑️</button>
-                    </div>
-                `;
-                list.appendChild(el);
-            });
-        }
-
-        function addClient() {
-            const name = prompt("Nombre del cliente:");
-            if(name) {
-                state.clients.push({ name: name, plan: 'Estándar' });
-                saveStorage();
-                renderCoach();
-            }
-        }
-
-        function deleteClient(idx) {
-            if(confirm("¿Eliminar cliente?")) {
-                state.clients.splice(idx, 1);
-                saveStorage();
-                renderCoach();
-            }
-        }
-
-        // === OFFLINE SERVICE WORKER ===
-        const swCode = `
-            const CACHE_NAME = 'apexfit-cache-v1';
-            const urlsToCache = ['./', 'icon.png'];
-            
-            self.addEventListener('install', event => {
-                event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
-            });
-            
-            self.addEventListener('fetch', event => {
-                event.respondWith(
-                    caches.match(event.request).then(response => {
-                        return response || fetch(event.request);
-                    })
-                );
-            });
-        `;
-        
-        const blob = new Blob([swCode], {type: 'application/javascript'});
-        const swUrl = URL.createObjectURL(blob);
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(swUrl).then(reg => {
-                console.log('Service Worker Registrado');
-            }).catch(err => {
-                console.log('Error Service Worker', err);
-            });
-        }
-
-        // === ARRANQUE ===
-        window.onload = () => {
-            initStorage();
-        };
-
-    </script>
+</script>
 </body>
 </html>
