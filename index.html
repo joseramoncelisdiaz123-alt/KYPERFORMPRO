@@ -6,359 +6,204 @@
 <meta name="theme-color" content="#0d0d0d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Hyperform Pro 11/10</title>
+<title>ApexFit Ultimate</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 /* ==================== VARIABLES Y RESET ==================== */
-:root {
-  --bg: #0d0d0d;
-  --card: #1a1a1a;
-  --primary: #00ffcc;
-  --danger: #ff4444;
-  --warning: #ffaa00;
-  --success: #00ffaa;
-  --ai: #bb86fc;
-  --text-main: #ffffff;
-  --text-muted: #888888;
-  --border: #333333;
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Tema Ultra (Domingos) */
-body.theme-ultra {
-  --primary: #ff5c00;
-  --success: #ff7b00;
-  --ai: #ff3300;
-}
-
+:root { --bg: #0d0d0d; --card: #1a1a1a; --primary: #00ffcc; --danger: #ff4444; --warning: #ffaa00; --success: #00ffaa; --ai: #bb86fc; --text-main: #ffffff; --text-muted: #888888; --border: #333333; --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+body.theme-ultra { --primary: #ff5c00; --success: #ff7b00; --ai: #ff3300; }
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
 body { background-color: var(--bg); color: var(--text-main); font-family: var(--font); overflow-x: hidden; padding-bottom: 90px; padding-top: env(safe-area-inset-top); transition: all 0.3s ease; }
-button { font-family: var(--font); cursor: pointer; border: none; outline: none; transition: transform 0.1s ease, filter 0.2s; }
-button:active { transform: scale(0.92); }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'%3E%3Cpath d='M10 10l5 5-5 5-5-5 5-5zm20 20l3 3-3 3-3-3 3-3zm40 10c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm20 40c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z'/%3E%3C/g%3E%3C/svg%3E"); z-index: -1; pointer-events: none; }
+button { font-family: var(--font); cursor: pointer; border: none; outline: none; transition: transform 0.1s ease; } button:active { transform: scale(0.92); }
 input, textarea { font-family: var(--font); outline: none; user-select: text; }
-a { text-decoration: none; color: inherit; }
-
-/* ==================== UTILIDADES ==================== */
 .btn { padding: 12px 18px; border-radius: 12px; font-weight: bold; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
-.btn-primary { background: var(--primary); color: #000; }
-.btn-danger { background: var(--danger); color: #fff; }
-.btn-success { background: var(--success); color: #000; }
-.btn-ai { background: var(--ai); color: #fff; }
-.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+.btn-primary { background: var(--primary); color: #000; } .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
 .card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
 .header-title { font-size: 24px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.5px; }
-.text-gradient { background: linear-gradient(90deg, var(--primary), var(--ai)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* ==================== LAYOUT Y PESTAÑAS ==================== */
-.tab-content { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
-.tab-content.active { display: block; }
+/* TABS & NAV */
+.tab-content { display: none; padding: 20px; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Barra de Navegación */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(70px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border); z-index: 9000; }
-.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 600; width: 60px; height: 100%; transition: color 0.3s; }
-.nav-item.active { color: var(--primary); }
-.nav-icon { font-size: 22px; }
+.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 600; width: 60px; height: 100%; transition: color 0.3s; } .nav-item.active { color: var(--primary); }
 
-/* Isla Dinámica */
+/* ISLA, TOASTS, MODALS */
 .dynamic-island { position: fixed; top: env(safe-area-inset-top, 10px); left: 50%; transform: translateX(-50%) translateY(-200%); width: 220px; height: 40px; background: #000; border-radius: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; font-weight: bold; color: var(--primary); z-index: 12000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid var(--border); }
 .dynamic-island.show { transform: translateX(-50%) translateY(10px); }
-
-/* Toasts */
 .toast-container { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 10000; pointer-events: none; width: 90%; max-width: 350px; }
-.toast { background: rgba(26,26,26,0.95); backdrop-filter: blur(10px); border: 1px solid var(--primary); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; transform: translateY(-20px); transition: all 0.3s ease; text-align: center; }
-.toast.show { opacity: 1; transform: translateY(0); }
-
-/* Modales */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 15000; display: none; align-items: center; justify-content: center; }
-.modal-overlay.active { display: flex; }
+.toast { background: rgba(26,26,26,0.95); backdrop-filter: blur(10px); border: 1px solid var(--primary); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: bold; text-align: center; opacity: 0; transform: translateY(-20px); transition: all 0.3s ease; } .toast.show { opacity: 1; transform: translateY(0); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 15000; display: none; align-items: center; justify-content: center; } .modal-overlay.active { display: flex; }
 .modal-content { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; width: 90%; max-width: 400px; position: relative; max-height: 80vh; overflow-y: auto; }
-.modal-close { position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--text-muted); background: none; }
 
-/* ==================== PESTAÑA: DASHBOARD ==================== */
-#tab-dash { background: radial-gradient(circle at top, rgba(0, 255, 204, 0.05) 0%, var(--bg) 60%); min-height: 100vh; }
-.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+/* DASHBOARD & AGUA */
+#tab-dash { background: radial-gradient(circle at top, rgba(0, 255, 204, 0.05) 0%, transparent 60%); min-height: 100vh; }
 .streak-widget { display: flex; align-items: center; gap: 8px; background: rgba(255,170,0,0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--warning); color: var(--warning); font-weight: bold; font-size: 14px; }
-.water-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 40px 0; }
-.water-circle { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #222; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #0a0a0a; box-shadow: 0 0 30px rgba(0,255,204,0.1); transition: border-color 0.3s; }
-.water-circle:active { transform: scale(0.95); }
+.water-circle { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #222; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #0a0a0a; margin: 40px auto; }
 .water-wave { position: absolute; bottom: 0; left: -50%; width: 200%; height: 200%; background: linear-gradient(to top, rgba(0, 255, 204, 0.4), rgba(0, 255, 204, 0.1)); border-radius: 40%; animation: spin 6s linear infinite; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.1, 0.7, 0.1, 1); }
 @keyframes spin { 100% { transform: translateY(var(--wave-y, 100%)) rotate(360deg); } }
-.water-text { position: relative; z-index: 2; font-size: 28px; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; }
-.water-text span { font-size: 12px; color: var(--text-muted); font-weight: bold; margin-top: 4px; }
+.water-text { position: relative; z-index: 2; font-size: 28px; font-weight: 900; display: flex; flex-direction: column; align-items: center; }
 
-/* ==================== PESTAÑA: ENTRENO ==================== */
-.day-selector { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
-.day-selector::-webkit-scrollbar { display: none; }
-.day-btn { padding: 10px 18px; border-radius: 20px; background: var(--card); color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap; font-size: 13px; font-weight: bold; }
-.day-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
-
+/* ENTRENO */
+.day-selector { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; } .day-btn { padding: 10px 18px; border-radius: 20px; background: var(--card); color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap; font-size: 13px; font-weight: bold; } .day-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
 .exercise-card { background: var(--card); border-radius: 16px; overflow: hidden; margin-bottom: 24px; border: 1px solid var(--border); position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-.exercise-bg { height: 140px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-end; padding: 16px; }
-.exercise-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,13,13,1) 0%, rgba(13,13,13,0.3) 100%); z-index: 1; }
-.exercise-title-container { position: relative; z-index: 2; width: 100%; }
-.exercise-tag { font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
-.exercise-title { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.1; }
-.play-vid-btn { position: absolute; top: 16px; right: 16px; z-index: 3; width: 36px; height: 36px; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; border: 1px solid rgba(255,255,255,0.3); }
+.exercise-bg { height: 140px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-end; padding: 16px; } .exercise-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,13,13,1) 0%, rgba(13,13,13,0.3) 100%); z-index: 1; }
+.exercise-title-container { position: relative; z-index: 2; width: 100%; } .exercise-tag { font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; } .exercise-title { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.1; }
+.alt-btn { position: absolute; top: 12px; right: 12px; z-index: 3; background: rgba(0,0,0,0.6); border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; backdrop-filter: blur(5px); }
 
-/* Set Row Grid */
+/* SETS GRID */
 .sets-container { padding: 12px; }
-.set-header { display: grid; grid-template-columns: 44px 40px 1fr 1fr; gap: 8px; text-align: center; font-size: 10px; color: var(--text-muted); margin-bottom: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-.set-row { display: grid; grid-template-columns: 44px 40px 1fr 1fr; gap: 8px; align-items: center; background: rgba(255,255,255,0.02); padding: 6px; border-radius: 10px; margin-bottom: 8px; position: relative; border: 1px solid var(--border); overflow: hidden; }
-.set-row.completed { background: rgba(0, 255, 204, 0.05); border-color: rgba(0, 255, 204, 0.3); }
-.set-row.completed::after { content: '✓'; position: absolute; right: 10px; color: var(--success); font-weight: bold; font-size: 16px; pointer-events: none; }
-
-.set-type-btn { width: 100%; height: 36px; border-radius: 6px; font-weight: 800; font-size: 10px; text-transform: uppercase; background: #222; color: #aaa; border: 1px solid #333; }
-.set-type-btn[data-type="Warm"] { background: rgba(255,170,0,0.1); color: var(--warning); border-color: rgba(255,170,0,0.3); }
-.set-type-btn[data-type="Fallo"] { background: rgba(255,68,68,0.1); color: var(--danger); border-color: rgba(255,68,68,0.3); }
-
-.check-btn { width: 100%; height: 36px; border-radius: 6px; background: #111; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #444; }
-.set-row.completed .check-btn { background: var(--primary); color: #000; border-color: var(--primary); }
-
+.set-header { display: grid; grid-template-columns: 44px 44px 1fr 1fr; gap: 8px; text-align: center; font-size: 10px; color: var(--text-muted); margin-bottom: 8px; font-weight: 900; text-transform: uppercase; }
+.set-row { display: grid; grid-template-columns: 44px 44px 1fr 1fr; gap: 8px; align-items: center; background: rgba(255,255,255,0.02); padding: 6px; border-radius: 10px; margin-bottom: 8px; position: relative; border: 1px solid var(--border); overflow: hidden; }
+.set-row.warmup { border-color: rgba(255,170,0,0.4); background: rgba(255,170,0,0.05); }
+.set-row.completed { background: rgba(0, 255, 204, 0.05); border-color: rgba(0, 255, 204, 0.3); } .set-row.completed::after { content: '✓'; position: absolute; right: 10px; color: var(--success); font-weight: bold; font-size: 16px; pointer-events: none; }
+.set-type-btn { width: 100%; height: 36px; border-radius: 6px; font-weight: 800; font-size: 9px; text-transform: uppercase; background: #222; color: #aaa; border: 1px solid #333; } .set-type-btn[data-type="Warm"] { background: rgba(255,170,0,0.1); color: var(--warning); border-color: rgba(255,170,0,0.3); } .set-type-btn[data-type="Fallo"] { background: rgba(255,68,68,0.1); color: var(--danger); border-color: rgba(255,68,68,0.3); }
+.check-btn { width: 100%; height: 36px; border-radius: 6px; background: #111; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #444; } .set-row.completed .check-btn { background: var(--primary); color: #000; border-color: var(--primary); }
 .input-wrapper { position: relative; width: 100%; }
-.val-input { width: 100%; height: 36px; background: #000; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 14px; font-weight: bold; text-align: center; caret-color: transparent; }
-.val-input:focus { border-color: var(--primary); background: rgba(0,255,204,0.05); }
-.ghost-sug { position: absolute; top: -6px; right: 4px; font-size: 8px; color: var(--text-muted); font-weight: bold; }
-
-/* Swipe Feedback */
+.val-input { width: 100%; height: 36px; background: #000; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 14px; font-weight: bold; text-align: center; caret-color: transparent; } .val-input:focus { border-color: var(--primary); }
+.ghost-sug { position: absolute; top: -7px; right: 4px; font-size: 8px; color: var(--warning); font-weight: bold; background: #000; padding: 0 4px; border-radius: 4px; }
 .swipe-feedback { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,255,204,0.2) 0%, transparent 100%); width: 0%; pointer-events: none; transition: width 0.1s; }
 
-/* Numpad Custom */
-.numpad-container { position: fixed; bottom: -400px; left: 0; right: 0; background: rgba(20,20,20,0.98); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 11000; box-shadow: 0 -10px 30px rgba(0,0,0,0.8); }
-.numpad-container.active { bottom: 0; }
-.numpad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.numpad-title { font-size: 12px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-.numpad-close { font-size: 14px; color: var(--primary); background: none; font-weight: bold; padding: 4px 12px; background: rgba(0,255,204,0.1); border-radius: 12px; }
-.numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.numpad-btn { background: #222; border: 1px solid #333; border-radius: 12px; height: 55px; font-size: 24px; font-weight: 600; color: #fff; display: flex; align-items: center; justify-content: center; }
-.numpad-btn:active { background: #444; }
-.numpad-btn.special { background: rgba(0,255,204,0.05); color: var(--primary); border-color: rgba(0,255,204,0.2); font-size: 16px; }
+/* EXPEDICIÓN UI (DOMINGO) */
+.expedition-board { background: linear-gradient(135deg, #1a1a1e 0%, #050505 100%); border: 1px solid var(--primary); border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 0 30px rgba(255,92,0,0.15); }
+.exp-stat-group { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 16px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #333; }
+.exp-stat-group label { font-size: 12px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; }
+.exp-stat-group input { background: transparent; border: none; color: var(--primary); font-size: 24px; font-weight: 900; text-align: right; width: 100px; }
 
-/* ==================== PESTAÑA: NUTRICIÓN (ESPARTANA) ==================== */
-.nutri-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
-.timeline { position: relative; padding-left: 20px; }
-.timeline::before { content: ''; position: absolute; left: 5px; top: 10px; bottom: 20px; width: 2px; background: #222; }
-.meal-item { position: relative; margin-bottom: 24px; }
-.meal-dot { position: absolute; left: -19px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--border); border: 2px solid var(--bg); z-index: 2; }
-.meal-item.done .meal-dot { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-.meal-item.supplement .meal-dot { background: var(--ai); box-shadow: 0 0 10px var(--ai); }
-.meal-time { font-size: 12px; font-weight: 900; color: var(--text-muted); margin-bottom: 4px; }
-.meal-content { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
-.meal-info h4 { font-size: 15px; margin-bottom: 4px; color: #fff; }
-.meal-info p { font-size: 12px; color: #aaa; line-height: 1.4; }
-.custom-checkbox { width: 32px; height: 32px; appearance: none; background: #000; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; position: relative; transition: all 0.2s; outline: none; flex-shrink: 0; }
-.custom-checkbox:checked { background: var(--primary); border-color: var(--primary); }
-.custom-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000; font-size: 16px; font-weight: bold; }
+/* NUMPAD AVANZADO */
+.numpad-container { position: fixed; bottom: -500px; left: 0; right: 0; background: rgba(20,20,20,0.98); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 11000; box-shadow: 0 -10px 30px rgba(0,0,0,0.8); } .numpad-container.active { bottom: 0; }
+.numpad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; } .numpad-close { font-size: 12px; color: #000; font-weight: bold; padding: 6px 16px; background: var(--primary); border-radius: 12px; }
+.bar-selector { display: flex; gap: 8px; margin-bottom: 16px; } .bar-btn { flex: 1; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: #888; font-size: 10px; font-weight: 900; text-transform: uppercase; } .bar-btn.active { background: rgba(0,255,204,0.1); border-color: var(--primary); color: var(--primary); }
+.numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; } .numpad-btn { background: #222; border: 1px solid #333; border-radius: 12px; height: 50px; font-size: 20px; font-weight: 600; color: #fff; } .numpad-btn:active { background: #444; } .numpad-btn.special { background: rgba(255,68,68,0.1); color: var(--danger); border-color: rgba(255,68,68,0.2); font-size: 16px; }
 
-/* ==================== PESTAÑA: PRO (RADAR FIFA) ==================== */
-.radar-container { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; position: relative; overflow: hidden; }
-.radar-tag { position: absolute; top: 16px; left: 16px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-svg.chart { width: 100%; max-width: 260px; height: auto; overflow: visible; margin-top: 20px; }
-.radar-bg { fill: #0a0a0a; stroke: #222; stroke-width: 1.5; }
-.radar-line { stroke: #222; stroke-width: 1; }
-.radar-polygon { fill: rgba(0,255,204,0.2); stroke: var(--primary); stroke-width: 2.5; filter: drop-shadow(0 0 8px rgba(0,255,204,0.4)); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.radar-point { fill: #fff; stroke: var(--primary); stroke-width: 2; }
-.radar-label { fill: #fff; font-size: 11px; font-family: var(--font); font-weight: 800; text-anchor: middle; letter-spacing: 0.5px; }
+/* NUTRICIÓN ESPARTANA */
+.timeline { position: relative; padding-left: 20px; } .timeline::before { content: ''; position: absolute; left: 5px; top: 10px; bottom: 20px; width: 2px; background: #222; } .meal-item { position: relative; margin-bottom: 24px; } .meal-dot { position: absolute; left: -19px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--border); border: 2px solid var(--bg); z-index: 2; } .meal-item.done .meal-dot { background: var(--primary); box-shadow: 0 0 10px var(--primary); } .meal-time { font-size: 12px; font-weight: 900; color: var(--text-muted); margin-bottom: 4px; } .meal-content { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; } .meal-info h4 { font-size: 14px; margin-bottom: 4px; color: #fff; } .meal-info p { font-size: 11px; color: #aaa; line-height: 1.4; } .custom-checkbox { width: 32px; height: 32px; appearance: none; background: #000; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; position: relative; outline: none; } .custom-checkbox:checked { background: var(--primary); border-color: var(--primary); } .custom-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000; font-size: 16px; font-weight: bold; }
 
+/* PROGRESO Y FOTOTECA */
+.weighin-banner { background: linear-gradient(90deg, #111, rgba(0,255,204,0.1)); border: 1px solid var(--primary); padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.weighin-banner.locked { border-color: #333; background: #111; opacity: 0.7; }
+.photo-gallery { display: flex; gap: 10px; margin-bottom: 20px; } .photo-slot { flex: 1; height: 180px; background: #111; border: 1px dashed #444; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; font-size: 12px; font-weight: bold; position: relative; overflow: hidden; background-size: cover; background-position: center; }
+.photo-input-file { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.radar-container { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; position: relative; }
+svg.chart { width: 100%; max-width: 250px; height: auto; overflow: visible; margin-top: 10px; } .radar-bg { fill: #0a0a0a; stroke: #222; stroke-width: 1.5; } .radar-line { stroke: #222; stroke-width: 1; } .radar-polygon { fill: rgba(0,255,204,0.2); stroke: var(--primary); stroke-width: 2; filter: drop-shadow(0 0 5px rgba(0,255,204,0.3)); transition: all 0.5s; } .radar-point { fill: #fff; stroke: var(--primary); stroke-width: 2; } .radar-label { fill: #fff; font-size: 11px; font-weight: 800; text-anchor: middle; }
 </style>
 </head>
 <body>
 
-<div id="dynamicIsland" class="dynamic-island">
-  <span>⏱️</span> <span id="islandTimer">00:00</span>
-</div>
-
+<div id="dynamicIsland" class="dynamic-island"><span>⏱️</span> <span id="islandTimer">00:00</span></div>
 <div id="toastContainer" class="toast-container"></div>
+<div id="watchdogAlert" class="toast-container" style="top: 130px; display: none;">
+  <div class="toast show" style="background: rgba(255,68,68,0.95); border-color: #ff4444;">
+    ⚠️ RPE 10 DETECTADO: Sobrecarga Lumbar. El peso sugerido de tu próxima serie bajó 5kg.
+  </div>
+</div>
 
 <div id="app">
 
   <div id="tab-dash" class="tab-content active">
     <div class="dash-header">
-      <div>
-        <p style="color: var(--text-muted); font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Corte Acelerado</p>
-        <h1 class="header-title" style="margin-bottom:0;">Lic. <span class="text-gradient">José Ramón</span></h1>
-      </div>
-      <div class="streak-widget">
-        🔥 <span id="streakDays">0</span> 
-      </div>
+      <div><p style="color: var(--text-muted); font-size: 12px; font-weight: bold;">CORTE ACELERADO</p><h1 class="header-title" style="margin-bottom:0;">Lic. <span class="text-gradient">José Ramón</span></h1></div>
+      <div class="streak-widget">🔥 <span id="streakDays">0</span> </div>
     </div>
-
     <div class="water-widget">
-      <div class="water-circle" onclick="addWater()">
-        <div class="water-wave" id="waterWave"></div>
-        <div class="water-text">
-          <span id="waterValue">0</span>
-          <span>/ 4000 ml</span>
-        </div>
-      </div>
-      <p style="color: var(--text-muted); font-size: 12px; margin-top: 20px; font-weight: bold;">Toca para registrar +250ml</p>
+      <div class="water-circle" onclick="addWater()"><div class="water-wave" id="waterWave"></div><div class="water-text"><span id="waterValue">0</span><span style="font-size: 10px; color:#888;">/ 4000 ml</span></div></div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-top: 20px; font-weight: bold;">Toca para +250ml</p>
     </div>
-
     <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
-      <div>
-        <h4 style="font-size: 14px; margin-bottom: 4px;">Modo Espartano</h4>
-        <p style="font-size: 11px; color: var(--text-muted);">Topo Chico en la oficina. Cero snacks.</p>
-      </div>
-      <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary);">🛡️</div>
+      <div><h4 style="font-size: 14px; margin-bottom: 4px;">Modo Espartano</h4><p style="font-size: 11px; color: var(--text-muted);">Topo Chico en la oficina. Cero snacks.</p></div>
+      <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center;">🛡️</div>
     </div>
   </div>
 
   <div id="tab-entreno" class="tab-content">
-    <div class="dash-header" style="margin-bottom: 16px;">
-      <h2 class="header-title" style="margin: 0;">Fuerza Bruta</h2>
-      <span style="font-size: 10px; font-weight: bold; color: var(--danger); background: rgba(255,68,68,0.1); padding: 4px 8px; border-radius: 8px;">L3-L5 PROTECTED</span>
-    </div>
+    <div class="dash-header" style="margin-bottom: 16px;"><h2 class="header-title" style="margin: 0;">Fuerza Bruta</h2><span style="font-size: 10px; font-weight: bold; color: var(--danger); background: rgba(255,68,68,0.1); padding: 4px 8px; border-radius: 8px;">L3-L5 PROTECTED</span></div>
     
     <div class="day-selector" id="daySelector">
-      <button class="day-btn" data-day="0">Lun (Pecho)</button>
-      <button class="day-btn" data-day="1">Mar (Espalda)</button>
-      <button class="day-btn" data-day="2">Mié (Pierna)</button>
-      <button class="day-btn" data-day="3">Jue (Hombro)</button>
-      <button class="day-btn" data-day="4">Vie (Glúteo)</button>
-      <button class="day-btn" data-day="6">Dom (Cerro)</button>
+      <button class="day-btn" data-day="0">Lun (Pecho)</button><button class="day-btn" data-day="1">Mar (Espalda)</button><button class="day-btn" data-day="2">Mié (Pierna)</button>
+      <button class="day-btn" data-day="3">Jue (Hombro)</button><button class="day-btn" data-day="4">Vie (Glúteo)</button><button class="day-btn" data-day="6">Dom (Cerro)</button>
     </div>
 
-    <div id="routinesContainer">
-      </div>
+    <div id="routinesContainer"></div>
 
-    <div class="card exercise-card" style="border-color: var(--warning);">
-      <div class="exercise-bg" style="background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400&auto=format&fit=crop'); height: 100px;">
-        <div class="exercise-title-container">
-          <span class="exercise-tag" style="color: var(--warning);">Quema de Grasa Pura</span>
-          <span class="exercise-title">40 Min Cardio</span>
-        </div>
+    <div class="card exercise-card" id="cardioModule" style="border-color: var(--warning); display: none;">
+      <div class="exercise-bg" style="background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400'); height: 100px;">
+        <div class="exercise-title-container"><span class="exercise-tag" style="color: var(--warning);">Apple Watch Sync</span><span class="exercise-title">Bitácora Cardio</span></div>
       </div>
       <div style="padding: 16px;">
-        <p style="font-size: 12px; color: #aaa; margin-bottom: 12px;">20m Escalera (Torso Recto) + 20m Caminadora Inc 15%</p>
-        <button class="btn btn-outline" style="width: 100%; border-color: var(--warning); color: var(--warning);" onclick="startDynamicIslandTimer(2400)">⏱️ Iniciar Timer (40m)</button>
+        <p style="font-size: 11px; color: #888; margin-bottom: 16px; line-height: 1.4;">Finaliza tu cardio (Escalera/Caminadora) y registra los datos reales de tu Apple Watch Ultra 2.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background:#000; padding:10px; border-radius:8px; border:1px solid #222;"><label style="font-size:10px; color:#888;">TIEMPO TOTAL (MIN)</label><input type="number" id="aw-time" class="val-input" style="height:30px; margin-top:4px;" value="40"></div>
+          <div style="background:#000; padding:10px; border-radius:8px; border:1px solid #222;"><label style="font-size:10px; color:#888;">KCAL QUEMADAS</label><input type="number" id="aw-kcal" class="val-input" style="height:30px; margin-top:4px;" placeholder="Ej. 350"></div>
+        </div>
       </div>
     </div>
 
-    <button class="btn btn-primary" style="width: 100%; margin-top: 10px; font-size: 16px; padding: 18px;" onclick="saveDay()">
-      💾 Finalizar Entrenamiento
-    </button>
+    <button class="btn btn-primary" id="btnSaveWorkout" style="width: 100%; margin-top: 10px; padding: 18px; display: none;" onclick="saveDay()">💾 Finalizar Entrenamiento</button>
   </div>
 
   <div id="tab-nutri" class="tab-content">
-    <div class="nutri-header">
-      <h2 class="header-title" style="margin:0;">Dieta de Corte</h2>
-      <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="openModal('marketModal')">🛒 Súper</button>
-    </div>
-
+    <div class="nutri-header"><h2 class="header-title" style="margin:0;">Dieta de Corte</h2></div>
     <div class="timeline">
-      <div class="meal-item supplement">
-        <div class="meal-dot"></div>
-        <div class="meal-time">05:45 AM</div>
-        <div class="meal-content">
-          <div class="meal-info">
-            <h4>Despertar Espartano</h4>
-            <p>Agua natural + Beta Alanina (15m antes del gym). <span style="color:var(--danger); font-weight:bold;">Cero Café.</span></p>
-          </div>
-          <input type="checkbox" class="custom-checkbox nutri-check">
-        </div>
-      </div>
-
-      <div class="meal-item supplement">
-        <div class="meal-dot"></div>
-        <div class="meal-time">08:30 AM</div>
-        <div class="meal-content">
-          <div class="meal-info">
-            <h4>Post-Entreno (Hack)</h4>
-            <p>Solo 1 scoop Carnivor Mass + Creatina. Única fuente de CH del día.</p>
-          </div>
-          <input type="checkbox" class="custom-checkbox nutri-check">
-        </div>
-      </div>
-
-      <div class="meal-item">
-        <div class="meal-dot"></div>
-        <div class="meal-time">02:00 PM</div>
-        <div class="meal-content">
-          <div class="meal-info">
-            <h4>Comida Principal</h4>
-            <p>250g Proteína (Res/Pollo), Nopales/Brócoli ilimitados. <br><span style="color:var(--ai); font-weight:bold;">+ Vit D (GNC) + Multivitamínico.</span></p>
-          </div>
-          <input type="checkbox" class="custom-checkbox nutri-check">
-        </div>
-      </div>
-
-      <div class="meal-item">
-        <div class="meal-dot"></div>
-        <div class="meal-time">06:00 PM</div>
-        <div class="meal-content">
-          <div class="meal-info">
-            <h4>Snack Ligero</h4>
-            <p>Yogur griego sin azúcar o Pechuga de pavo. Cero Avena.</p>
-          </div>
-          <input type="checkbox" class="custom-checkbox nutri-check">
-        </div>
-      </div>
-
-      <div class="meal-item supplement">
-        <div class="meal-dot"></div>
-        <div class="meal-time">09:30 PM</div>
-        <div class="meal-content">
-          <div class="meal-info">
-            <h4>Cena y Pre-Sueño</h4>
-            <p>Proteína limpia (Omelette/Cerro magro) + vegetales.<br><span style="color:var(--ai); font-weight:bold;">+ 3 Magnesio + 1 Zinc L-Lisina.</span></p>
-          </div>
-          <input type="checkbox" class="custom-checkbox nutri-check">
-        </div>
-      </div>
+      <div class="meal-item"><div class="meal-dot"></div><div class="meal-time">05:45 AM</div><div class="meal-content"><div class="meal-info"><h4>Despertar Espartano</h4><p>Agua + Beta Alanina (Cero Café).</p></div><input type="checkbox" class="custom-checkbox nutri-check"></div></div>
+      <div class="meal-item"><div class="meal-dot"></div><div class="meal-time">08:30 AM</div><div class="meal-content"><div class="meal-info"><h4>Post-Entreno (Hack)</h4><p>1 scoop Carnivor Mass + Creatina.</p></div><input type="checkbox" class="custom-checkbox nutri-check"></div></div>
+      <div class="meal-item"><div class="meal-dot"></div><div class="meal-time">02:00 PM</div><div class="meal-content"><div class="meal-info"><h4>Comida Principal</h4><p>250g Proteína limpia, vegetales. <br><span style="color:var(--primary);">+ Vit D + Omega 3.</span></p></div><input type="checkbox" class="custom-checkbox nutri-check"></div></div>
+      <div class="meal-item"><div class="meal-dot"></div><div class="meal-time">06:00 PM</div><div class="meal-content"><div class="meal-info"><h4>Snack Ligero</h4><p>Yogur griego o Pechuga de pavo.</p></div><input type="checkbox" class="custom-checkbox nutri-check"></div></div>
+      <div class="meal-item"><div class="meal-dot"></div><div class="meal-time">09:30 PM</div><div class="meal-content"><div class="meal-info"><h4>Cena y Pre-Sueño</h4><p>Omelette/Cerro magro + vegetales.<br><span style="color:var(--primary);">+ 3 Magnesio + 1 Zinc.</span></p></div><input type="checkbox" class="custom-checkbox nutri-check"></div></div>
     </div>
   </div>
 
   <div id="tab-pro" class="tab-content">
-    <h2 class="header-title">Analíticas Pro</h2>
+    <h2 class="header-title">Progreso Oficial</h2>
     
-    <div class="radar-container">
-      <span class="radar-tag">Radar FIFA Mode</span>
-      <svg class="chart" viewBox="0 0 300 300" id="radarSvg">
-        </svg>
-      <p style="font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 16px;">*Las stats se auto-calculan en base a tu volumen, peso levantado y adherencia al ayuno.</p>
-    </div>
-
-    <div class="card">
-      <h3 style="font-size: 14px; margin-bottom: 16px; color: #fff;">1RM Actualizado (Fuerza Bruta)</h3>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #000; padding: 12px; border-radius: 12px; border: 1px solid #222;">
-        <span style="font-size: 12px; font-weight: bold; color: var(--text-muted);">Press Banca</span>
-        <span style="font-size: 16px; font-weight: 900; color: var(--primary);" id="stat-bench">-- kg</span>
+    <div class="weighin-banner" id="weighinBanner">
+      <div>
+        <h4 style="font-size: 14px; margin-bottom: 4px;" id="weighinTitle">Pesaje Semanal</h4>
+        <p style="font-size: 11px; color: var(--text-muted);" id="weighinSub">Solo disponible los lunes en ayunas.</p>
       </div>
-      <div style="display: flex; justify-content: space-between; background: #000; padding: 12px; border-radius: 12px; border: 1px solid #222;">
-        <span style="font-size: 12px; font-weight: bold; color: var(--text-muted);">Prensa Pierna</span>
-        <span style="font-size: 16px; font-weight: 900; color: var(--primary);" id="stat-leg">-- kg</span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="number" id="officialWeight" style="width: 60px; height: 40px; background: #000; border: 1px solid var(--border); border-radius: 8px; color: #fff; text-align: center; font-weight: bold; font-size: 18px;" disabled>
+        <span style="font-size: 12px; font-weight: bold; color: #888;">KG</span>
       </div>
     </div>
 
-    <div class="card" style="text-align: center;">
-      <h3 style="font-size: 14px; margin-bottom: 12px;">Control de Peso</h3>
-      <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <input type="number" id="currentWeight" value="93" style="background: transparent; border: none; font-size: 32px; font-weight: 900; color: #fff; width: 80px; text-align: center;">
-        <span style="font-size: 16px; font-weight: bold; color: var(--text-muted);">KG</span>
+    <h3 style="font-size: 14px; margin-bottom: 12px;">Espejo vs Báscula</h3>
+    <div class="photo-gallery">
+      <div class="photo-slot" id="photoFront">
+        <span>+ Frontal</span>
+        <input type="file" class="photo-input-file" accept="image/*" onchange="handlePhotoUpload(event, 'front')">
       </div>
+      <div class="photo-slot" id="photoSide">
+        <span>+ Perfil</span>
+        <input type="file" class="photo-input-file" accept="image/*" onchange="handlePhotoUpload(event, 'side')">
+      </div>
+    </div>
+
+    <div class="radar-container" style="margin-top: 30px;">
+      <span class="radar-tag">Radar de Atleta</span>
+      <svg class="chart" viewBox="0 0 300 300" id="radarSvg"></svg>
     </div>
   </div>
 
   <div style="height: 40px;"></div>
 
   <nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('tab-dash', this)">
-      <span class="nav-icon">🏠</span><span>Dash</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('tab-entreno', this)">
-      <span class="nav-icon">💪</span><span>Entreno</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('tab-nutri', this)">
-      <span class="nav-icon">🥩</span><span>Dieta</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('tab-pro', this)">
-      <span class="nav-icon">⚡</span><span>Radar</span>
-    </div>
+    <div class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="ph-fill ph-squares-four nav-icon"></i><span>Dash</span></div>
+    <div class="nav-item" onclick="switchTab('tab-entreno', this)"><i class="ph-fill ph-barbell nav-icon"></i><span>Entreno</span></div>
+    <div class="nav-item" onclick="switchTab('tab-nutri', this)"><i class="ph-fill ph-fork-knife nav-icon"></i><span>Dieta</span></div>
+    <div class="nav-item" onclick="switchTab('tab-pro', this)"><i class="ph-fill ph-trend-up nav-icon"></i><span>Progreso</span></div>
   </nav>
 
-</div> <div id="customNumpad" class="numpad-container">
-  <div class="numpad-header">
-    <span class="numpad-title" id="numpadTitle">Ingresar Valor</span>
-    <button class="numpad-close" onclick="closeNumpad()">CERRAR</button>
+</div>
+
+<div id="customNumpad" class="numpad-container">
+  <div class="numpad-header"><span class="numpad-title" id="numpadTitle">PESO POR LADO (DISCOS)</span><button class="numpad-close" onclick="closeNumpad()">ACEPTAR</button></div>
+  <div class="bar-selector" id="barSelector" style="display: none;">
+    <button class="bar-btn" data-bar="0" onclick="selectBar(0, this)">Libre (0kg)</button>
+    <button class="bar-btn" data-bar="10" onclick="selectBar(10, this)">Barra Z (+10kg)</button>
+    <button class="bar-btn active" data-bar="20" onclick="selectBar(20, this)">Olímpica (+20kg)</button>
   </div>
   <div class="numpad-grid">
     <button class="numpad-btn" onclick="numPress('1')">1</button><button class="numpad-btn" onclick="numPress('2')">2</button><button class="numpad-btn" onclick="numPress('3')">3</button>
@@ -368,398 +213,272 @@ svg.chart { width: 100%; max-width: 260px; height: auto; overflow: visible; marg
   </div>
 </div>
 
-<div class="modal-overlay" id="marketModal">
+<div class="modal-overlay" id="altModal">
   <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('marketModal')">×</button>
-    <h3 style="margin-bottom: 20px;">Market Mode 🛒</h3>
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-      <label style="display: flex; align-items: center; gap: 10px; background: #000; padding: 12px; border-radius: 8px; border: 1px solid #222;"><input type="checkbox" style="width: 20px; height: 20px;"> Pechuga de Pollo / Res Magra</label>
-      <label style="display: flex; align-items: center; gap: 10px; background: #000; padding: 12px; border-radius: 8px; border: 1px solid #222;"><input type="checkbox" style="width: 20px; height: 20px;"> Yogur Griego Sin Azúcar</label>
-      <label style="display: flex; align-items: center; gap: 10px; background: #000; padding: 12px; border-radius: 8px; border: 1px solid #222;"><input type="checkbox" style="width: 20px; height: 20px;"> Topo Chico / Agua Mineral</label>
-      <label style="display: flex; align-items: center; gap: 10px; background: #000; padding: 12px; border-radius: 8px; border: 1px solid #222;"><input type="checkbox" style="width: 20px; height: 20px;"> Nopales / Brócoli / Espinacas</label>
-      <label style="display: flex; align-items: center; gap: 10px; background: #000; padding: 12px; border-radius: 8px; border: 1px solid #222;"><input type="checkbox" style="width: 20px; height: 20px;"> Pechuga de Pavo en rebanadas</label>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="videoModal">
-  <div class="modal-content" style="padding: 0; overflow: hidden; max-height: 50vh;">
-    <button class="modal-close" onclick="closeModal('videoModal')" style="z-index: 10; background: rgba(0,0,0,0.5); width: 30px; height: 30px; border-radius: 15px; top: 10px; right: 10px; color: #fff;">×</button>
-    <video id="exVideoPlayer" playsinline loop muted autoplay style="width: 100%; height: 100%; object-fit: cover;">
-      <source src="https://cdn.pixabay.com/video/2020/05/24/40061-424699661_tiny.mp4" type="video/mp4">
-    </video>
+    <button class="modal-close" onclick="closeModal('altModal')">×</button>
+    <h3 style="margin-bottom: 20px;">Sustituto Biomecánico</h3>
+    <div id="altList" style="display: flex; flex-direction: column; gap: 10px;"></div>
   </div>
 </div>
 
 <script>
-/* --- ESTADO GLOBAL --- */
+/* --- ESTADO Y BASE DE DATOS MÁSTER --- */
 const STATE = {
-  activeInput: null,
-  activeInputType: '', 
+  activeInput: null, activeInputType: '', activeExId: null, currentBarWeight: 0,
   currentDay: new Date().getDay() === 0 ? 6 : new Date().getDay() - 1, 
   water: parseInt(localStorage.getItem('hyp_water')) || 0,
   streak: parseInt(localStorage.getItem('hyp_streak')) || 0,
   weight: parseFloat(localStorage.getItem('hyp_weight')) || 93,
   rmBench: parseInt(localStorage.getItem('hyp_rmBench')) || 0,
   rmLeg: parseInt(localStorage.getItem('hyp_rmLeg')) || 0,
-  historyWeights: JSON.parse(localStorage.getItem('hyp_historyW')) || {}
+  historyWeights: JSON.parse(localStorage.getItem('hyp_historyW')) || {},
+  timerTarget: 0 // Timestamp para el reloj a prueba de bloqueos
 };
 
-/* --- BASE DE DATOS: CORTE ACELERADO 6-10 REPS (PESADO) --- */
+// Base de datos de corte con ALTERNATIVAS MAPEADAS
 const ROUTINES = {
-  0: [ // Lunes (Pecho/Tríceps)
-    { id: 'l1', name: 'Press Banca (Mancuernas)', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 4, reps: "6-8" },
-    { id: 'l2', name: 'Press Inclinado Máquina', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "8-10" },
-    { id: 'l3', name: 'Cruce Poleas', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 3, reps: "12" },
-    { id: 'l4', name: 'Press Francés Sentado', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 3, reps: "8-10" },
-    { id: 'l5', name: 'Extensión Tríceps Polea', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400', sets: 3, reps: "10" },
-    { id: 'l6', name: 'Deadbugs (Core)', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "15" }
+  0: [ // Lunes
+    { id: 'l1', name: 'Press Banca (Barra)', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 4, reps: "6-8", usesBar: true, alts: ["Press Inclinado", "Press Floor (Piso)"] },
+    { id: 'l2', name: 'Press Inclinado Máquina', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "8-10", alts: ["Press Inclinado Mancuernas"] },
+    { id: 'l3', name: 'Cruce Poleas', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 3, reps: "12", alts: ["Peck Deck Máquina"] },
+    { id: 'l4', name: 'Press Francés Sentado', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 3, reps: "8-10", usesBar: true, alts: ["Extensión Copa 2 Manos"] },
+    { id: 'l5', name: 'Extensión Tríceps Polea', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400', sets: 3, reps: "10", alts: ["Patada Tríceps"] }
   ],
-  1: [ // Martes (Espalda/Bíceps)
-    { id: 'm1', name: 'Jalón al Pecho (Pesado)', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400', sets: 4, reps: "8" },
-    { id: 'm2', name: 'Remo Máquina Sentado', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 3, reps: "8-10" },
-    { id: 'm3', name: 'Pull-over Polea Alta', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 3, reps: "12" },
-    { id: 'm4', name: 'Curl Bíceps Scott', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "8-10" },
-    { id: 'm5', name: 'Curl Martillo', img: 'https://images.unsplash.com/photo-1581009137042-c552e48ce53f?q=80&w=400', sets: 3, reps: "10" },
-    { id: 'm6', name: 'Bird-Dog', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 3, reps: "15" }
+  1: [ // Martes
+    { id: 'm1', name: 'Jalón al Pecho', img: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?q=80&w=400', sets: 4, reps: "8", alts: ["Dominadas Asistidas"] },
+    { id: 'm2', name: 'Remo Máquina Sentado', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 3, reps: "8-10", alts: ["Remo Polea Baja"] },
+    { id: 'm3', name: 'Pull-over Polea Alta', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 3, reps: "12", alts: ["Pull-over Mancuerna"] },
+    { id: 'm4', name: 'Curl Bíceps Scott', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "8-10", usesBar: true, alts: ["Curl Alterno Mancuernas"] }
   ],
-  2: [ // Miércoles (Pierna)
-    { id: 'x1', name: 'Prensa de Piernas', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 4, reps: "8-10" },
-    { id: 'x2', name: 'Extensiones de Pierna', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "12" },
-    { id: 'x3', name: 'Step-Ups (Cajón)', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 3, reps: "10 p/p" },
-    { id: 'x4', name: 'Costurera (Pantorrilla)', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 4, reps: "15" }
+  2: [ // Miércoles
+    { id: 'x1', name: 'Prensa de Piernas', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 4, reps: "8-10", alts: ["Sentadilla Hack (Cuida L3-L5)"] },
+    { id: 'x2', name: 'Extensiones de Pierna', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "12", alts: ["Sentadilla Sissy Estricta"] },
+    { id: 'x3', name: 'Step-Ups (Cajón)', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 3, reps: "10 p/p", alts: ["Zancadas Estáticas"] }
   ],
-  3: [ // Jueves (Hombro/Abs)
-    { id: 'j1', name: 'Press Hombro Mancuernas', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 4, reps: "6-8" },
-    { id: 'j2', name: 'Elevaciones Laterales', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 4, reps: "12" },
-    { id: 'j3', name: 'Face Pulls', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "15" },
-    { id: 'j4', name: 'Planchas (Frontal)', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 3, reps: "1 min" }
+  3: [ // Jueves
+    { id: 'j1', name: 'Press Hombro Mancuernas', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 4, reps: "6-8", alts: ["Press Militar Máquina"] },
+    { id: 'j2', name: 'Elevaciones Laterales', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 4, reps: "12", alts: ["Elevación Lateral Polea"] },
+    { id: 'j3', name: 'Face Pulls', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 3, reps: "15", alts: ["Pájaros Máquina"] }
   ],
-  4: [ // Viernes (Glúteo/Frenado)
-    { id: 'v1', name: 'Curl Femoral Sentado', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 4, reps: "10" },
-    { id: 'v2', name: 'Hip Thrust Máquina', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 4, reps: "8-10" },
-    { id: 'v3', name: 'Peso Muerto Rumano', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 3, reps: "8-10" },
-    { id: 'v4', name: 'Elevación Talones Pie', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=400', sets: 4, reps: "15" }
-  ],
-  6: [ // Domingo (Cerro)
-    { id: 'd1', name: 'Expedición (Cerro)', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 1, reps: "90 min" }
+  4: [ // Viernes
+    { id: 'v1', name: 'Hip Thrust Máquina', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=400', sets: 4, reps: "8-10", usesBar: true, alts: ["Puente de Glúteo Piso"] },
+    { id: 'v2', name: 'Curl Femoral Sentado', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400', sets: 4, reps: "10", alts: ["Curl Femoral Acostado"] },
+    { id: 'v3', name: 'Peso Muerto Rumano', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=400', sets: 3, reps: "8-10", usesBar: true, alts: ["Extensiones Banco (Lumbar segura)"] }
   ]
-};
-// Sábado = Descanso
-ROUTINES[5] = [];
+}; ROUTINES[5] = []; // Sábado descanso
 
-/* --- AUDIO & HAPTIC SYSTEM --- */
-let audioCtx;
-function initAudio() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    gain.gain.value = 0;
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(0); osc.stop(0.001);
-  }
-}
-document.body.addEventListener('touchstart', initAudio, { once: true });
-document.body.addEventListener('click', initAudio, { once: true });
-
-function hapticTick(heavy = false) {
-  if (navigator.vibrate) navigator.vibrate(heavy ? 15 : 5);
-  if (audioCtx && audioCtx.state === 'running') {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = heavy ? 'square' : 'sine';
-    osc.frequency.value = heavy ? 400 : 800;
-    gain.gain.setValueAtTime(heavy ? 0.05 : 0.1, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-  }
-}
-
-/* --- UI SYSTEM --- */
-function showToast(msg) {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = 'toast'; toast.innerText = msg;
-  container.appendChild(toast);
-  setTimeout(() => toast.classList.add('show'), 10);
-  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
-  hapticTick(true);
-}
-
-function switchTab(targetId, navElement) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.getElementById(targetId).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  navElement.classList.add('active');
-  hapticTick();
-  if(targetId === 'tab-pro') updateRadar();
-}
-
+/* --- FUNCIONES CORE --- */
+function hapticTick(heavy=false) { if(navigator.vibrate) navigator.vibrate(heavy?15:5); }
+function showToast(msg) { const t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.getElementById('toastContainer').appendChild(t); setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>{t.classList.remove('show'); setTimeout(()=>t.remove(),300);},3000); hapticTick(true); }
+function switchTab(id, el) { document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active')); el.classList.add('active'); hapticTick(); if(id==='tab-pro'){ checkMondayWeighIn(); updateRadar(); loadPhotos(); } }
 function openModal(id) { document.getElementById(id).classList.add('active'); hapticTick(); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); hapticTick(); }
 
-/* --- DASHBOARD LOGIC --- */
-function addWater() {
-  if (STATE.water < 4000) STATE.water += 250;
-  if (STATE.water > 4000) STATE.water = 4000;
-  updateWaterUI();
-  localStorage.setItem('hyp_water', STATE.water);
-  hapticTick();
-}
-function updateWaterUI() {
-  document.getElementById('waterValue').innerText = STATE.water;
-  const pct = (STATE.water / 4000) * 100;
-  const wave = document.getElementById('waterWave');
-  // Usamos translateY para mejor performance CSS
-  wave.style.setProperty('--wave-y', `${100 - (pct * 1.5)}%`);
-  wave.style.transform = `translateY(${100 - (pct * 1.5)}%)`;
+/* --- AGUA & DASHBOARD --- */
+function addWater() { if(STATE.water<4000) STATE.water+=250; updateWaterUI(); localStorage.setItem('hyp_water', STATE.water); hapticTick(); }
+function updateWaterUI() { document.getElementById('waterValue').innerText = STATE.water; const pct = (STATE.water/4000)*100; document.getElementById('waterWave').style.transform = `translateY(${100 - (pct*1.5)}%)`; }
+
+/* --- RELOJ ABSOLUTO (ANTI-BLOQUEO) --- */
+let timerInt;
+function startTimer(seconds) {
+  STATE.timerTarget = Date.now() + (seconds * 1000);
+  document.getElementById('dynamicIsland').classList.add('show'); hapticTick(true);
+  clearInterval(timerInt);
+  timerInt = setInterval(() => {
+    let left = Math.round((STATE.timerTarget - Date.now()) / 1000);
+    if(left <= 0) { clearInterval(timerInt); document.getElementById('dynamicIsland').classList.remove('show'); hapticTick(true); setTimeout(()=>hapticTick(true), 300); }
+    else { let m = Math.floor(left/60); let s = left%60; document.getElementById('islandTimer').innerText = `${m<10?'0'+m:m}:${s<10?'0'+s:s}`; }
+  }, 500);
 }
 
-/* --- ISLA DINÁMICA --- */
-let islandInterval;
-function startDynamicIslandTimer(seconds = 90) { // 90s por defecto para fuerza pesada
-  const island = document.getElementById('dynamicIsland');
-  const timerText = document.getElementById('islandTimer');
-  island.classList.add('show'); hapticTick(true);
-  
-  let left = seconds; clearInterval(islandInterval);
-  timerText.innerText = `00:${left < 10 ? '0'+left : left}`;
-  
-  islandInterval = setInterval(() => {
-    left--; let m = Math.floor(left / 60); let s = left % 60;
-    timerText.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
-    if (left <= 0) {
-      clearInterval(islandInterval); island.classList.remove('show');
-      hapticTick(true); setTimeout(() => hapticTick(true), 200);
-    }
-  }, 1000);
-}
-
-/* --- ENTRENO LOGIC --- */
-function initEntreno() {
-  renderDaySelector(); renderRoutine(STATE.currentDay);
-}
-
+/* --- RENDER ENTRENO (WARM-UPS Y EXPEDICIÓN) --- */
+function initEntreno() { renderDaySelector(); }
 function renderDaySelector() {
-  const selector = document.getElementById('daySelector');
-  const btns = selector.querySelectorAll('.day-btn');
-  btns.forEach(btn => {
-    btn.onclick = () => {
-      btns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
-      STATE.currentDay = parseInt(btn.getAttribute('data-day'));
-      
-      if(STATE.currentDay === 6) document.body.classList.add('theme-ultra');
-      else document.body.classList.remove('theme-ultra');
-
-      renderRoutine(STATE.currentDay); hapticTick();
-    };
-    if(parseInt(btn.getAttribute('data-day')) === STATE.currentDay) {
-        btn.classList.add('active');
-        if(STATE.currentDay === 6) document.body.classList.add('theme-ultra');
-    }
+  const btns = document.querySelectorAll('.day-btn');
+  btns.forEach(b => {
+    b.onclick = () => { btns.forEach(x=>x.classList.remove('active')); b.classList.add('active'); STATE.currentDay=parseInt(b.dataset.day); renderRoutine(STATE.currentDay); hapticTick(); };
+    if(parseInt(b.dataset.day)===STATE.currentDay) { b.classList.add('active'); renderRoutine(STATE.currentDay); }
   });
 }
 
-function renderRoutine(dayIndex) {
-  const container = document.getElementById('routinesContainer');
-  container.innerHTML = '';
-  const routine = ROUTINES[dayIndex] || [];
-  
-  if(routine.length === 0) {
-      container.innerHTML = '<p style="text-align:center; color:#888; margin-top:40px;">Día de Descanso. Oxida grasa con puro Topo Chico.</p>';
-      return;
-  }
+function renderRoutine(day) {
+  const container = document.getElementById('routinesContainer'); container.innerHTML = '';
+  document.getElementById('cardioModule').style.display = 'none';
+  document.getElementById('btnSaveWorkout').style.display = 'none';
 
-  routine.forEach(ex => {
+  if(day === 5) { container.innerHTML = '<p style="text-align:center; color:#888; margin-top:40px;">Día de Descanso. Oxida grasa con puro Topo Chico.</p>'; return; }
+  
+  // MODO EXPEDICIÓN (DOMINGO)
+  if(day === 6) {
+    document.body.classList.add('theme-ultra');
+    container.innerHTML = `
+      <div class="expedition-board">
+        <h3 style="color:var(--primary); font-size:20px; font-weight:900; margin-bottom:20px;">MODO EXPEDICIÓN</h3>
+        <div class="exp-stat-group"><label>TIEMPO (MIN)</label><input type="number" placeholder="0" id="exp-time"></div>
+        <div class="exp-stat-group"><label>LASTRE MOCHILA (KG)</label><input type="number" placeholder="0" id="exp-weight"></div>
+        <div class="exp-stat-group"><label>RPE FATIGA (1-10)</label><input type="number" placeholder="0" id="exp-rpe"></div>
+        <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveDay()">GUARDAR EXPEDICIÓN</button>
+      </div>`;
+    return;
+  }
+  
+  document.body.classList.remove('theme-ultra');
+  document.getElementById('cardioModule').style.display = 'block';
+  document.getElementById('btnSaveWorkout').style.display = 'block';
+
+  const routine = ROUTINES[day];
+  routine.forEach((ex, idx) => {
     const card = document.createElement('div'); card.className = 'card exercise-card';
     const lastWeight = STATE.historyWeights[ex.id] || 0;
-    const sugWeight = lastWeight > 0 ? lastWeight + 2.5 : '--';
+    let sugWeight = lastWeight > 0 ? lastWeight + 2.5 : '--';
 
     let setsHTML = '';
-    for(let i=0; i<ex.sets; i++) {
+    // WARM-UP Lógica: 1 serie extra si es el primer ejercicio
+    let totalSets = idx === 0 ? ex.sets + 1 : ex.sets;
+    for(let i=0; i<totalSets; i++) {
+      let isWarmup = (idx === 0 && i === 0);
+      let setType = isWarmup ? 'WARM' : 'NORM';
+      let rowClass = isWarmup ? 'warmup' : '';
+      let displaySug = isWarmup ? 'Solo Barra' : (lastWeight > 0 ? `Sug: ${sugWeight}` : '');
+      
       setsHTML += `
-        <div class="set-row" data-ex-id="${ex.id}" data-set="${i}">
+        <div class="set-row ${rowClass}" id="set-${ex.id}-${i}" data-ex="${ex.id}" data-idx="${i}">
           <div class="swipe-feedback"></div>
-          <button class="set-type-btn" data-type="Norm" onclick="toggleSetType(this)">NORM</button>
+          <button class="set-type-btn" data-type="${setType}" onclick="toggleSetType(this)">${setType}</button>
           <button class="check-btn" onclick="completeSet(this.parentElement, '${ex.id}')"><i class="ph-bold ph-check"></i></button>
+          <div class="input-wrapper"><input type="text" class="val-input reps-input" placeholder="${ex.reps}" readonly onclick="openNumpad(this, 'reps')"></div>
           <div class="input-wrapper">
-            <input type="text" class="val-input reps-input" placeholder="${ex.reps}" readonly onclick="openNumpad(this, 'reps')">
+            <input type="text" class="val-input peso-input" id="inp-w-${ex.id}-${i}" placeholder="${lastWeight||'--'} kg" readonly onclick="openNumpad(this, 'peso', '${ex.id}', ${ex.usesBar||false})">
+            <span class="ghost-sug" id="sug-${ex.id}-${i}">${displaySug}</span>
           </div>
-          <div class="input-wrapper">
-            <input type="text" class="val-input peso-input" placeholder="${lastWeight || '--'} kg" readonly onclick="openNumpad(this, 'peso', '${ex.id}')">
-            ${lastWeight > 0 ? `<span class="ghost-sug">Sug: ${sugWeight}</span>` : ''}
-          </div>
-        </div>
-      `;
+          <select style="position:absolute; width:100%; height:100%; opacity:0; z-index:10;" onchange="handleSmartRPE(this.value, '${ex.id}', ${i}, ${lastWeight})">
+            <option value="" disabled selected></option><option value="6">6</option><option value="8">8</option><option value="10">10 (Fallo)</option>
+          </select>
+        </div>`;
     }
 
     card.innerHTML = `
-      <button class="play-vid-btn" onclick="openModal('videoModal')">▶</button>
-      <div class="exercise-bg" style="background-image: url('${ex.img}');">
-        <div class="exercise-title-container">
-          <span class="exercise-tag">EJERCICIO</span>
-          <span class="exercise-title" id="title-${ex.id}">${ex.name}</span>
-        </div>
-      </div>
-      <div class="sets-container">
-        <div class="set-header"><span>Tipo</span><span>Hecho</span><span>Reps</span><span>Peso</span></div>
-        ${setsHTML}
-      </div>
-    `;
+      <button class="alt-btn" onclick="openAltModal('${ex.id}')">🔄 ALTERNATIVA</button>
+      <div class="exercise-bg" style="background-image:url('${ex.img}');"><div class="exercise-title-container"><span class="exercise-tag">EJERCICIO 0${idx+1}</span><span class="exercise-title" id="title-${ex.id}">${ex.name}</span></div></div>
+      <div class="sets-container"><div class="set-header"><span>TIPO</span><span>OK</span><span>REPS</span><span>PESO</span></div>${setsHTML}</div>`;
     container.appendChild(card);
   });
-  initSwipes();
 }
 
-function toggleSetType(btn) {
-  hapticTick();
-  const types = [{c:'Norm', l:'NORM'}, {c:'Warm', l:'WARM'}, {c:'Fallo', l:'FALLO'}];
-  let current = btn.getAttribute('data-type');
-  let nextIdx = (types.findIndex(t => t.c === current) + 1) % types.length;
-  btn.setAttribute('data-type', types[nextIdx].c);
-  btn.innerText = types[nextIdx].l;
-}
-
-function completeSet(row, exId) {
-    if(row.classList.contains('completed')) {
-        row.classList.remove('completed');
-    } else {
-        row.classList.add('completed');
-        // Extraemos peso para 1RM si hay
-        const wInput = row.querySelector('.peso-input').dataset.raw;
-        if(wInput) calc1RM(exId, parseFloat(wInput));
-        // Descanso inteligente (120s para pierna, 90s para el resto)
-        startDynamicIslandTimer(exId.includes('x') || exId.includes('v') ? 120 : 90);
-    }
-    hapticTick(true);
-}
-
-/* --- SWIPE LOGIC (Mantenida de tu código) --- */
-function initSwipes() {
-  document.querySelectorAll('.set-row').forEach(row => {
-    let startX = 0, startY = 0, currentX = 0; let isSwiping = false; let feedback = row.querySelector('.swipe-feedback');
-    row.addEventListener('touchstart', e => {
-      if(row.classList.contains('completed')) return; 
-      startX = e.touches[0].clientX; startY = e.touches[0].clientY; isSwiping = true;
-    }, {passive: true});
-    row.addEventListener('touchmove', e => {
-      if(!isSwiping || row.classList.contains('completed')) return;
-      let deltaX = e.touches[0].clientX - startX; let deltaY = e.touches[0].clientY - startY;
-      if(Math.abs(deltaY) > Math.abs(deltaX)) { isSwiping = false; return; }
-      if(deltaX > 0) { let pct = Math.min((deltaX / 150) * 100, 100); feedback.style.width = pct + '%'; }
-    }, {passive: true});
-    row.addEventListener('touchend', e => {
-      if(!isSwiping || row.classList.contains('completed')) return;
-      let deltaX = e.changedTouches[0].clientX - startX; isSwiping = false; feedback.style.width = '0%';
-      if(deltaX > 100) completeSet(row, row.getAttribute('data-ex-id'));
-    });
+function openAltModal(exId) {
+  const ex = ROUTINES[STATE.currentDay].find(e=>e.id===exId);
+  const list = document.getElementById('altList'); list.innerHTML = '';
+  ex.alts.forEach(alt => {
+    const btn = document.createElement('button'); btn.className = 'btn btn-outline'; btn.style.width = '100%'; btn.innerText = alt;
+    btn.onclick = () => { document.getElementById(`title-${exId}`).innerText = alt; closeModal('altModal'); };
+    list.appendChild(btn);
   });
+  openModal('altModal');
 }
 
-/* --- CUSTOM NUMPAD --- */
-let activeExIdForNumpad = null;
-function openNumpad(inputEl, type, exId = null) {
-  STATE.activeInput = inputEl; STATE.activeInputType = type; activeExIdForNumpad = exId;
-  document.getElementById('numpadTitle').innerText = type === 'reps' ? 'REPETICIONES' : 'PESO (KG)';
-  inputEl.dataset.raw = ''; updateInputDisplay();
+/* --- SMART RPE --- */
+function handleSmartRPE(val, exId, currentSetIdx, lastWeight) {
+  if(parseInt(val) >= 9) {
+    document.getElementById('watchdogAlert').style.display = 'block';
+    setTimeout(()=>document.getElementById('watchdogAlert').style.display='none', 4000);
+    hapticTick(true);
+    // Bajar sugerencia 5kg para el siguiente set
+    let nextSug = document.getElementById(`sug-${exId}-${currentSetIdx + 1}`);
+    if(nextSug) { nextSug.innerText = `Auto: ${lastWeight - 5}`; nextSug.style.color = 'var(--danger)'; }
+  }
+}
+
+/* --- NUMPAD & BARBELL CALCULATOR --- */
+function openNumpad(el, type, exId=null, usesBar=false) {
+  STATE.activeInput = el; STATE.activeInputType = type; STATE.activeExId = exId; STATE.currentBarWeight = 20; // Default Olimpica si usa
+  document.getElementById('numpadTitle').innerText = type==='reps' ? 'REPETICIONES' : (usesBar ? 'PESO POR LADO (DISCOS)' : 'PESO TOTAL (KG)');
+  const barSel = document.getElementById('barSelector');
+  if(type==='peso' && usesBar) { barSel.style.display='flex'; document.querySelectorAll('.bar-btn').forEach(b=>b.classList.remove('active')); barSel.lastElementChild.classList.add('active'); } else { barSel.style.display='none'; STATE.currentBarWeight = 0; }
+  el.dataset.raw = ''; updateInputDisplay();
   document.getElementById('customNumpad').classList.add('active'); hapticTick();
 }
-function closeNumpad() { 
-    document.getElementById('customNumpad').classList.remove('active'); STATE.activeInput = null; hapticTick(); 
-    updateUI(); // Refrescar stats
-}
+function selectBar(weight, btn) { document.querySelectorAll('.bar-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); STATE.currentBarWeight = weight; hapticTick(); updateInputDisplay(); }
+function closeNumpad() { document.getElementById('customNumpad').classList.remove('active'); STATE.activeInput = null; hapticTick(); }
 function numPress(val) {
   if(!STATE.activeInput) return; hapticTick();
   let raw = STATE.activeInput.dataset.raw || '';
-  if (val === 'DEL') { raw = raw.slice(0, -1); } else if (val === '.') { if(!raw.includes('.')) raw += '.'; } else { raw += val; }
+  if(val === 'DEL') raw = raw.slice(0,-1); else if(val === '.') { if(!raw.includes('.')) raw+='.'; } else raw+=val;
   STATE.activeInput.dataset.raw = raw; updateInputDisplay();
-  
-  if(STATE.activeInputType === 'peso' && activeExIdForNumpad && raw) {
-      STATE.historyWeights[activeExIdForNumpad] = parseFloat(raw);
-      localStorage.setItem('hyp_historyW', JSON.stringify(STATE.historyWeights));
-  }
 }
 function updateInputDisplay() {
   if(!STATE.activeInput) return; let raw = STATE.activeInput.dataset.raw;
-  let suffix = STATE.activeInputType === 'reps' ? ' reps' : ` kg`;
-  STATE.activeInput.value = raw ? raw + suffix : `--`;
+  if(!raw) { STATE.activeInput.value = '--'; return; }
+  if(STATE.activeInputType === 'peso') {
+    let calc = parseFloat(raw);
+    if(STATE.currentBarWeight > 0) calc = (calc * 2) + STATE.currentBarWeight; // Math real de discos
+    STATE.activeInput.value = `${calc} kg`;
+    if(STATE.activeExId) { STATE.historyWeights[STATE.activeExId] = calc; localStorage.setItem('hyp_historyW', JSON.stringify(STATE.historyWeights)); }
+  } else { STATE.activeInput.value = `${raw} reps`; }
 }
 
-function calc1RM(exId, weight) {
-    if(!weight || isNaN(weight)) return;
-    const rm = Math.round(weight * 1.33); // Estimación rápida para 10 reps
-    if(exId.includes('l1') && rm > STATE.rmBench) { STATE.rmBench = rm; localStorage.setItem('hyp_rmBench', rm); }
-    if(exId.includes('x1') && rm > STATE.rmLeg) { STATE.rmLeg = rm; localStorage.setItem('hyp_rmLeg', rm); }
+function completeSet(row, exId) {
+  row.classList.toggle('completed'); hapticTick(true);
+  if(row.classList.contains('completed')) startTimer(exId.includes('x')||exId.includes('v') ? 120 : 90);
 }
 
-/* --- GUARDAR DÍA --- */
-function saveDay() {
-  hapticTick(true);
-  STATE.streak += 1; localStorage.setItem('hyp_streak', STATE.streak);
-  document.getElementById('streakDays').innerText = STATE.streak;
-  STATE.water = 0; localStorage.setItem('hyp_water', 0); updateWaterUI();
-  document.querySelectorAll('.nutri-check').forEach(c => c.checked = false);
-  showToast("¡Día guardado! Panza bajando, músculo intacto. 🔥");
-  updateRadar();
+/* --- PROGRESO: LUNES PESAJE & FOTOS --- */
+function checkMondayWeighIn() {
+  const isMonday = new Date().getDay() === 1;
+  const banner = document.getElementById('weighinBanner'); const inp = document.getElementById('officialWeight');
+  if(isMonday) { banner.classList.remove('locked'); inp.disabled = false; inp.value = STATE.weight; document.getElementById('weighinSub').innerText = "¡Registra tu peso de hoy!"; }
+  else { banner.classList.add('locked'); inp.disabled = true; inp.value = STATE.weight; }
+  inp.onchange = (e) => { STATE.weight = parseFloat(e.target.value); localStorage.setItem('hyp_weight', STATE.weight); showToast("Peso oficial guardado."); };
 }
 
-/* --- PRO / RADAR FIFA LOGIC --- */
+// Compresor de imagen local por Canvas (Evita saturar LocalStorage)
+function handlePhotoUpload(e, type) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+      // Redimensionar a 400px de ancho máximo
+      const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
+      canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.6); // 60% calidad
+      localStorage.setItem(`hyp_photo_${type}`, dataUrl);
+      document.getElementById(type === 'front' ? 'photoFront' : 'photoSide').style.backgroundImage = `url(${dataUrl})`;
+      document.getElementById(type === 'front' ? 'photoFront' : 'photoSide').innerHTML = ''; // Quitar texto
+      showToast("Foto guardada localmente 📸");
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function loadPhotos() {
+  ['front', 'side'].forEach(t => {
+    const data = localStorage.getItem(`hyp_photo_${t}`);
+    if(data) { const el = document.getElementById(t==='front'?'photoFront':'photoSide'); el.style.backgroundImage = `url(${data})`; el.innerHTML=''; }
+  });
+}
+
+/* --- RADAR FIFA --- */
 function updateRadar() {
-  const cx = 150, cy = 150, r = 100;
-  const svg = document.getElementById('radarSvg');
-  
-  // Math para simular los 6 atributos basados en estado
-  const pow = Math.min(100, (STATE.rmBench + STATE.rmLeg) * 0.4 || 65);
+  const cx = 150, cy = 150, r = 100; const svg = document.getElementById('radarSvg');
+  const pow = Math.min(100, (STATE.rmBench + STATE.rmLeg) * 0.4 || 70);
   const sta = Math.min(100, 60 + (STATE.streak * 2));
-  const tec = 85; 
-  const vol = 80; 
-  const rec = STATE.water >= 2000 ? 90 : 60;
-  const agi = 75; 
-
-  const vals = [pow, tec, vol, sta, rec, agi];
-  const labels = ["POW (Fuerza)", "TEC (Técnica)", "VOL (Volumen)", "STA (Cardio)", "REC (Agua)", "AGI (Movilidad)"];
-
-  let backgroundHex = ""; let labelsHTML = ""; let points = ""; let dotsHTML = "";
-
+  const tec = 85; const vol = 80; const rec = STATE.water >= 2000 ? 90 : 60; const agi = 75; 
+  const vals = [pow, tec, vol, sta, rec, agi]; const labels = ["POW", "TEC", "VOL", "STA", "REC", "AGI"];
+  let bg="", lbl="", pts="", dots="";
   for(let i=0; i<6; i++) {
-    let angle = (Math.PI / 3) * i - (Math.PI / 2);
-    backgroundHex += `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)} `;
-    
-    // Labels
-    let lx = cx + (r + 25) * Math.cos(angle); let ly = cy + (r + 20) * Math.sin(angle);
-    labelsHTML += `<text x="${lx}" y="${ly}" class="radar-label" dominant-baseline="middle">${labels[i]}</text>`;
-    
-    // Polígono Dinámico
-    let nVal = (vals[i] / 100) * r;
-    if(nVal < 15) nVal = 15; 
-    let px = cx + nVal * Math.cos(angle); let py = cy + nVal * Math.sin(angle);
-    points += `${px},${py} `;
-    dotsHTML += `<circle cx="${px}" cy="${py}" r="5" class="radar-point" />`;
+    let a = (Math.PI/3)*i - (Math.PI/2); bg += `${cx+r*Math.cos(a)},${cy+r*Math.sin(a)} `;
+    lbl += `<text x="${cx+(r+25)*Math.cos(a)}" y="${cy+(r+20)*Math.sin(a)}" class="radar-label" dominant-baseline="middle">${labels[i]}</text>`;
+    let nv = (vals[i]/100)*r; if(nv<15) nv=15; let px = cx+nv*Math.cos(a); let py = cy+nv*Math.sin(a);
+    pts += `${px},${py} `; dots += `<circle cx="${px}" cy="${py}" r="5" class="radar-point" />`;
   }
-
-  svg.innerHTML = `
-    <polygon points="${backgroundHex}" class="radar-bg" />
-    <polygon points="${points}" class="radar-polygon" />
-    <line x1="150" y1="50" x2="150" y2="250" class="radar-line" />
-    <line x1="63" y1="100" x2="237" y2="200" class="radar-line" />
-    <line x1="63" y1="200" x2="237" y2="100" class="radar-line" />
-    ${dotsHTML} ${labelsHTML}
-  `;
+  svg.innerHTML = `<polygon points="${bg}" class="radar-bg" /><polygon points="${pts}" class="radar-polygon" /><line x1="150" y1="50" x2="150" y2="250" class="radar-line" /><line x1="63" y1="100" x2="237" y2="200" class="radar-line" /><line x1="63" y1="200" x2="237" y2="100" class="radar-line" />${dots}${lbl}`;
 }
 
-function updateUI() {
-    document.getElementById('stat-bench').innerText = STATE.rmBench + ' kg';
-    document.getElementById('stat-leg').innerText = STATE.rmLeg + ' kg';
-}
+function saveDay() { STATE.streak+=1; localStorage.setItem('hyp_streak', STATE.streak); STATE.water=0; updateWaterUI(); showToast("Día finalizado. Modo Bestia activado. 🦍"); switchTab('tab-dash', document.querySelector('.nav-item')); document.getElementById('streakDays').innerText=STATE.streak; }
 
-/* --- INICIALIZACIÓN --- */
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('streakDays').innerText = STATE.streak;
-  updateWaterUI(); initEntreno(); updateUI(); updateRadar();
-});
+document.addEventListener('DOMContentLoaded', () => { document.getElementById('streakDays').innerText = STATE.streak; updateWaterUI(); initEntreno(); });
 </script>
 </body>
 </html>
